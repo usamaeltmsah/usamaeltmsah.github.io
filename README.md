@@ -80,7 +80,17 @@ Tick **Private client work** on a project to show it under **Client work** on th
 - Page 1: header, impact stats, profile, and experience. Full-time and freelance roles are shown in full; internships and part-time roles appear as one line each under "Earlier experience".
 - Page 2: selected projects (those with **Show on CV** ticked, about 6), activities (the first 4 by your drag-and-drop order), certificates, volunteering, languages and interests.
 
-The PDF step checks the page count. If edits push it past two pages, it shrinks the layout a little (down to 85%). If it still doesn't fit, the deploy fails with a message telling you what to trim. The CV uses the bundled Inter font, so it looks the same everywhere it's built.
+**ATS-friendly by construction.** After rendering, the build reads the PDF back the way an applicant tracking system does (with PDF.js) and fails the deploy if any of these break:
+
+- every job title, company, date, summary and highlight is in the text, in order, under the right role (no bullets drifting to the end of the page, no columns interleaving the summary);
+- standard section headings (Summary, Experience, Education, Skills, Projects, Certifications), each on its own line;
+- contact details as plain text: name, email, website and the full LinkedIn URL;
+- fonts embedded as real text fonts (no Type3), no ligature or broken glyphs, all skills readable;
+- at most 2 pages and under 2 MB.
+
+To keep it that way, the CV avoids letter-spacing, positioned bullets, non-Latin scripts and symbols such as ★ and → (they are written out as "4.8/5" and "to"). The rules live in [`scripts/ats.ts`](scripts/ats.ts), with tests in `tests/ats.test.ts`. If a CMS edit breaks one, the Actions log lists exactly what to fix.
+
+The PDF step also checks the page count. If edits push it past two pages, it shrinks the layout a little (down to 85%). If it still doesn't fit, the deploy fails with a message telling you what to trim. The CV uses the bundled Inter font, so it looks the same everywhere it's built.
 
 ### Signing in
 
@@ -135,6 +145,7 @@ The Vitest suite in [`tests/`](tests) guards both the content and the CMS:
 - **`cms-config.test.ts`:** `public/admin/config.yml` is valid against Sveltia CMS's official JSON Schema and uses only built-in widgets. Every CMS field exists in the Zod schema, every required schema field is editable in the CMS, and `index.html` loads the same Sveltia version the tests validate against.
 - **`resume.test.ts`, `feeds.test.ts`:** date formatting, sorting, resume assembly, links between entries, and the GitHub and YouTube parsers.
 - **`pdf-fit.test.ts`:** page counting and the 2-page auto-fit for the CV PDF.
+- **`ats.test.ts`:** the ATS rules themselves, including the failure cases they must catch.
 
 When upgrading Sveltia, bump the version in both `package.json` and `public/admin/index.html` (and the `$schema` line in `config.yml`). The tests will flag a mismatch.
 
@@ -163,6 +174,7 @@ public/
 tests/                    # Vitest
 scripts/cv-pdf.ts         # renders /cv/ to dist/cv.pdf, fitted to 2 pages
 scripts/pdf-fit.ts        # page counting + auto-fit (tested)
+scripts/ats.ts            # ATS check: reads the PDF back and verifies the text layer (tested)
 .github/workflows/deploy.yml
 ```
 
