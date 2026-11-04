@@ -4,10 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build && node scripts/cv-pdf.mjs",
+    "build": "vitest run && astro build && node scripts/cv-pdf.mjs",
     "build:site": "astro build",
     "preview": "astro preview",
-    "cms": "npx @sveltia/cms@latest"
+    "cms": "npx @sveltia/cms@latest",
+    "test": "vitest run"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",
@@ -15,6 +16,11 @@
     "sharp": "^0.35.5"
   },
   "devDependencies": {
-    "puppeteer-core": "^25.16.0"
+    "@sveltia/cms": "^0.258.1",
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1",
+    "puppeteer-core": "^25.16.0",
+    "vitest": "^5.1.0",
+    "yaml": "^2.9.1"
   }
 }
