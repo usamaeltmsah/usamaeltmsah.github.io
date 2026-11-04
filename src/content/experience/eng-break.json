@@ -1,11 +1,11 @@
 {
   "company": "Eng Break",
   "position": "Arduino Trainer",
-  "type": "Part-time",
-  "url": "",
-  "location": "Cairo, Egypt",
+  "type": "Volunteer",
   "startDate": "2018-09",
   "endDate": "2019-04",
+  "location": "Cairo, Egypt",
+  "url": "",
   "summary": "Taught engineering and computer science students to build robots from scratch with Arduino.",
   "highlights": []
 }
