@@ -255,6 +255,36 @@ collections:
       - { name: image, label: Photo, widget: image, required: false }
       - { name: url, label: Link, required: false }
 
+  - name: testimonials
+    label: Client feedback
+    label_singular: Testimonial
+    icon: reviews
+    description: Reviews from Upwork, LinkedIn recommendations or emails. Paste the client's words exactly; keep clients anonymous unless they agreed to be named. Drag to reorder.
+    folder: src/content/testimonials
+    format: json
+    extension: json
+    identifier_field: context
+    slug: "{{context}}"
+    summary: "{{source}} · {{context}} · {{quote}}"
+    thumbnail: false
+    reorder: true
+    view_groups:
+      - { name: source, label: Source, field: source }
+    view_filters:
+      - { name: on-cv, label: On CV, field: onCv, eq: true }
+    editor: { preview: false }
+    fields:
+      - { name: quote, label: Quote, widget: text, hint: "The client's words, exactly as written." }
+      - { name: source, label: Source, widget: select, default: Upwork, options: [Upwork, LinkedIn, Email, Other] }
+      - { name: author, label: Shown as, hint: "e.g. Upwork client, or a name and title if they agreed to be named (LinkedIn recommendations are public)." }
+      - { name: context, label: What the work was, required: false, hint: "e.g. SwiftUI mobile app. No client or app names." }
+      - { name: date, label: Date, required: false, hint: "YYYY-MM", pattern: ["^$|^\\d{4}(-(0[1-9]|1[0-2]))?$", "Use YYYY or YYYY-MM"] }
+      - { name: rating, label: Stars, widget: number, value_type: int, min: 0, max: 5, default: 5, required: false, hint: "0 hides the stars (e.g. for LinkedIn recommendations)." }
+      - { name: url, label: Verify link, required: false, hint: "Where the review is public, e.g. your Upwork profile or LinkedIn recommendations page." }
+      - { name: project, label: Related project, widget: relation, collection: projects, value_field: "{{slug}}", search_fields: [name], display_fields: ["{{name}}"], required: false }
+      - { name: experience, label: Related role, widget: relation, collection: experience, value_field: "{{slug}}", search_fields: [company, position], display_fields: ["{{position}} · {{company}}"], required: false }
+      - { name: onCv, label: Show on CV, widget: boolean, default: false, hint: "Keep it to 2 short quotes so the CV stays at 2 pages." }
+
   - name: credentials
     label: Certificates & awards
     label_singular: Credential

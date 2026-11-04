@@ -103,6 +103,27 @@ export const activitySchema = z.object({
   image: z.string().default(''),
 });
 
+export const testimonialSources = ['Upwork', 'LinkedIn', 'Email', 'Other'] as const;
+
+export const testimonialSchema = z.object({
+  /** The client's words, exactly as written. */
+  quote: text,
+  /** Managed by the CMS drag-and-drop. */
+  order: z.number().int().positive().default(999),
+  source: z.enum(testimonialSources),
+  /** How the author is shown. Keep clients anonymous unless they agreed to be named. */
+  author: text,
+  /** What the work was, e.g. "SwiftUI mobile app". */
+  context: z.string().default(''),
+  date,
+  rating: z.number().int().min(0).max(5).default(0),
+  /** Where the review can be verified, e.g. the Upwork profile or LinkedIn recommendations. */
+  url,
+  project: ref,
+  experience: ref,
+  onCv: z.boolean().default(false),
+});
+
 export const credentialKinds = ['Certificate', 'Award'] as const;
 
 export const credentialSchema = z.object({
@@ -129,6 +150,7 @@ export type Volunteering = z.infer<typeof volunteeringSchema>;
 export type Education = z.infer<typeof educationSchema>;
 export type Project = z.infer<typeof projectSchema>;
 export type Activity = z.infer<typeof activitySchema>;
+export type Testimonial = z.infer<typeof testimonialSchema>;
 export type Credential = z.infer<typeof credentialSchema>;
 export type Writing = z.infer<typeof writingSchema>;
 
@@ -139,6 +161,7 @@ export const folders = {
   education: educationSchema,
   projects: projectSchema,
   activities: activitySchema,
+  testimonials: testimonialSchema,
   credentials: credentialSchema,
   writing: writingSchema,
 } as const;
@@ -148,6 +171,8 @@ export const relations = [
   { from: 'projects', field: 'experience', to: 'experience' },
   { from: 'activities', field: 'experience', to: 'experience' },
   { from: 'activities', field: 'volunteering', to: 'volunteering' },
+  { from: 'testimonials', field: 'project', to: 'projects' },
+  { from: 'testimonials', field: 'experience', to: 'experience' },
 ] as const;
 
 /** Single-file entries under src/content. */

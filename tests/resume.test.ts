@@ -55,6 +55,10 @@ const content: Content = {
     { id: 'hack', name: 'Hack', order: 1, role: 'Participant', date: '2025-07', description: 'd', url: '', image: '', experience: 'old', volunteering: '' },
     { id: 'talk', name: 'Talk', order: 2, role: 'Speaker', date: '', description: 'd', url: '', image: '', experience: '', volunteering: 'club' },
   ],
+  testimonials: [
+    { id: 'great', quote: 'Great work.', order: 1, source: 'Upwork', author: 'Upwork client', context: 'SwiftUI app', date: '2025-08', rating: 5, url: '', project: 'b', experience: 'market', onCv: true },
+    { id: 'kind', quote: 'Kind words.', order: 2, source: 'LinkedIn', author: 'Former manager', context: '', date: '', rating: 0, url: '', project: '', experience: '', onCv: false },
+  ],
   credentials: [
     { kind: 'Certificate', name: 'Old cert', issuer: 'X', date: '2020-01', url: '', summary: '' },
     { kind: 'Award', name: 'Top', issuer: 'Upwork', date: '', url: '', summary: 'great' },
@@ -104,6 +108,15 @@ describe('relations', () => {
     const renamed = buildResume({ ...content, experience: [job('old', 'Renamed Co', 'Full-time', '2019-01', '2020-01'), content.experience[1]] }, 'x');
     expect(renamed.projects[0].at).toBe('at Renamed Co');
   });
+  it('attaches reviews to projects and resolves testimonial links', () => {
+    expect(r.projects.find((p) => p.id === 'b')!.reviews).toEqual([{ id: 'great', rating: 5 }]);
+    expect(r.testimonials[0]).toMatchObject({ projectName: 'B', at: 'via Upwork' });
+    expect(r.testimonials[1]).toMatchObject({ projectName: '', at: '' });
+  });
+  it('fails loudly when a testimonial links to a deleted project', () => {
+    const broken = { ...content, testimonials: [{ ...content.testimonials[0], project: 'gone' }] };
+    expect(() => buildResume(broken, 'x')).toThrow(/links to projects "gone"/);
+  });
   it('fails loudly on a link to a missing entry', () => {
     const broken = { ...content, projects: [project('x', 1, { experience: 'deleted-role' })] };
     expect(() => buildResume(broken, 'x')).toThrow('Project "X" links to experience "deleted-role", which doesn\'t exist');
@@ -124,6 +137,13 @@ describe('toJsonResume', () => {
   it('maps project periods to JSON Resume dates, entity and type', () => {
     expect(json.projects[0]).toMatchObject({ startDate: '2024', endDate: '', type: 'personal', entity: 'Old Co' });
     expect(json.projects[1]).toMatchObject({ startDate: '2022', endDate: '2025', type: 'client work', entity: 'Upwork' });
+  });
+  it('publishes testimonials as JSON Resume references', () => {
+    expect(json).not.toHaveProperty('testimonials');
+    expect(json.references).toEqual([
+      { name: 'Upwork client, SwiftUI app, 2025', reference: 'Great work.' },
+      { name: 'Former manager', reference: 'Kind words.' },
+    ]);
   });
   it('keeps the extra sections and uses an absolute image URL', () => {
     expect(json.softSkills).toHaveLength(1);

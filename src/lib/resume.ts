@@ -1,4 +1,4 @@
-import type { Activity, Credential, Education, Experience, Profile, Project, Skills, Volunteering, Writing } from './schemas';
+import type { Activity, Credential, Education, Experience, Profile, Project, Skills, Testimonial, Volunteering, Writing } from './schemas';
 
 /** An entry plus its id: the file name without .json, which relations point to. */
 export type Entry<T> = T & { id: string };
@@ -11,6 +11,7 @@ export type Content = {
   education: Education[];
   projects: Entry<Project>[];
   activities: Entry<Activity>[];
+  testimonials: Entry<Testimonial>[];
   credentials: Credential[];
   writing: Writing[];
 };
@@ -69,6 +70,9 @@ export function buildResume(c: Content, lastModified: string) {
   const volunteering = linker(c.volunteering, 'volunteering');
   const projects = [...c.projects].sort(byOrder);
   const activities = [...c.activities].sort(byOrder);
+  const project = linker(c.projects, 'projects');
+  const testimonials = [...c.testimonials].sort(byOrder);
+  const reviewsOf = (id: string) => testimonials.filter((t) => t.project === id).map((t) => ({ id: t.id, rating: t.rating }));
   const projectsAt = (id: string) => projects.filter((x) => x.experience === id).map((x) => ({ id: x.id, name: x.name }));
   const activitiesAt = (field: 'experience' | 'volunteering', id: string) =>
     activities.filter((a) => a[field] === id).map((a) => ({ id: a.id, name: a.name }));
@@ -116,11 +120,14 @@ export function buildResume(c: Content, lastModified: string) {
     softSkills: c.skills.soft,
     languages: c.skills.languages,
     interests: c.skills.interests,
-    references: [] as { name: string; reference: string }[],
+    references: testimonials.map((t) => ({
+      name: [t.author, t.context, t.date.slice(0, 4)].filter(Boolean).join(', '),
+      reference: t.quote,
+    })),
     projects: projects.map((x) => {
       const j = job(x.experience, `Project "${x.name}"`);
       return {
-      id: x.id, name: x.name, entity: j?.company ?? '', at: atJob(j),
+      id: x.id, name: x.name, entity: j?.company ?? '', at: atJob(j), reviews: reviewsOf(x.id),
       featured: x.featured, private: x.private, onCv: x.onCv, period: x.period,
       description: x.description, highlights: x.highlights, keywords: x.tech,
       url: x.private ? '' : x.url, demo: x.private ? '' : x.demo, image: x.image, color: x.color || '#64748b',
@@ -130,6 +137,11 @@ export function buildResume(c: Content, lastModified: string) {
       const j = job(experience, `Activity "${a.name}"`);
       const v = volunteering(vol, `Activity "${a.name}"`);
       return { ...a, at: j ? atJob(j) : v ? `with ${v.organization}` : '' };
+    }),
+    testimonials: testimonials.map(({ order: _order, ...t }) => {
+      const p = project(t.project, `Testimonial "${t.quote.slice(0, 30)}…"`);
+      const j = job(t.experience, `Testimonial "${t.quote.slice(0, 30)}…"`);
+      return { ...t, projectName: p?.name ?? '', at: atJob(j) };
     }),
     meta: { canonical: new URL('resume.json', p.url).href, version: 'v1.0.0', lastModified },
   };
@@ -142,7 +154,7 @@ export type Resume = ReturnType<typeof buildResume>;
  * work[].type), which the schema allows, and drops presentation-only fields.
  */
 export function toJsonResume(r: Resume) {
-  const { stats: _stats, ...rest } = r;
+  const { stats: _stats, testimonials: _testimonials, ...rest } = r;
   return {
     $schema: 'https://raw.githubusercontent.com/jsonresume/resume-schema/v1.0.0/schema.json',
     ...rest,
@@ -150,7 +162,7 @@ export function toJsonResume(r: Resume) {
     work: r.work.map(({ id: _id, projects: _p, activities: _a, ...w }) => w),
     volunteer: r.volunteer.map(({ id: _id, image: _i, activities: _a, ...v }) => v),
     activities: r.activities.map(({ id: _id, at: _at, ...a }) => a),
-    projects: r.projects.map(({ id: _id, at: _at, featured: _f, color: _c, onCv: _cv, private: isPrivate, period, ...x }) => {
+    projects: r.projects.map(({ id: _id, at: _at, reviews: _reviews, featured: _f, color: _c, onCv: _cv, private: isPrivate, period, ...x }) => {
       const [startDate = '', endDate = ''] = period.match(/^\d{4}-\d{4}$/) ? period.split('-') : [period];
       return { ...x, startDate, endDate, type: isPrivate ? 'client work' : 'personal' };
     }),

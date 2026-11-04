@@ -15,7 +15,8 @@ const contacts = ['GitHub', 'LinkedIn', 'Upwork']
 const mainRoles = resume.work.filter((w) => w.type === 'Full-time' || w.type === 'Freelance');
 const earlierRoles = resume.work.filter((w) => !mainRoles.includes(w));
 const projects = resume.projects.filter((p) => p.onCv);
-const activities = resume.activities.slice(0, 4);
+const activities = resume.activities.slice(0, 3);
+const feedback = resume.testimonials.filter((t) => t.onCv);
 const yearOf = (d: string) => d.slice(0, 4);
 ---
 <!doctype html>
@@ -94,6 +95,10 @@ section:first-child>h2{margin-top:1.5mm}
 .tech{font-size:8.2pt;color:var(--muted);margin-top:.4mm}
 .tech a{color:var(--accent);text-decoration:underline;text-underline-offset:.4mm}
 
+.fb{margin:0 0 2.6mm;padding:2mm 3mm;border-left:.8mm solid var(--accent2);background:#f7f5fd;border-radius:0 2mm 2mm 0;break-inside:avoid}
+.fb blockquote{font-style:italic;color:#2a2e37;line-height:1.4}
+.fb figcaption{font-size:8.2pt;color:var(--muted);margin-top:.8mm}
+.fb .st{color:#e0a100;letter-spacing:.3mm}
 .act{margin-bottom:2mm;break-inside:avoid}
 .act b{font-weight:600}
 .act p{color:var(--muted);font-size:8.6pt}
@@ -171,7 +176,7 @@ aside h2{margin-top:4.2mm}
             <div class="job-h"><h3>{w.position} · <em>{w.name}</em></h3><span class="when">{range(w.startDate, w.endDate)}</span></div>
             <div class="meta">{[w.type, w.location].filter(Boolean).join(' · ')}</div>
             <p>{w.summary}</p>
-            {w.highlights.length > 0 && <ul>{w.highlights.slice(0, 4).map((h) => <li>{h}</li>)}</ul>}
+            {w.highlights.length > 0 && <ul>{w.highlights.slice(0, 3).map((h) => <li>{h}</li>)}</ul>}
           </div>
         ))}
         {earlierRoles.length > 0 && (
@@ -190,11 +195,23 @@ aside h2{margin-top:4.2mm}
           <div class="proj">
             <h3><span>{p.name}{p.private ? <span class="badge priv">Client work</span> : <span class="badge oss">Open source</span>}</span><span class="when">{fmtDate(p.period)}</span></h3>
             <p>{p.description}</p>
-            {p.private && p.highlights.length > 0 && <ul>{p.highlights.slice(0, 2).map((h) => <li>{h}</li>)}</ul>}
+            {p.private && p.highlights.length > 0 && <ul>{p.highlights.slice(0, 1).map((h) => <li>{h}</li>)}</ul>}
             <div class="tech">{[p.at, ...p.keywords].filter(Boolean).join(' · ')}{p.url && <> · <a href={p.url}>{host(p.url)}</a></>}</div>
           </div>
         ))}
       </section>
+
+      {feedback.length > 0 && (
+        <section>
+          <h2>Client feedback</h2>
+          {feedback.map((t) => (
+            <figure class="fb">
+              <blockquote>“{t.quote}”</blockquote>
+              <figcaption>{t.rating > 0 && <span class="st" aria-label={`${t.rating} out of 5 stars`}>{'★'.repeat(t.rating)}</span>} {[t.author, t.context, t.date.slice(0, 4)].filter(Boolean).join(' · ')}</figcaption>
+            </figure>
+          ))}
+        </section>
+      )}
 
       <section>
         <h2>Activities</h2>

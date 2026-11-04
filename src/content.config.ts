@@ -10,6 +10,7 @@ export const collections = {
   education: defineCollection({ loader: json('education'), schema: folders.education }),
   projects: defineCollection({ loader: json('projects'), schema: folders.projects }),
   activities: defineCollection({ loader: json('activities'), schema: folders.activities }),
+  testimonials: defineCollection({ loader: json('testimonials'), schema: folders.testimonials }),
   credentials: defineCollection({ loader: json('credentials'), schema: folders.credentials }),
   writing: defineCollection({ loader: json('writing'), schema: folders.writing }),
 };
