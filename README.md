@@ -65,7 +65,7 @@ Projects and activities are linked to the role they belong to, so you only descr
 
 ### Client feedback
 
-Paste the client's words exactly as written into **Client feedback**, pick the **Source** and link the **Related project**. The site shows it under "What clients say", in your drag-and-drop order, and the linked project gets a "★ Client review" link back to it. Tick **Show on CV** on two short quotes for the CV. The feedback is also published as `references` in `resume.json`.
+Paste the client's words exactly as written into **Client feedback**, pick the **Source** and link the **Related project**. The site shows it under "What clients say" as a swipeable row with previous/next buttons, in your drag-and-drop order (the first one shows first), and the linked project gets a "★ Client review" link back to it. Tick **Show on CV** on two short quotes for the CV. The feedback is also published as `references` in `resume.json`.
 
 - Keep clients anonymous ("Upwork client" plus what the work was) unless they agreed to be named. LinkedIn recommendations are already public, so you can use the person's name and title there.
 - Only use reviews from engagements longer than a month, the same rule as client projects.

@@ -245,15 +245,15 @@ h1{font:800 clamp(40px,6.2vw,72px)/1.02 var(--display);letter-spacing:-.045em}
 @media (max-width:640px){.vol{grid-template-columns:1fr}.vol img{min-height:0;aspect-ratio:16/9}}
 
 /* client feedback */
-.quotes{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.quote{margin:0;padding:26px;display:flex;flex-direction:column;gap:14px;position:relative}
+.quotes{display:grid;grid-auto-flow:column;grid-auto-columns:calc((100% - 16px) / 2.15);gap:16px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none;padding:4px 2px 8px;margin:-4px -2px 0}
+.quotes::-webkit-scrollbar{display:none}
+.quotes:focus-visible{outline-offset:6px}
+.quote{margin:0;padding:28px;display:flex;flex-direction:column;gap:14px;position:relative;scroll-snap-align:start}
 .quote::before{content:"“";position:absolute;top:6px;right:20px;font:800 72px/1 var(--display);color:var(--accent);opacity:.18}
-.quote.lead-quote{background:radial-gradient(90% 120% at 0% 0%,var(--glow1),transparent),var(--surface)}
-.quote.lead-quote blockquote p{font-size:18px;line-height:1.5}
 .stars{color:#f5b301;letter-spacing:2px;font-size:15px}
 .stars span{color:var(--line)}
 .quote blockquote{margin:0;flex:1}
-.quote blockquote p{font:500 16px/1.55 var(--display);color:var(--ink)}
+.quote blockquote p{font:500 17px/1.55 var(--display);color:var(--ink)}
 .quote figcaption{display:flex;flex-direction:column;gap:2px;font-size:13px;color:var(--muted)}
 .quote figcaption b{color:var(--ink);font-size:14px}
 .quote figcaption a,.review-link{color:var(--accent);text-decoration:none;font-weight:600;padding:2px 0}
@@ -261,5 +261,9 @@ h1{font:800 clamp(40px,6.2vw,72px)/1.02 var(--display);letter-spacing:-.045em}
 .review-link span{color:#f5b301}
 .quote figcaption a:hover,.review-link:hover{text-decoration:underline}
 .quote:target{border-color:var(--accent);box-shadow:0 0 0 3px var(--glow1)}
-@media (max-width:980px){.quotes{grid-template-columns:1fr 1fr}}
-@media (max-width:640px){.quotes{grid-template-columns:1fr}.quote.lead-quote{grid-column:auto}.quote.lead-quote blockquote p{font-size:18px}}
+.car-nav{display:flex;align-items:center;justify-content:flex-end;gap:12px;margin-top:18px}
+.car-nav[hidden]{display:none}
+.car-count{font:500 13px var(--mono);color:var(--muted);min-width:4.5ch;text-align:center;font-variant-numeric:tabular-nums}
+.icon-btn:disabled{opacity:.35;cursor:default}
+@media (max-width:980px){.quotes{grid-auto-columns:calc((100% - 16px) / 1.6)}}
+@media (max-width:640px){.quotes{grid-auto-columns:88%}.quote{padding:24px}}
