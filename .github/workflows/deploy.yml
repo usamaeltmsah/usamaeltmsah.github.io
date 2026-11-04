@@ -26,8 +26,10 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
+      - name: Run tests
+        run: npm test
       - name: Build site and CV PDF
-        run: npm run build
+        run: npm run build:site && node scripts/cv-pdf.mjs
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CHROME_PATH: /usr/bin/google-chrome
