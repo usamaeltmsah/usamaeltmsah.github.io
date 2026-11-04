@@ -43,14 +43,36 @@ The sidebar is organized like your CV:
 | --- | --- | --- |
 | **Profile** | Name, title, headline, photo, summary, availability, hero stats, social links | Single page |
 | **Skills & languages** | Technical skill groups, soft skills, spoken languages, interests | Single page |
-| **Experience** | One entry per role (Full-time, Part-time, Freelance, Internship, Volunteer) | Newest first; group by type; filter current or past roles |
+| **Experience** | One entry per job (Full-time, Part-time, Freelance, Contract, Internship) | Newest first; group by type; filter current or past roles |
+| **Volunteering** | One entry per volunteer role, with an optional photo | Newest first; photo thumbnails |
 | **Education** | One entry per school | |
-| **Projects** | One entry per project, with a screenshot thumbnail | Drag and drop to set the order on the site; filter featured |
-| **Activities** | Hackathons, workshops, conferences, communities | Drag and drop to set the order; photo thumbnails |
+| **Projects** | One entry per project, with a screenshot thumbnail | Drag and drop to set the order; filter featured, on CV, client work |
+| **Activities** | Hackathons, conferences, challenges, communities | Drag and drop to set the order; photo thumbnails |
 | **Certificates & awards** | One entry per credential | Newest first; group by kind or issuer |
 | **Writing** | Articles (used when dev.to is unreachable, and in `resume.json`) | Newest first |
 
 Every field has a hint, and dates are validated as you type (`YYYY-MM`). Leave **End** empty for a current role.
+
+### Linked entries
+
+Projects and activities are linked to the role they belong to, so you only describe each role once:
+
+- A project's **Built at (role)** picks an Experience entry. The site shows "at Nugttah" or "via Upwork" on the project, and that role lists the project as a link. Rename or edit the role, and every linked project follows.
+- An activity's **Related job** or **Related volunteering** works the same way, for example the Copilot hackathon → VOIS.
+- Links are stored by the entry's file name. If you delete a role that something still links to, the build stops with a message naming the broken link, so nothing goes live half-updated. Re-link the entry in the CMS, or restore the role.
+
+### Private client projects
+
+Tick **Private client work** on a project to show it under **Client work** on the site and with a "Client work" label on the CV, with no links. Describe what you built, not who you built it for: no client or app names, no confidential numbers, no screenshots.
+
+### The CV
+
+`/cv/` and `/cv.pdf` are designed for exactly **two A4 pages**:
+
+- Page 1: header, impact stats, profile, and experience. Full-time and freelance roles are shown in full; internships and part-time roles appear as one line each under "Earlier experience".
+- Page 2: selected projects (those with **Show on CV** ticked, about 6), activities (the first 4 by your drag-and-drop order), certificates, volunteering, languages and interests.
+
+The PDF step checks the page count. If edits push it past two pages, it shrinks the layout a little (down to 85%). If it still doesn't fit, the deploy fails with a message telling you what to trim. The CV uses the bundled Inter font, so it looks the same everywhere it's built.
 
 ### Signing in
 
@@ -70,9 +92,10 @@ Uploaded images go to `src/assets/images/` and are automatically resized and con
 | --- | --- |
 | `src/content/profile.json` | `headline`: the word "polished" gets the gradient. `stats`: at most 4. |
 | `src/content/skills.json` | `technical`, `soft` (name + evidence), `languages`, `interests` |
-| `src/content/experience/<company>.json` | `type` is one of `Full-time`, `Part-time`, `Freelance`, `Internship`, `Volunteer` |
-| `src/content/projects/<name>.json` | `order` sets the position; `featured: true` shows it large in a phone frame using `image` |
-| `src/content/activities/<name>.json` | `order` sets the position; `date` can be `YYYY`, `YYYY-MM` or `YYYY-YYYY` |
+| `src/content/experience/<company>.json` | `type` is one of `Full-time`, `Part-time`, `Freelance`, `Contract`, `Internship` |
+| `src/content/volunteering/<organization>.json` | `role`, dates, `summary`, `highlights`, optional `image` |
+| `src/content/projects/<name>.json` | `order` sets the position; `featured` shows it large in a phone frame; `private` hides links; `onCv` puts it on the CV; `experience` links to a role by file name (e.g. `"nugttah"`) |
+| `src/content/activities/<name>.json` | `order` sets the position; `date` can be `YYYY`, `YYYY-MM` or `YYYY-YYYY`; optional `experience` or `volunteering` link |
 | `src/content/credentials/<name>.json` | `kind` is `Certificate` or `Award` |
 | `src/content/education/`, `src/content/writing/` | One file per school or article |
 
@@ -99,9 +122,10 @@ Set `GITHUB_TOKEN` when building locally to avoid GitHub API rate limits.
 
 The Vitest suite in [`tests/`](tests) guards both the content and the CMS:
 
-- **`content.test.ts`:** every content file matches its Zod schema, and every referenced image exists.
+- **`content.test.ts`:** every content file matches its Zod schema, every referenced image exists, and every link points to an existing entry.
 - **`cms-config.test.ts`:** `public/admin/config.yml` is valid against Sveltia CMS's official JSON Schema and uses only built-in widgets. Every CMS field exists in the Zod schema, every required schema field is editable in the CMS, and `index.html` loads the same Sveltia version the tests validate against.
-- **`resume.test.ts`, `feeds.test.ts`:** date formatting, sorting, resume assembly, and the GitHub and YouTube parsers.
+- **`resume.test.ts`, `feeds.test.ts`:** date formatting, sorting, resume assembly, links between entries, and the GitHub and YouTube parsers.
+- **`pdf-fit.test.ts`:** page counting and the 2-page auto-fit for the CV PDF.
 
 When upgrading Sveltia, bump the version in both `package.json` and `public/admin/index.html` (and the `$schema` line in `config.yml`). The tests will flag a mismatch.
 
@@ -111,7 +135,7 @@ When upgrading Sveltia, bump the version in both `package.json` and `public/admi
 src/
   content/                # all content (one JSON file per entry)
     profile.json, skills.json
-    experience/ education/ projects/ activities/ credentials/ writing/
+    experience/ volunteering/ education/ projects/ activities/ credentials/ writing/
   content.config.ts       # Astro collections for the folders above
   assets/images/          # photos and screenshots (optimized at build)
   lib/schemas.ts          # Zod schemas: the single definition of every field
@@ -128,7 +152,8 @@ public/
   admin/                  # Sveltia CMS (index.html + config.yml)
   robots.txt, og.png, icon.svg, humans.txt
 tests/                    # Vitest
-scripts/cv-pdf.mjs        # renders /cv/ to dist/cv.pdf
+scripts/cv-pdf.ts         # renders /cv/ to dist/cv.pdf, fitted to 2 pages
+scripts/pdf-fit.ts        # page counting + auto-fit (tested)
 .github/workflows/deploy.yml
 ```
 
