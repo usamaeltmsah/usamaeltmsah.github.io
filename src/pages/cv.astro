@@ -1,12 +1,22 @@
 ---
+import '@fontsource-variable/inter';
 import { Image } from 'astro:assets';
 import { getResume, img, range, fmtDate, SITE } from '../lib/data';
 
 const resume = await getResume();
-
 const b = resume.basics;
 const avatar = img(b.image);
-const show = ['GitHub', 'LinkedIn', 'Upwork'];
+const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
+const contacts = ['GitHub', 'LinkedIn', 'Upwork']
+  .map((n) => b.profiles.find((p) => p.network === n))
+  .filter((p) => p !== undefined);
+
+// Main roles get full detail; internships and part-time roles are listed in one line each.
+const mainRoles = resume.work.filter((w) => w.type === 'Full-time' || w.type === 'Freelance');
+const earlierRoles = resume.work.filter((w) => !mainRoles.includes(w));
+const projects = resume.projects.filter((p) => p.onCv);
+const activities = resume.activities.slice(0, 4);
+const yearOf = (d: string) => d.slice(0, 4);
 ---
 <!doctype html>
 <html lang="en">
@@ -14,122 +24,220 @@ const show = ['GitHub', 'LinkedIn', 'Upwork'];
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{b.name} | CV</title>
-<meta name="description" content={`Curriculum vitae of ${b.name}, ${b.label}.`}>
+<meta name="description" content={`Two-page CV of ${b.name}, ${b.label}: experience, selected projects, skills and certificates.`}>
 <link rel="canonical" href={`${SITE}/cv/`}>
 <link rel="icon" href="/icon.svg" type="image/svg+xml">
 <link rel="alternate" type="application/json" href="/resume.json" title="JSON Resume">
 <meta name="color-scheme" content="light">
 <style is:global>
-@page{size:A4;margin:14mm 14mm}
-*{box-sizing:border-box;margin:0}
-body{font:10.5pt/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;color:#16181d;background:#eceef2}
-a{color:#0a55c8;text-decoration:none}
-.bar{max-width:210mm;margin:20px auto 0;display:flex;gap:10px;justify-content:flex-end;padding:0 4px}
-.bar a,.bar button{font:600 14px inherit;font-family:inherit;padding:9px 14px;border-radius:10px;border:1px solid #d5d8de;background:#fff;color:#16181d;cursor:pointer}
-.bar .p{background:#0a55c8;color:#fff;border-color:#0a55c8}
-.page{max-width:210mm;margin:12px auto 40px;background:#fff;padding:16mm 15mm;box-shadow:0 10px 40px -20px rgba(0,0,0,.3)}
-header{display:flex;gap:18px;align-items:center;padding-bottom:12px;border-bottom:2px solid #16181d}
-header img{width:72px;height:72px;border-radius:50%;object-fit:cover}
-h1{font-size:24pt;letter-spacing:-.02em;line-height:1.1}
-.role{font-size:12.5pt;color:#0a55c8;font-weight:600}
-.contact{display:flex;flex-wrap:wrap;gap:3px 14px;font-size:9.5pt;color:#444;margin-top:5px}
-.cols{display:grid;grid-template-columns:1fr 62mm;gap:9mm;margin-top:12px}
-h2{font-size:10pt;text-transform:uppercase;letter-spacing:.12em;color:#0a55c8;margin:14px 0 6px;padding-bottom:3px;border-bottom:1px solid #e3e5ea}
-section:first-child h2{margin-top:0}
-.item{margin-bottom:9px;break-inside:avoid}
-.item h3{font-size:10.5pt;display:flex;justify-content:space-between;gap:8px}
-.item h3 span{font-weight:400;color:#666;font-size:9.5pt;white-space:nowrap}
-.org{color:#444;font-weight:600;font-size:10pt}
-.item p,.item li{color:#333}
-ul{padding-left:15px}
-.tags{display:flex;flex-wrap:wrap;gap:4px}
-.tag{font-size:8.8pt;padding:1px 7px;border-radius:99px;background:#eef2fb;color:#0a3f94}
-aside p{color:#333;font-size:9.8pt}
-aside .item{margin-bottom:7px}
-.summary{color:#333}
-.item p a{text-decoration:underline;text-underline-offset:2px}
-@media print{body{background:#fff}.bar{display:none}.page{margin:0;padding:0;box-shadow:none;max-width:none}}
-@media (max-width:700px){.page{padding:22px}.cols{grid-template-columns:1fr}header{flex-wrap:wrap}}
+@page{size:A4;margin:11mm 12mm 13mm}
+:root{--ink:#14161b;--muted:#5a6070;--line:#e2e5eb;--accent:#0b5bd3;--accent2:#6d3fd6;--tint:#f2f6fd}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font:9.6pt/1.45 'Inter Variable',-apple-system,'Segoe UI',Roboto,Arial,sans-serif;color:var(--ink);background:#e9ebef;-webkit-print-color-adjust:exact;print-color-adjust:exact;font-feature-settings:'cv11','ss01'}
+a{color:inherit;text-decoration:none}
+ul{list-style:none}
+
+.bar{max-width:210mm;margin:20px auto 0;display:flex;gap:8px;justify-content:flex-end;padding:0 4px}
+.bar a{font:600 13px 'Inter Variable',sans-serif;padding:9px 14px;border-radius:10px;border:1px solid #d3d7de;background:#fff}
+.bar .p{background:var(--accent);color:#fff;border-color:var(--accent)}
+.sheet{max-width:210mm;margin:12px auto 40px;background:#fff;padding:12mm 12mm 14mm;box-shadow:0 10px 40px -20px rgba(0,0,0,.35)}
+
+/* header */
+header{display:grid;grid-template-columns:auto 1fr auto;gap:5mm;align-items:center}
+header img{width:23mm;height:23mm;border-radius:50%;object-fit:cover;box-shadow:0 0 0 1.2mm #fff,0 0 0 1.6mm var(--accent)}
+h1{font-size:24pt;font-weight:800;letter-spacing:-.025em;line-height:1}
+.role{font-size:11.5pt;font-weight:600;color:var(--accent);margin-top:1.2mm}
+.contact{display:flex;flex-wrap:wrap;gap:.6mm 4mm;margin-top:2mm;font-size:8.6pt;color:var(--muted)}
+.contact a{color:var(--ink)}
+.contact span::before{content:'';display:inline-block;width:1.2mm;height:1.2mm;border-radius:50%;background:var(--accent);margin-right:1.4mm;vertical-align:.35mm}
+.avail{align-self:start;font-size:8pt;font-weight:600;color:#137a3a;background:#e8f7ee;border-radius:99px;padding:1mm 3mm;white-space:nowrap}
+
+.impact{display:grid;grid-template-columns:repeat(4,1fr);gap:2.5mm;margin:5mm 0 1mm}
+.impact div{background:var(--tint);border-radius:2.5mm;padding:2.6mm 3mm;border-left:.8mm solid var(--accent)}
+.impact b{display:block;font-size:13pt;font-weight:800;letter-spacing:-.02em;line-height:1.1}
+.impact span{font-size:7.6pt;color:var(--muted);line-height:1.25;display:block;margin-top:.6mm}
+
+.cols{display:grid;grid-template-columns:1fr 56mm;gap:7mm;margin-top:3mm}
+aside{border-left:1px solid var(--line);padding-left:6mm}
+
+h2{font-size:8.4pt;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--accent);margin:4.6mm 0 2.2mm;display:flex;align-items:center;gap:2mm}
+h2::after{content:'';flex:1;height:1px;background:var(--line)}
+section:first-child>h2{margin-top:1.5mm}
+.summary{color:#2a2e37}
+
+.job{margin-bottom:3.4mm;break-inside:avoid}
+.earlier-block{break-inside:auto}
+.earlier li{break-inside:avoid}
+.job-h{display:flex;justify-content:space-between;gap:3mm;align-items:baseline}
+.job h3{font-size:10.4pt;font-weight:700;letter-spacing:-.005em}
+.job h3 em{font-style:normal;color:var(--accent)}
+.when{font-size:8.3pt;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+.meta{font-size:8.3pt;color:var(--muted);margin:.2mm 0 .8mm}
+.job p{color:#2a2e37}
+.job ul{margin-top:.8mm}
+.job li,.proj li{position:relative;padding-left:3.4mm;color:#2a2e37}
+.job li::before,.proj li::before{content:'';position:absolute;left:.6mm;top:2.1mm;width:1.2mm;height:1.2mm;border-radius:50%;background:var(--accent)}
+
+.earlier li{display:flex;justify-content:space-between;gap:3mm;padding:.5mm 0;border-bottom:1px dashed var(--line)}
+.earlier li:last-child{border:0}
+.earlier li::before{display:none}
+.earlier b{font-weight:600}
+.earlier span{color:var(--muted)}
+.earlier span:first-child{color:var(--ink)}
+
+.proj{margin-bottom:3mm;break-inside:avoid}
+.proj h3{font-size:10pt;font-weight:700;display:flex;justify-content:space-between;gap:3mm;align-items:baseline}
+.badge{display:inline-block;font-size:7pt;font-weight:600;text-transform:uppercase;letter-spacing:.06em;padding:.3mm 1.6mm;border-radius:99px;vertical-align:.4mm;margin-left:1.4mm}
+.badge.priv{background:#f1edfb;color:var(--accent2)}
+.badge.oss{background:#e8f7ee;color:#137a3a}
+.proj p{color:#2a2e37}
+.tech{font-size:8.2pt;color:var(--muted);margin-top:.4mm}
+.tech a{color:var(--accent);text-decoration:underline;text-underline-offset:.4mm}
+
+.act{margin-bottom:2mm;break-inside:avoid}
+.act b{font-weight:600}
+.act p{color:var(--muted);font-size:8.6pt}
+
+aside section{break-inside:avoid}
+aside h2{margin-top:4.2mm}
+.sk{margin-bottom:2mm}
+.sk b{display:block;font-size:8.6pt;font-weight:600}
+.sk p{font-size:8.6pt;color:#3a3f4b;line-height:1.4}
+.pills{display:flex;flex-wrap:wrap;gap:1.2mm}
+.pills span{font-size:8pt;padding:.4mm 2mm;border-radius:99px;background:var(--tint);color:#163d7a}
+.edu b{display:block;font-weight:600}
+.edu p,.small{font-size:8.6pt;color:var(--muted)}
+.cert{margin-bottom:1.5mm;font-size:8.6pt;line-height:1.3}
+.cert b{font-weight:600;display:block}
+.cert span{color:var(--muted)}
+.lang{display:flex;justify-content:space-between;font-size:8.6pt;padding:.4mm 0}
+.lang span{color:var(--muted)}
+
+@media print{
+  body{background:#fff}
+  .bar{display:none}
+  .sheet{margin:0;padding:0;box-shadow:none;max-width:none}
+}
+@media screen{
+  .contact{row-gap:2mm}
+  .contact a,.tech a{display:inline-block;min-height:24px;line-height:24px}
+}
+@media (max-width:760px){
+  .sheet{padding:20px}
+  header{grid-template-columns:auto 1fr}.avail{grid-column:1/-1;justify-self:start}
+  .impact{grid-template-columns:1fr 1fr}
+  .cols{grid-template-columns:1fr}
+  aside{border:0;padding:0}
+}
 </style>
 </head>
 <body>
-<div class="bar">
+<nav class="bar" aria-label="CV actions">
   <a href="/">← Portfolio</a>
   <a href="/resume.json" download="usama-fouad-resume.json">JSON</a>
   <a class="p" href="/cv.pdf" download="Usama-Fouad-CV.pdf">Download PDF</a>
-</div>
-<main class="page">
+</nav>
+<main class="sheet">
   <header>
-    {avatar && <Image src={avatar} alt={b.name} width={144} height={144} loading="eager" />}
+    {avatar && <Image src={avatar} alt={b.name} width={180} height={180} loading="eager" />}
     <div>
       <h1>{b.name}</h1>
-      <div class="role">{b.label}</div>
+      <div class="role">{b.label} · Swift, SwiftUI & UIKit</div>
       <div class="contact">
         <span>{b.location.city}, Egypt</span>
-        <a href={`mailto:${b.email}`}>{b.email}</a>
-        <a href={b.url}>{b.url.replace(/^https?:\/\//, '').replace(/\/$/, '')}</a>
-        {b.profiles.filter((p) => show.includes(p.network)).map((p) => <a href={p.url}>{p.network}: {p.username}</a>)}
+        <span><a href={`mailto:${b.email}`}>{b.email}</a></span>
+        <span><a href={b.url}>{host(b.url)}</a></span>
+        {contacts.map((p) => <span><a href={p.url}>{p.network}</a></span>)}
       </div>
     </div>
+    {b.availability && <div class="avail">{b.availability}</div>}
   </header>
+
+  <div class="impact">
+    {resume.stats.map((s) => <div><b>{s.value}</b><span>{s.label}</span></div>)}
+  </div>
 
   <div class="cols">
     <div>
-      <section><h2>Profile</h2><p class="summary">{b.summary}</p></section>
+      <section>
+        <h2>Profile</h2>
+        <p class="summary">{b.summary}</p>
+      </section>
+
       <section>
         <h2>Experience</h2>
-        {resume.work.map((w) => (
-          <div class="item">
-            <h3>{w.position}{w.type !== 'Full-time' && ` · ${w.type}`}<span>{range(w.startDate, w.endDate)}</span></h3>
-            <div class="org">{w.name}{w.location && ` · ${w.location}`}</div>
+        {mainRoles.map((w) => (
+          <div class="job">
+            <div class="job-h"><h3>{w.position} · <em>{w.name}</em></h3><span class="when">{range(w.startDate, w.endDate)}</span></div>
+            <div class="meta">{[w.type, w.location].filter(Boolean).join(' · ')}</div>
             <p>{w.summary}</p>
-            {w.highlights.length > 0 && <ul>{w.highlights.map((h) => <li>{h}</li>)}</ul>}
+            {w.highlights.length > 0 && <ul>{w.highlights.slice(0, 4).map((h) => <li>{h}</li>)}</ul>}
+          </div>
+        ))}
+        {earlierRoles.length > 0 && (
+          <div class="job earlier-block">
+            <h3 style="font-size:9.4pt;margin-bottom:1mm">Earlier experience</h3>
+            <ul class="earlier">
+              {earlierRoles.map((w) => <li><span><b>{w.position}</b> · {w.name}</span><span>{w.type} · {yearOf(w.startDate)}</span></li>)}
+            </ul>
+          </div>
+        )}
+      </section>
+
+      <section>
+        <h2>Selected projects</h2>
+        {projects.map((p) => (
+          <div class="proj">
+            <h3><span>{p.name}{p.private ? <span class="badge priv">Client work</span> : <span class="badge oss">Open source</span>}</span><span class="when">{fmtDate(p.period)}</span></h3>
+            <p>{p.description}</p>
+            {p.private && p.highlights.length > 0 && <ul>{p.highlights.slice(0, 2).map((h) => <li>{h}</li>)}</ul>}
+            <div class="tech">{[p.at, ...p.keywords].filter(Boolean).join(' · ')}{p.url && <> · <a href={p.url}>{host(p.url)}</a></>}</div>
           </div>
         ))}
       </section>
-      <section>
-        <h2>Selected projects</h2>
-        {resume.projects.filter((p) => p.featured).map((p) => (
-          <div class="item"><h3>{p.name}<span>{p.keywords.join(' · ')}</span></h3><p>{p.description} <a href={p.url}>{p.url.replace('https://', '')}</a></p></div>
-        ))}
-      </section>
-      {resume.volunteer.length > 0 && (
-        <section><h2>Volunteering</h2>
-          {resume.volunteer.map((v) => <div class="item"><h3>{v.position}<span>{range(v.startDate, v.endDate)}</span></h3><div class="org">{v.organization}</div><p>{v.summary}</p>{v.highlights.length > 0 && <ul>{v.highlights.map((h) => <li>{h}</li>)}</ul>}</div>)}
-        </section>
-      )}
+
       <section>
         <h2>Activities</h2>
-        {resume.activities.map((a) => <div class="item"><h3>{a.name}<span>{fmtDate(a.date)}</span></h3><p>{a.description}</p></div>)}
+        {activities.map((a) => <div class="act"><b>{a.name}</b> <span class="small">· {a.role}{a.date && `, ${fmtDate(a.date)}`}</span><p>{a.description}</p></div>)}
       </section>
     </div>
 
     <aside>
       <section>
-        <h2>Education</h2>
-        {resume.education.map((e) => <div class="item"><h3>{e.institution}</h3><p>{e.studyType}</p><p>{range(e.startDate, e.endDate)}</p></div>)}
-      </section>
-      <section>
         <h2>Skills</h2>
-        {resume.skills.map((s) => <div class="item"><p><b>{s.name}</b></p><div class="tags">{s.keywords.map((k) => <span class="tag">{k}</span>)}</div></div>)}
+        {resume.skills.map((s) => <div class="sk"><b>{s.name}</b><p>{s.keywords.join(', ')}</p></div>)}
       </section>
       <section>
-        <h2>Soft skills</h2>
-        <div class="tags">{resume.softSkills.map((s) => <span class="tag">{s.name}</span>)}</div>
+        <h2>Strengths</h2>
+        <div class="pills">{resume.softSkills.map((s) => <span>{s.name}</span>)}</div>
       </section>
-      {(resume.awards.length > 0 || resume.certificates.length > 0) && (
-        <section><h2>Awards & certificates</h2>
-          {resume.awards.map((a) => <div class="item"><p><b>{a.title}</b>, {a.awarder}{a.date && ` (${a.date})`}</p></div>)}
-          {resume.certificates.map((c) => <div class="item"><p><b>{c.name}</b><br>{c.issuer}{c.date && `, ${fmtDate(c.date)}`}</p></div>)}
+      <section>
+        <h2>Education</h2>
+        {resume.education.map((e) => <div class="edu"><b>{e.institution}</b><p>{e.studyType}{e.area && `, ${e.area}`}</p><p>{range(e.startDate, e.endDate)}</p></div>)}
+      </section>
+      {resume.awards.length > 0 && (
+        <section>
+          <h2>Awards</h2>
+          {resume.awards.map((a) => <div class="cert"><b>{a.title}</b><span>{a.awarder}{a.summary && ` · ${a.summary}`}</span></div>)}
+        </section>
+      )}
+      <section>
+        <h2>Certificates</h2>
+        {resume.certificates.map((c) => <div class="cert"><b>{c.name}</b><span>{c.issuer}{c.date && ` · ${yearOf(c.date)}`}</span></div>)}
+      </section>
+      {resume.volunteer.length > 0 && (
+        <section>
+          <h2>Volunteering</h2>
+          {resume.volunteer.map((v) => <div class="cert"><b>{v.organization}</b><span>{v.position} · {range(v.startDate, v.endDate)}</span></div>)}
         </section>
       )}
       <section>
         <h2>Languages</h2>
-        {resume.languages.map((l) => <p>{l.language}: {l.fluency}</p>)}
+        {resume.languages.map((l) => <div class="lang"><b>{l.language}</b><span>{l.fluency}</span></div>)}
       </section>
       <section>
         <h2>Interests</h2>
-        <p>{resume.interests.map((i) => i.name).join(', ')}</p>
+        <p class="small">{resume.interests.map((i) => i.name).join(' · ')}</p>
       </section>
     </aside>
   </div>
