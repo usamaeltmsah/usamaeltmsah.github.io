@@ -146,6 +146,7 @@ The Vitest suite in [`tests/`](tests) guards both the content and the CMS:
 - **`cms-config.test.ts`:** `public/admin/config.yml` is valid against Sveltia CMS's official JSON Schema and uses only built-in widgets. Every CMS field exists in the Zod schema, every required schema field is editable in the CMS, and `index.html` loads the same Sveltia version the tests validate against.
 - **`resume.test.ts`, `feeds.test.ts`:** date formatting, sorting, resume assembly, links between entries, and the GitHub and YouTube parsers.
 - **`timeline.test.ts`:** the Experience phone stack's data: order, dates and durations, and that each role lists only its own projects and skills.
+- **`lazy-entry.test.ts`:** filling in the phone stack's chunk URL after the build.
 - **`pdf-fit.test.ts`:** page counting and the 2-page auto-fit for the CV PDF.
 - **`ats.test.ts`:** the ATS rules themselves, including the failure cases they must catch.
 
@@ -179,6 +180,7 @@ tests/                    # Vitest
 scripts/cv-pdf.ts         # renders /cv/ to dist/cv.pdf, fitted to 2 pages
 scripts/pdf-fit.ts        # page counting + auto-fit (tested)
 scripts/ats.ts            # ATS check: reads the PDF back and verifies the text layer (tested)
+scripts/lazy-entry.ts     # build integration: emits the phone stack as a lazy chunk for the inline loader
 .github/workflows/deploy.yml
 ```
 
@@ -186,7 +188,8 @@ scripts/ats.ts            # ATS check: reads the PDF back and verifies the text 
 
 - Lighthouse scores 100 in Performance, Accessibility, Best Practices, SEO and Agentic Browsing, on mobile and desktop, for both `/` and `/cv/`.
 - No web fonts, frameworks or trackers. CSS is inlined, and images are responsive WebP.
-- Three.js loads only when you scroll near Experience, and only where WebGL works. Everywhere else, and for screen readers and crawlers, the section is a plain list.
+- The page loads no JavaScript files up front. A small inline loader fetches the phone stack (with Three.js) only when you scroll near Experience, and only where WebGL works. Everywhere else, and for screen readers and crawlers, the section is a plain list.
+- GitHub Pages serves every file with a 10-minute cache (`max-age=600`) and doesn't allow custom headers. File names under `/_astro/` are content-hashed, so a longer cache would be safe; it would need a CDN in front of Pages.
 - Structured data: JSON-LD `Person`, `ProfilePage` and `WebSite`, all built from the content.
 - Agent-friendly: `llms.txt`, a markdown copy of the page, a machine-readable resume, `robots.txt` content signals (search and AI input allowed, training disallowed), and WebMCP tools (`get_profile`, `list_projects`, `get_skills`, `get_contact`, `download_resume`) for browsers that support `navigator.modelContext`.
 
