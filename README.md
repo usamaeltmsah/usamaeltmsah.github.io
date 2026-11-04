@@ -59,6 +59,7 @@ Every field has a hint, and dates are validated as you type (`YYYY-MM`). Leave *
 Projects and activities are linked to the role they belong to, so you only describe each role once:
 
 - A project's **Built at (role)** picks an Experience entry. The site shows "at Nugttah" or "via Upwork" on the project, and that role lists the project as a link. Rename or edit the role, and every linked project follows.
+- On the Experience phones, a role's **Projects** tab lists only projects built in that role, and its **Skills** tab lists only skills its summary, highlights or those projects name. To give a role skills, name the technologies in its summary or highlights. A tab with nothing to show is hidden.
 - An activity's **Related job** or **Related volunteering** works the same way, for example the Copilot hackathon → VOIS.
 - Links are stored by the entry's file name. If you delete a role that something still links to, the build stops with a message naming the broken link, so nothing goes live half-updated. Re-link the entry in the CMS, or restore the role.
 
@@ -144,6 +145,7 @@ The Vitest suite in [`tests/`](tests) guards both the content and the CMS:
 - **`content.test.ts`:** every content file matches its Zod schema, every referenced image exists, and every link points to an existing entry.
 - **`cms-config.test.ts`:** `public/admin/config.yml` is valid against Sveltia CMS's official JSON Schema and uses only built-in widgets. Every CMS field exists in the Zod schema, every required schema field is editable in the CMS, and `index.html` loads the same Sveltia version the tests validate against.
 - **`resume.test.ts`, `feeds.test.ts`:** date formatting, sorting, resume assembly, links between entries, and the GitHub and YouTube parsers.
+- **`timeline.test.ts`:** the Experience phone stack's data: order, dates and durations, and that each role lists only its own projects and skills.
 - **`pdf-fit.test.ts`:** page counting and the 2-page auto-fit for the CV PDF.
 - **`ats.test.ts`:** the ATS rules themselves, including the failure cases they must catch.
 
@@ -163,6 +165,8 @@ src/
   lib/feeds.ts            # pure: GitHub summary, YouTube feed parsing
   lib/data.ts             # loads collections, fetches feeds, resolves images
   lib/markdown.ts         # resume → markdown (index.md, llms-full.txt)
+  lib/timeline.ts         # pure: resume → roles for the Experience phone stack
+  scripts/phone-stack/    # Three.js phone stack and the iOS-style app drawn on each screen
   layouts/Base.astro      # <head>, SEO meta, JSON-LD
   pages/index.astro       # portfolio
   pages/cv.astro          # printable A4 CV
@@ -182,6 +186,7 @@ scripts/ats.ts            # ATS check: reads the PDF back and verifies the text 
 
 - Lighthouse scores 100 in Performance, Accessibility, Best Practices, SEO and Agentic Browsing, on mobile and desktop, for both `/` and `/cv/`.
 - No web fonts, frameworks or trackers. CSS is inlined, and images are responsive WebP.
+- Three.js loads only when you scroll near Experience, and only where WebGL works. Everywhere else, and for screen readers and crawlers, the section is a plain list.
 - Structured data: JSON-LD `Person`, `ProfilePage` and `WebSite`, all built from the content.
 - Agent-friendly: `llms.txt`, a markdown copy of the page, a machine-readable resume, `robots.txt` content signals (search and AI input allowed, training disallowed), and WebMCP tools (`get_profile`, `list_projects`, `get_skills`, `get_contact`, `download_resume`) for browsers that support `navigator.modelContext`.
 
