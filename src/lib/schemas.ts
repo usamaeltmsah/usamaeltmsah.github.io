@@ -16,6 +16,8 @@ export const profileSchema = z.object({
   headline: text,
   image: z.string().default(''),
   email: z.email(),
+  /** Optional; most ATS look for a phone number. International format, e.g. +20 100 000 0000. */
+  phone: z.string().regex(/^$|^\+?[0-9 ()-]{7,20}$/, 'Use international format, e.g. +20 100 000 0000').default(''),
   url: z.url(),
   availability: z.string().default(''),
   summary: text,

@@ -86,6 +86,7 @@ export function buildResume(c: Content, lastModified: string) {
       headline: p.headline,
       image: p.image,
       email: p.email,
+      phone: p.phone,
       url: p.url,
       summary: p.summary,
       availability: p.availability,

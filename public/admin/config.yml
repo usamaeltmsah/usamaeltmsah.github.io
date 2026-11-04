@@ -38,6 +38,7 @@ singletons:
       - { name: headline, label: Hero headline, hint: "The word “polished” is highlighted with the gradient." }
       - { name: image, label: Photo, widget: image, required: false, hint: "Square photo, at least 300×300." }
       - { name: email, label: Email }
+      - { name: phone, label: Phone, required: false, hint: "Optional, shown on the CV only. International format, e.g. +20 100 000 0000. Most ATS look for one.", pattern: ["^$|^\\+?[0-9 ()-]{7,20}$", "Use international format"] }
       - { name: url, label: Website URL }
       - { name: availability, label: Availability, required: false, hint: "Shown next to the green dot, e.g. Open to freelance work" }
       - { name: summary, label: Summary, widget: text, hint: "3–4 sentences. Used on the site, the CV and resume.json." }

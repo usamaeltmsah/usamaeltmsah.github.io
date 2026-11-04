@@ -39,7 +39,7 @@ const project = (id: string, order: number, over: Partial<Content['projects'][nu
 
 const content: Content = {
   profile: {
-    name: 'Ada', label: 'iOS Developer', headline: 'Hi', image: '', email: 'a@b.co', url: 'https://example.com/',
+    name: 'Ada', label: 'iOS Developer', headline: 'Hi', image: '', email: 'a@b.co', phone: '', url: 'https://example.com/',
     availability: '', summary: 'Summary', location: { city: 'Cairo', countryCode: 'EG', region: '' },
     stats: [{ value: '1', label: 'stat' }], profiles: [],
   },
