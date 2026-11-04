@@ -65,7 +65,7 @@ const phoneData = {
   </div>
   <div class="stage" aria-hidden="true">
     <div class="phone"><div class="screen">
-      {heroShots.map((s, i) => <Image src={s} alt="" widths={[270, 540]} sizes="(max-width: 640px) 230px, 270px" loading={i === 0 ? 'eager' : 'lazy'} fetchpriority={i === 0 ? 'high' : undefined} />)}
+      {heroShots.map((s, i) => <Image src={s} alt="" widths={[250, 380, 500, 640]} sizes="(max-width: 640px) 210px, 250px" loading={i === 0 ? 'eager' : 'lazy'} fetchpriority={i === 0 ? 'high' : undefined} />)}
     </div></div>
     <span class="badge a">SwiftUI</span><span class="badge b">AVFoundation</span><span class="badge c">WidgetKit</span>
   </div>
