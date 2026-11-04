@@ -122,6 +122,17 @@ h1{font:800 clamp(40px,6.2vw,72px)/1.02 var(--display);letter-spacing:-.045em}
 .timeline h3{font:700 18px var(--display)}.timeline .org{color:var(--accent);font-weight:600}
 .timeline p{color:var(--muted);font-size:15px;margin-top:4px}
 .timeline ul{color:var(--muted);font-size:15px;margin-top:6px;padding-left:18px}
+/* phone stack: replaces the list visually when WebGL runs; the list stays for screen readers and crawlers */
+.phones-only{display:none}
+.has-phones .phones-only{display:block}
+.has-phones .timeline{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.phones{height:calc(var(--n) * 70vh)}
+.phones .stage{position:sticky;top:65px;height:calc(100svh - 65px);overflow:hidden}
+.phones canvas{display:block;width:100%;height:100%}
+.rail{position:absolute;left:50%;bottom:20px;translate:-50% 0;display:flex;gap:4px;padding:6px;border-radius:999px;background:color-mix(in srgb,var(--surface) 80%,transparent);border:1px solid var(--line);backdrop-filter:blur(10px);max-width:calc(100% - 32px);overflow-x:auto;scrollbar-width:none}
+.rail button{border:0;background:none;color:var(--muted);font:600 11px var(--mono);padding:6px;border-radius:999px;cursor:pointer;display:grid;justify-items:center;gap:4px}
+.rail button::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--c);opacity:.45;transition:.2s}
+.rail button[aria-current]{color:var(--ink)}.rail button[aria-current]::before{opacity:1;transform:scale(1.5)}
 
 /* github live */
 .gh{display:grid;grid-template-columns:1fr 1.4fr;gap:16px}

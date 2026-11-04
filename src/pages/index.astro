@@ -1,7 +1,8 @@
 ---
-import { Image } from 'astro:assets';
+import { Image, getImage } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import { getResume, img, range, fmtDate, github, posts, profileLink } from '../lib/data';
+import { buildTimeline } from '../lib/timeline';
 
 const resume = await getResume();
 const profile = (network: string) => profileLink(resume, network);
@@ -18,6 +19,17 @@ const current = resume.work[0];
 const tech = [...new Set(resume.skills.flatMap((s) => s.keywords))];
 const langColors: Record<string, string> = { Swift: '#F05138', Ruby: '#CC342D', Python: '#3572A5', 'Jupyter Notebook': '#DA5B0B', PHP: '#4F5D95', Java: '#B07219', C: '#555555', R: '#198CE7', 'C#': '#178600', CSS: '#663399', HTML: '#E34C26', JavaScript: '#F1E05A', TypeScript: '#3178C6' };
 const year = new Date().getFullYear();
+
+// The phone stack draws photos and screenshots on canvases, so it gets optimized URLs, not <img> tags
+const phoneImage = async (name: string) => {
+  const meta = img(name);
+  return meta ? (await getImage({ src: meta, width: Math.min(meta.width, 720), format: 'webp' })).src : '';
+};
+const timeline = buildTimeline(resume, new Date());
+const phoneData = {
+  roles: await Promise.all(timeline.roles.map(async (r) => ({ ...r, image: await phoneImage(r.image) }))),
+  projects: await Promise.all(timeline.projects.map(async (p) => ({ ...p, image: await phoneImage(p.image) }))),
+};
 ---
 <Base title={`${b.name} | ${b.label} (Swift, SwiftUI, UIKit)`} description={`${b.name} is a ${b.location.city}-based ${b.label} at ${current?.name}. Top Rated freelancer building polished native apps in Swift, SwiftUI and UIKit. ${b.availability}.`}>
 <a class="skip" href="#main">Skip to content</a>
@@ -201,6 +213,11 @@ const year = new Date().getFullYear();
 <section class="wrap section" id="experience" aria-labelledby="t-exp">
   <span class="kicker">05 / Experience</span>
   <h2 class="sec-title" id="t-exp">Where I've worked.</h2>
+  <p class="sec-sub phones-only">Each role is an iPhone running a small app, newest first. Scroll to deal through them, then tap the screen to switch tabs or open a project.</p>
+  <div class="phones phones-only" style={`--n:${phoneData.roles.length}`}>
+    <div class="stage"><nav class="rail" aria-label="Jump to a role"></nav></div>
+  </div>
+  <script type="application/json" id="phone-data" set:html={JSON.stringify(phoneData).replace(/</g, '\\u003c')} />
   <ol class="timeline" style="margin-top:34px">
     {resume.work.map((w) => (
       <li class="reveal">
@@ -321,6 +338,33 @@ const year = new Date().getFullYear();
   <span><a href="/cv/">CV</a> · <a href="/resume.json">resume.json</a> · <a href="/llms.txt">llms.txt</a> · <a href="/index.md">Markdown</a></span>
 </footer>
 <div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+  import type { Timeline } from '../lib/timeline';
+
+  // Phone stack: decided at load so the section's height never jumps later; Three.js loads only near it
+  const section = document.querySelector<HTMLElement>('#experience');
+  const phones = section?.querySelector<HTMLElement>('.phones');
+  const json = document.getElementById('phone-data')?.textContent;
+  const webgl = (() => {
+    try { return Boolean(document.createElement('canvas').getContext('webgl2')); } catch { return false; }
+  })();
+  if (section && phones && json && webgl) {
+    section.classList.add('has-phones');
+    const io = new IntersectionObserver(async ([entry]) => {
+      if (!entry.isIntersecting) return;
+      io.disconnect();
+      try {
+        const { mount } = await import('../scripts/phone-stack/stack');
+        await mount(phones, JSON.parse(json) as Timeline);
+      } catch (err) {
+        section.classList.remove('has-phones');
+        console.error('[phone-stack] showing the plain timeline instead:', err);
+      }
+    }, { rootMargin: '800px 0px' });
+    io.observe(section);
+  }
+</script>
 
 <script is:inline define:vars={{ mcp: { profile: { name: b.name, role: b.label, employer: current?.name, location: `${b.location.city}, Egypt`, availability: b.availability, summary: b.summary, stats: resume.stats }, projects: resume.projects.map((p) => ({ name: p.name, description: p.description, url: p.url, tech: p.keywords })), contact: { email: b.email, profiles: b.profiles }, skills: { technical: resume.skills, soft: resume.softSkills } } }}>
 (function(){
