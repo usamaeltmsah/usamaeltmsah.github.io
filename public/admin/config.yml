@@ -58,7 +58,7 @@ singletons:
         summary: "{{value}} · {{label}}"
         hint: "Up to 4 tiles under the hero."
         fields:
-          - { name: value, label: Value, hint: "Short, e.g. 4.8★ or 50×" }
+          - { name: value, label: Value, hint: "Short, e.g. 4.8★ or 50×. Avoid earnings or rates." }
           - { name: label, label: Label }
       - name: profiles
         label: Social profiles
