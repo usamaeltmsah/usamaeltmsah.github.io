@@ -103,7 +103,7 @@ const phoneData = {
           <div class="tags">{p.keywords.map((k) => <span class="chip">{k}</span>)}</div>
           <h3>{p.name}</h3><p>{p.description}</p>
           {p.highlights.length > 0 && <ul>{p.highlights.map((h) => <li>{h}</li>)}</ul>}
-          <div class="links" style="margin-top:16px"><a href={p.url} target="_blank" rel="noopener">Code ↗</a>{p.demo && <a href={p.demo} target="_blank" rel="noopener">Demo ↗</a>}</div>
+          <div class="links" style="margin-top:16px"><a href={p.url} target="_blank" rel="noopener" aria-label={`Code for ${p.name} on GitHub`}>Code ↗</a>{p.demo && <a href={p.demo} target="_blank" rel="noopener" aria-label={`Demo of ${p.name}`}>Demo ↗</a>}</div>
         </div>
         {img(p.image) && <div class="mini-phone"><Image src={img(p.image)!} alt={`${p.name} screenshot`} widths={[200, 400]} sizes="200px" /></div>}
       </article>
@@ -114,7 +114,7 @@ const phoneData = {
           <div>
             <div class="tags">{p.keywords.map((k) => <span class="chip">{k}</span>)}</div>
             <h3>{p.name}</h3><p>{p.description}</p>
-            <div class="links" style="margin-top:14px"><a href={p.url} target="_blank" rel="noopener">Code ↗</a>{p.demo && <a href={p.demo} target="_blank" rel="noopener">Demo ↗</a>}</div>
+            <div class="links" style="margin-top:14px"><a href={p.url} target="_blank" rel="noopener" aria-label={`Code for ${p.name} on GitHub`}>Code ↗</a>{p.demo && <a href={p.demo} target="_blank" rel="noopener" aria-label={`Demo of ${p.name}`}>Demo ↗</a>}</div>
           </div>
           {img(p.image) && <div class="mini-phone"><Image src={img(p.image)!} alt={`${p.name} screenshot`} widths={[150, 300]} sizes="150px" /></div>}
         </article>
@@ -144,7 +144,7 @@ const phoneData = {
         <div class="card-top"><span class="swatch" aria-hidden="true">{p.name[0]}</span>{p.period && <span class="period">{fmtDate(p.period)}</span>}</div>
         <div class="tags">{p.keywords.map((k) => <span class="chip">{k}</span>)}</div>
         <h3>{p.name}</h3><p>{p.description}</p>
-        <div class="links">{p.url && <a href={p.url} target="_blank" rel="noopener">Code ↗</a>}{p.demo && <a href={p.demo} target="_blank" rel="noopener">Demo ↗</a>}</div>
+        <div class="links">{p.url && <a href={p.url} target="_blank" rel="noopener" aria-label={`Code for ${p.name} on GitHub`}>Code ↗</a>}{p.demo && <a href={p.demo} target="_blank" rel="noopener" aria-label={`Demo of ${p.name}`}>Demo ↗</a>}</div>
       </article>
     ))}
   </div>
@@ -266,7 +266,7 @@ const phoneData = {
         {img(a.image) && <Image src={img(a.image)!} alt={`${a.name} photo`} widths={[340, 640]} sizes="(max-width: 640px) 90vw, 340px" />}
         <span class="role">{a.role}{a.date && ` · ${fmtDate(a.date)}`}</span>
         <h3>{a.name}</h3>{a.at && <span class="at">{a.at}</span>}<p>{a.description}</p>
-        {a.url && <a class="tlink" href={a.url} target="_blank" rel="noopener">Learn more ↗</a>}
+        {a.url && <a class="tlink" href={a.url} target="_blank" rel="noopener" aria-label={`Learn more about ${a.name}`}>Learn more ↗</a>}
       </article>
     ))}
   </div>
