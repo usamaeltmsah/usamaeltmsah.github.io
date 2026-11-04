@@ -1,201 +1,270 @@
-# Sveltia CMS (Decap-compatible). Edits src/data/resume.json in the GitHub repo;
-# every save is a commit, and the GitHub Action rebuilds and deploys the site.
+# yaml-language-server: $schema=https://unpkg.com/@sveltia/cms@0.258.1/schema/sveltia-cms.json
+# Sveltia CMS. Each section in the sidebar edits its own files under src/content/.
+# Every save is a commit to main; the GitHub Action rebuilds the site, CV, PDF and resume.json.
+# Field names must match the Zod schemas in src/lib/schemas.ts (enforced by tests/cms-config.test.ts).
+
 backend:
   name: github
   repo: usamaeltmsah/usamaeltmsah.github.io
   branch: main
   commit_messages:
-    update: "content: update {{slug}}"
+    create: "content: add {{collection}} {{slug}}"
+    update: "content: update {{collection}} {{slug}}"
+    delete: "content: delete {{collection}} {{slug}}"
     uploadMedia: "content: upload {{path}}"
     deleteMedia: "content: delete {{path}}"
 
+app_title: Portfolio CMS
 site_url: https://usamaeltmsah.github.io
 display_url: https://usamaeltmsah.github.io
-logo_url: /icon.svg
+logo:
+  src: /icon.svg
 media_folder: src/assets/images
-public_folder: ""
+public_folder: /src/assets/images
+slug:
+  encoding: ascii
+  clean_accents: true
+
+# ─── Profile ────────────────────────────────────────────────────────────────
+singletons:
+  - name: profile
+    label: Profile
+    icon: account_circle
+    file: src/content/profile.json
+    format: json
+    fields:
+      - { name: name, label: Full name }
+      - { name: label, label: Job title, hint: "Shown under your name, e.g. iOS Developer" }
+      - { name: headline, label: Hero headline, hint: "The word “polished” is highlighted with the gradient." }
+      - { name: image, label: Photo, widget: image, required: false, hint: "Square photo, at least 300×300." }
+      - { name: email, label: Email }
+      - { name: url, label: Website URL }
+      - { name: availability, label: Availability, required: false, hint: "Shown next to the green dot, e.g. Open to freelance work" }
+      - { name: summary, label: Summary, widget: text, hint: "3–4 sentences. Used on the site, the CV and resume.json." }
+      - name: location
+        label: Location
+        widget: object
+        collapsed: true
+        summary: "{{city}}, {{countryCode}}"
+        fields:
+          - { name: city, label: City }
+          - { name: countryCode, label: Country code, hint: "Two letters, e.g. EG", pattern: ["^[A-Z]{2}$", "Two capital letters"] }
+          - { name: region, label: Region, required: false }
+      - name: stats
+        label: Hero stats
+        label_singular: Stat
+        widget: list
+        max: 4
+        summary: "{{value}} · {{label}}"
+        hint: "Up to 4 tiles under the hero."
+        fields:
+          - { name: value, label: Value, hint: "Short, e.g. 4.8★ or 50×" }
+          - { name: label, label: Label }
+      - name: profiles
+        label: Social profiles
+        label_singular: Profile
+        widget: list
+        collapsed: true
+        summary: "{{network}}"
+        fields:
+          - { name: network, label: Network, hint: "e.g. GitHub, LinkedIn, Upwork" }
+          - { name: username, label: Username, required: false }
+          - { name: url, label: URL }
+
+  - name: skills
+    label: Skills & languages
+    icon: psychology
+    file: src/content/skills.json
+    format: json
+    fields:
+      - name: technical
+        label: Technical skills
+        label_singular: Skill group
+        widget: list
+        summary: "{{name}} ({{keywords.length}})"
+        fields:
+          - { name: name, label: Group, hint: "e.g. Apple frameworks" }
+          - { name: keywords, label: Skills, widget: list }
+      - name: soft
+        label: Soft skills
+        label_singular: Soft skill
+        widget: list
+        summary: "{{name}}"
+        hint: "Best in multiples of 3. Back each one with evidence."
+        fields:
+          - { name: name, label: Skill }
+          - { name: description, label: Evidence, widget: text }
+      - name: languages
+        label: Spoken languages
+        label_singular: Language
+        widget: list
+        summary: "{{language}} · {{fluency}}"
+        fields:
+          - { name: language, label: Language }
+          - { name: fluency, label: Fluency, widget: select, options: [Native, Fluent, Professional, Intermediate, Basic] }
+      - name: interests
+        label: Interests
+        label_singular: Interest
+        widget: list
+        summary: "{{name}}"
+        fields:
+          - { name: name, label: Interest }
+          - { name: keywords, label: Keywords, widget: list, required: false }
 
 collections:
-  - name: content
-    label: Portfolio
-    icon: badge
+  # ─── Career ───────────────────────────────────────────────────────────────
+  - name: experience
+    label: Experience
+    label_singular: Role
+    icon: work
+    description: Jobs, freelance, internships and volunteering. Current roles show first on the site.
+    folder: src/content/experience
+    format: json
+    extension: json
+    identifier_field: company
+    slug: "{{company}}"
+    summary: "{{position}} · {{company}}"
+    thumbnail: false
+    sortable_fields:
+      fields: [startDate, company, type]
+      default: { field: startDate, direction: descending }
+    view_groups:
+      - { name: type, label: Type, field: type }
+    view_filters:
+      - { name: current, label: Current roles, field: endDate, pattern: "^$" }
+      - { name: past, label: Past roles, field: endDate, pattern: "." }
     editor: { preview: false }
-    files:
-      - name: resume
-        label: Resume & portfolio data
-        file: src/data/resume.json
-        format: json
-        fields:
-          - { name: "$schema", widget: hidden }
-          - name: basics
-            label: Basics
-            widget: object
-            fields:
-              - { name: name, label: Name }
-              - { name: label, label: Title, hint: "e.g. iOS Developer" }
-              - { name: headline, label: Hero headline, hint: "The word 'polished' gets the gradient." }
-              - { name: image, label: Photo, widget: image }
-              - { name: email, label: Email }
-              - { name: url, label: Website }
-              - { name: summary, label: Summary, widget: text }
-              - { name: availability, label: Availability, hint: "e.g. Open to freelance work" }
-              - name: location
-                label: Location
-                widget: object
-                fields:
-                  - { name: city, label: City }
-                  - { name: countryCode, label: Country code }
-                  - { name: region, label: Region, required: false }
-              - name: profiles
-                label: Profiles
-                widget: list
-                summary: "{{fields.network}}"
-                fields:
-                  - { name: network, label: Network }
-                  - { name: username, label: Username }
-                  - { name: url, label: URL }
-          - name: stats
-            label: Hero stats
-            widget: list
-            summary: "{{fields.value}} {{fields.label}}"
-            fields:
-              - { name: value, label: Value }
-              - { name: label, label: Label }
-          - name: work
-            label: Experience
-            widget: list
-            summary: "{{fields.position}} · {{fields.name}}"
-            fields:
-              - { name: name, label: Company }
-              - { name: position, label: Position }
-              - { name: url, label: URL, required: false }
-              - { name: startDate, label: Start, required: false, hint: "YYYY-MM or YYYY" }
-              - { name: endDate, label: End, required: false, hint: "Leave empty if current" }
-              - { name: location, label: Location, required: false }
-              - { name: summary, label: Summary, widget: text }
-              - { name: highlights, label: Highlights, widget: list, required: false }
-          - name: volunteer
-            label: Volunteering
-            widget: list
-            required: false
-            summary: "{{fields.position}} · {{fields.organization}}"
-            fields:
-              - { name: organization, label: Organization }
-              - { name: position, label: Role }
-              - { name: url, label: URL, required: false }
-              - { name: startDate, label: Start, required: false }
-              - { name: endDate, label: End, required: false }
-              - { name: summary, label: Summary, widget: text }
-              - { name: highlights, label: Highlights, widget: list, required: false }
-          - name: education
-            label: Education
-            widget: list
-            summary: "{{fields.studyType}} · {{fields.institution}}"
-            fields:
-              - { name: institution, label: Institution }
-              - { name: url, label: URL, required: false }
-              - { name: area, label: Area }
-              - { name: studyType, label: Degree }
-              - { name: startDate, label: Start, required: false }
-              - { name: endDate, label: End, required: false }
-              - { name: score, label: Grade, required: false }
-              - { name: courses, label: Courses, widget: list, required: false }
-          - name: projects
-            label: Projects
-            widget: list
-            summary: "{{fields.name}}"
-            fields:
-              - { name: name, label: Name }
-              - { name: featured, label: Featured (with screenshot), widget: boolean, default: false }
-              - { name: description, label: Description, widget: text }
-              - { name: highlights, label: Highlights, widget: list, required: false }
-              - { name: keywords, label: Tech tags, widget: list }
-              - { name: url, label: Code URL }
-              - { name: demo, label: Demo URL, required: false }
-              - { name: image, label: Screenshot (portrait), widget: image, required: false }
-              - { name: color, label: Accent color, widget: color, required: false }
-          - name: activities
-            label: Activities
-            widget: list
-            summary: "{{fields.name}}"
-            fields:
-              - { name: name, label: Name }
-              - { name: role, label: Role }
-              - { name: date, label: Date, required: false }
-              - { name: description, label: Description, widget: text }
-              - { name: url, label: URL, required: false }
-              - { name: image, label: Image, widget: image, required: false }
-          - name: awards
-            label: Awards
-            widget: list
-            required: false
-            summary: "{{fields.title}}"
-            fields:
-              - { name: title, label: Title }
-              - { name: date, label: Date, required: false }
-              - { name: awarder, label: Awarder }
-              - { name: summary, label: Summary, widget: text, required: false }
-          - name: certificates
-            label: Certificates
-            widget: list
-            required: false
-            summary: "{{fields.name}}"
-            fields:
-              - { name: name, label: Name }
-              - { name: date, label: Date, required: false }
-              - { name: issuer, label: Issuer }
-              - { name: url, label: URL, required: false }
-          - name: publications
-            label: Publications
-            widget: list
-            required: false
-            summary: "{{fields.name}}"
-            fields:
-              - { name: name, label: Title }
-              - { name: publisher, label: Publisher }
-              - { name: releaseDate, label: Date, required: false }
-              - { name: url, label: URL }
-              - { name: summary, label: Summary, widget: text, required: false }
-          - name: skills
-            label: Technical skills
-            widget: list
-            summary: "{{fields.name}}"
-            fields:
-              - { name: name, label: Group }
-              - { name: level, label: Level, required: false }
-              - { name: keywords, label: Skills, widget: list }
-          - name: softSkills
-            label: Soft skills
-            widget: list
-            summary: "{{fields.name}}"
-            fields:
-              - { name: name, label: Skill }
-              - { name: description, label: Evidence, widget: text }
-          - name: languages
-            label: Languages
-            widget: list
-            summary: "{{fields.language}} ({{fields.fluency}})"
-            fields:
-              - { name: language, label: Language }
-              - { name: fluency, label: Fluency }
-          - name: interests
-            label: Interests
-            widget: list
-            summary: "{{fields.name}}"
-            fields:
-              - { name: name, label: Interest }
-              - { name: keywords, label: Keywords, widget: list, required: false }
-          - name: references
-            label: References
-            widget: list
-            required: false
-            fields:
-              - { name: name, label: Name }
-              - { name: reference, label: Reference, widget: text }
-          - name: meta
-            label: Meta
-            widget: object
-            fields:
-              - { name: canonical, label: Canonical, widget: hidden }
-              - { name: version, label: Schema version, widget: hidden }
-              - { name: lastModified, label: Last modified, widget: datetime, date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD" }
+    fields:
+      - { name: company, label: Company / organization }
+      - { name: position, label: Position }
+      - { name: type, label: Type, widget: select, default: Full-time, options: [Full-time, Part-time, Freelance, Internship, Volunteer] }
+      - { name: startDate, label: Start, hint: "YYYY-MM", pattern: ["^\\d{4}(-(0[1-9]|1[0-2]))?$", "Use YYYY or YYYY-MM"] }
+      - { name: endDate, label: End, required: false, hint: "Leave empty if this is your current role", pattern: ["^$|^\\d{4}(-(0[1-9]|1[0-2]))?$", "Use YYYY or YYYY-MM"] }
+      - { name: location, label: Location, required: false, hint: "e.g. Cairo, Egypt · Hybrid" }
+      - { name: url, label: Company URL, required: false }
+      - { name: summary, label: Summary, widget: text, hint: "One sentence on what you did there." }
+      - { name: highlights, label: Highlights, widget: list, required: false, hint: "Results with numbers stand out most." }
+
+  - name: education
+    label: Education
+    label_singular: School
+    icon: school
+    folder: src/content/education
+    format: json
+    extension: json
+    identifier_field: institution
+    slug: "{{institution}}"
+    summary: "{{degree}} · {{institution}}"
+    thumbnail: false
+    editor: { preview: false }
+    fields:
+      - { name: institution, label: Institution }
+      - { name: degree, label: Degree }
+      - { name: area, label: Field of study, required: false }
+      - { name: startDate, label: Start, required: false, pattern: ["^$|^\\d{4}(-(0[1-9]|1[0-2]))?$", "Use YYYY or YYYY-MM"] }
+      - { name: endDate, label: End, required: false, pattern: ["^$|^\\d{4}(-(0[1-9]|1[0-2]))?$", "Use YYYY or YYYY-MM"] }
+      - { name: score, label: Grade, required: false }
+      - { name: url, label: URL, required: false }
+      - { name: courses, label: Notable courses, widget: list, required: false }
+
+  - { name: showcase-divider, divider: true }
+
+  # ─── Showcase ─────────────────────────────────────────────────────────────
+  - name: projects
+    label: Projects
+    label_singular: Project
+    icon: apps
+    description: Drag to reorder. Featured projects appear large, in a phone frame, using their screenshot.
+    folder: src/content/projects
+    format: json
+    extension: json
+    identifier_field: name
+    slug: "{{name}}"
+    summary: "{{name}}"
+    thumbnail: image
+    reorder: true
+    view_filters:
+      - { name: featured, label: Featured, field: featured, eq: true }
+      - { name: other, label: Not featured, field: featured, eq: false }
+    editor: { preview: false }
+    fields:
+      - { name: name, label: Name }
+      - { name: featured, label: Featured, widget: boolean, default: false, hint: "Needs a portrait screenshot." }
+      - { name: image, label: Screenshot, widget: image, required: false, hint: "Portrait phone screenshot works best." }
+      - { name: description, label: Description, widget: text }
+      - { name: tech, label: Tech tags, widget: list, hint: "e.g. SwiftUI, MapKit" }
+      - { name: highlights, label: Highlights, widget: list, required: false, hint: "Shown on featured projects." }
+      - { name: url, label: Code URL, required: false, hint: "Leave empty for private client work." }
+      - { name: demo, label: Demo URL, required: false, hint: "Video, article or App Store link." }
+      - { name: color, label: Accent color, widget: color, required: false }
+
+  - name: activities
+    label: Activities
+    label_singular: Activity
+    icon: celebration
+    description: Hackathons, talks, workshops, communities. Drag to reorder.
+    folder: src/content/activities
+    format: json
+    extension: json
+    identifier_field: name
+    slug: "{{name}}"
+    summary: "{{name}} · {{role}}"
+    thumbnail: image
+    reorder: true
+    editor: { preview: false }
+    fields:
+      - { name: name, label: Name }
+      - { name: role, label: Your role, hint: "e.g. Participant, Speaker, Trainer" }
+      - { name: date, label: Date, required: false, hint: "YYYY-MM, YYYY or a range like 2018-2019", pattern: ["^$|^\\d{4}(-(0[1-9]|1[0-2]))?$|^\\d{4}-\\d{4}$", "Use YYYY, YYYY-MM or YYYY-YYYY"] }
+      - { name: description, label: Description, widget: text }
+      - { name: image, label: Photo, widget: image, required: false }
+      - { name: url, label: Link, required: false }
+
+  - name: credentials
+    label: Certificates & awards
+    label_singular: Credential
+    icon: workspace_premium
+    folder: src/content/credentials
+    format: json
+    extension: json
+    identifier_field: name
+    slug: "{{name}}"
+    summary: "{{name}} · {{issuer}}"
+    thumbnail: false
+    sortable_fields:
+      fields: [date, name, issuer]
+      default: { field: date, direction: descending }
+    view_groups:
+      - { name: kind, label: Kind, field: kind }
+      - { name: issuer, label: Issuer, field: issuer }
+    editor: { preview: false }
+    fields:
+      - { name: kind, label: Kind, widget: select, default: Certificate, options: [Certificate, Award] }
+      - { name: name, label: Name }
+      - { name: issuer, label: Issuer }
+      - { name: date, label: Date, required: false, hint: "YYYY-MM", pattern: ["^$|^\\d{4}(-(0[1-9]|1[0-2]))?$", "Use YYYY or YYYY-MM"] }
+      - { name: url, label: Credential URL, required: false }
+      - { name: summary, label: Summary, widget: text, required: false }
+
+  - name: writing
+    label: Writing
+    label_singular: Article
+    icon: edit_note
+    description: Articles that appear when the dev.to feed is unavailable, and in resume.json.
+    folder: src/content/writing
+    format: json
+    extension: json
+    identifier_field: title
+    slug: "{{title}}"
+    summary: "{{title}} · {{publisher}}"
+    thumbnail: false
+    sortable_fields:
+      fields: [date, title]
+      default: { field: date, direction: descending }
+    editor: { preview: false }
+    fields:
+      - { name: title, label: Title }
+      - { name: publisher, label: Publisher }
+      - { name: date, label: Date, required: false, hint: "YYYY-MM-DD", pattern: ["^$|^\\d{4}-\\d{2}(-\\d{2})?$", "Use YYYY-MM-DD"] }
+      - { name: url, label: URL }
+      - { name: summary, label: Summary, widget: text, required: false }
