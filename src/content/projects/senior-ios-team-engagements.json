@@ -1,0 +1,23 @@
+{
+  "name": "Embedded senior iOS developer",
+  "order": 11,
+  "featured": false,
+  "private": true,
+  "onCv": false,
+  "period": "2023-2025",
+  "experience": "upwork",
+  "description": "Long-term roles as the senior iOS developer inside clients' teams: 15 months on an urgent app project, and two engagements with another client working in US Eastern hours with Git, GitHub and Jira.",
+  "highlights": [
+    "More than a year with each client"
+  ],
+  "tech": [
+    "Swift",
+    "UIKit",
+    "Git",
+    "Jira"
+  ],
+  "url": "",
+  "demo": "",
+  "image": "",
+  "color": "#0f766e"
+}

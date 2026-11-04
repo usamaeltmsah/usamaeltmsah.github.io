@@ -1,19 +1,21 @@
 {
-  "name": "Location-based features for a live iOS app",
-  "order": 7,
+  "name": "Location sharing for a live iOS app",
+  "order": 12,
   "featured": false,
   "private": true,
-  "onCv": true,
-  "period": "2024-2026",
+  "onCv": false,
+  "period": "2025",
   "experience": "upwork",
-  "description": "Long-term freelance engagement adding location-based features to a production iOS app, from geolocation to map-driven flows.",
+  "description": "Added location features to a production iOS app that shows users their own and their friends' locations, plus app localization and follow-up fixes.",
   "highlights": [
-    "Nearly two years of continuous delivery for one client"
+    "Location features built around the user's and friends' positions",
+    "Localization and ongoing bug fixes after release"
   ],
   "tech": [
     "Swift",
     "Core Location",
-    "MapKit"
+    "MapKit",
+    "Localization"
   ],
   "url": "",
   "demo": "",

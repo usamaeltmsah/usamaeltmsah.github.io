@@ -1,15 +1,15 @@
 {
   "name": "Consumer iOS apps for a repeat client",
-  "order": 9,
+  "order": 10,
   "featured": false,
   "private": true,
   "onCv": true,
   "period": "2022-2025",
   "experience": "upwork",
-  "description": "13 contracts over three years with the same client, building and redesigning consumer iOS apps: a music alarm, a news reader, an alerts app, a design tool and an audio app.",
+  "description": "Eight multi-month contracts for the same client, building and redesigning consumer iOS apps: a music alarm, a news reader, an alerts app, a T-shirt design app and an audio app redesign, among others.",
   "highlights": [
-    "Repeat business across 13 contracts",
-    "Concept-to-App Store delivery"
+    "8 contracts of more than a month each, with 5★ reviews",
+    "From concept to App Store builds and redesigns"
   ],
   "tech": [
     "Swift",

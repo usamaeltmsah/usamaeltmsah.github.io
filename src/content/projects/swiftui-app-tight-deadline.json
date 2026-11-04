@@ -1,0 +1,21 @@
+{
+  "name": "SwiftUI app shipped on a tight deadline",
+  "order": 9,
+  "featured": false,
+  "private": true,
+  "onCv": false,
+  "period": "2025",
+  "experience": "upwork",
+  "description": "Seven-month SwiftUI engagement building a client's mobile app against a tight launch deadline.",
+  "highlights": [
+    "Delivered against the deadline, with a 5★ client review"
+  ],
+  "tech": [
+    "Swift",
+    "SwiftUI"
+  ],
+  "url": "",
+  "demo": "",
+  "image": "",
+  "color": "#2563eb"
+}

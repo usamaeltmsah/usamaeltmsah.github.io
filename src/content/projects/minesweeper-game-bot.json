@@ -1,6 +1,6 @@
 {
   "name": "Minesweeper game bot",
-  "order": 13,
+  "order": 16,
   "featured": false,
   "private": false,
   "onCv": false,

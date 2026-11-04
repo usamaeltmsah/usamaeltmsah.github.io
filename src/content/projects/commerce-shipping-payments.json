@@ -1,20 +1,22 @@
 {
-  "name": "Shipping & payments for a commerce app",
+  "name": "Shipping & payments for an e-commerce iOS app",
   "order": 8,
   "featured": false,
   "private": true,
   "onCv": true,
   "period": "2025",
   "experience": "upwork",
-  "description": "Extended a live commerce app on native iOS and Android, together with its PHP backend, to add shipping and payment integration end to end.",
+  "description": "Owned the iOS side of an e-commerce upgrade: switched the app to a new payment gateway and integrated a shipping provider across checkout, orders and support.",
   "highlights": [
-    "Delivered across iOS, Android and backend in one engagement"
+    "Payment gateway SDK and payment flow, shipping rates and delivery estimates at checkout",
+    "Address validation, shipment tracking with a status timeline, and push notifications for shipment updates",
+    "Refund requests and in-app support links"
   ],
   "tech": [
     "Swift",
-    "Android",
-    "PHP",
-    "Payments"
+    "UIKit",
+    "Payments SDK",
+    "Push notifications"
   ],
   "url": "",
   "demo": "",

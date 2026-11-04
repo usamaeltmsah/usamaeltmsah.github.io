@@ -1,0 +1,24 @@
+{
+  "name": "Porting an Android app to native iOS",
+  "order": 7,
+  "featured": false,
+  "private": true,
+  "onCv": true,
+  "period": "2025-2026",
+  "experience": "upwork",
+  "description": "Rebuilding an existing Android app as a native iOS app, matching its functionality feature by feature. Ongoing since September 2025.",
+  "highlights": [
+    "Long-term engagement, more than a year so far",
+    "Feature parity with the Android app"
+  ],
+  "tech": [
+    "Swift",
+    "SwiftUI",
+    "UIKit",
+    "Android → iOS"
+  ],
+  "url": "",
+  "demo": "",
+  "image": "",
+  "color": "#16a34a"
+}
