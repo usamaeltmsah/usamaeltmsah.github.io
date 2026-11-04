@@ -1,9 +1,10 @@
 // Renders dist/cv/index.html to dist/cv.pdf with headless Chrome, fitted to 2 A4 pages.
 import { createServer } from 'node:http';
-import { existsSync, readFileSync, statSync, writeFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import type { AddressInfo } from 'node:net';
 import { extname, join } from 'node:path';
 import puppeteer from 'puppeteer-core';
+import { checkAts, extractPages } from './ats.ts';
 import { fitToPages } from './pdf-fit.ts';
 
 const executablePath = [
@@ -33,7 +34,7 @@ const server = createServer((req, res) => {
 }).listen(0);
 const { port } = server.address() as AddressInfo;
 
-const footer = `<div style="width:100%;padding:0 12mm;display:flex;justify-content:space-between;font:7px 'Inter Variable',Arial,sans-serif;color:#8a90a0">
+const footer = `<div style="width:100%;padding:0 12mm;display:flex;justify-content:space-between;font:7px Arial,sans-serif;color:#8a90a0">
   <span>${profile.name} · CV · ${site}</span><span>Page <span class="pageNumber"></span> of <span class="totalPages"></span></span></div>`;
 
 const browser = await puppeteer.launch({ executablePath, headless: true, args: ['--no-sandbox'] });
@@ -50,6 +51,21 @@ try {
   );
   writeFileSync('dist/cv.pdf', pdf);
   console.log(`[cv-pdf] wrote dist/cv.pdf: ${pages} page(s) at ${Math.round(scale * 100)}% scale`);
+
+  // Read the PDF back the way an ATS does and fail the build if anything is lost or out of order.
+  const projectDir = 'src/content/projects';
+  const cvProjects = readdirSync(projectDir)
+    .map((f) => JSON.parse(readFileSync(join(projectDir, f), 'utf8')) as { name: string; onCv?: boolean })
+    .filter((p) => p.onCv).map((p) => p.name);
+  const problems = checkAts({
+    pages: await extractPages(pdf), pdf,
+    resume: JSON.parse(readFileSync('dist/resume.json', 'utf8')),
+    projects: cvProjects,
+  });
+  if (problems.length) {
+    throw new Error(`CV is not ATS-friendly:\n${problems.map((p) => `  - ${p}`).join('\n')}`);
+  }
+  console.log('[cv-pdf] ATS check passed: text layer complete, in order, standard headings, no Type3 fonts');
 } finally {
   await browser.close();
   server.close();
