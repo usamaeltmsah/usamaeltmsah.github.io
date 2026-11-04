@@ -48,6 +48,7 @@ The sidebar is organized like your CV:
 | **Education** | One entry per school | |
 | **Projects** | One entry per project, with a screenshot thumbnail | Drag and drop to set the order; filter featured, on CV, client work |
 | **Activities** | Hackathons, conferences, challenges, communities | Drag and drop to set the order; photo thumbnails |
+| **Client feedback** | Reviews from Upwork, LinkedIn recommendations or email, linked to a project and role | Drag and drop to set the order; group by source; filter on CV |
 | **Certificates & awards** | One entry per credential | Newest first; group by kind or issuer |
 | **Writing** | Articles (used when dev.to is unreachable, and in `resume.json`) | Newest first |
 
@@ -61,9 +62,16 @@ Projects and activities are linked to the role they belong to, so you only descr
 - An activity's **Related job** or **Related volunteering** works the same way, for example the Copilot hackathon → VOIS.
 - Links are stored by the entry's file name. If you delete a role that something still links to, the build stops with a message naming the broken link, so nothing goes live half-updated. Re-link the entry in the CMS, or restore the role.
 
+### Client feedback
+
+Paste the client's words exactly as written into **Client feedback**, pick the **Source** and link the **Related project**. The site shows it under "What clients say", in your drag-and-drop order, and the linked project gets a "★ Client review" link back to it. Tick **Show on CV** on two short quotes for the CV. The feedback is also published as `references` in `resume.json`.
+
+- Keep clients anonymous ("Upwork client" plus what the work was) unless they agreed to be named. LinkedIn recommendations are already public, so you can use the person's name and title there.
+- Only use reviews from engagements longer than a month, the same rule as client projects.
+
 ### Private client projects
 
-Tick **Private client work** on a project to show it under **Client work** on the site and with a "Client work" label on the CV, with no links. Describe what you built, not who you built it for: no client or app names, no confidential numbers, no screenshots.
+Tick **Private client work** on a project to show it under **Client work** on the site and with a "Client work" label on the CV, with no links. Describe what you built, not who you built it for: no client or app names, no confidential numbers, no screenshots. Only list engagements that lasted more than a month, and never mention earnings or rates (a test blocks money amounts in all content).
 
 ### The CV
 
@@ -96,6 +104,7 @@ Uploaded images go to `src/assets/images/` and are automatically resized and con
 | `src/content/volunteering/<organization>.json` | `role`, dates, `summary`, `highlights`, optional `image` |
 | `src/content/projects/<name>.json` | `order` sets the position; `featured` shows it large in a phone frame; `private` hides links; `onCv` puts it on the CV; `experience` links to a role by file name (e.g. `"nugttah"`) |
 | `src/content/activities/<name>.json` | `order` sets the position; `date` can be `YYYY`, `YYYY-MM` or `YYYY-YYYY`; optional `experience` or `volunteering` link |
+| `src/content/testimonials/<name>.json` | `quote` verbatim; `source` is `Upwork`, `LinkedIn`, `Email` or `Other`; `rating` 0–5 (0 hides stars); optional `project` and `experience` links; `onCv` |
 | `src/content/credentials/<name>.json` | `kind` is `Certificate` or `Award` |
 | `src/content/education/`, `src/content/writing/` | One file per school or article |
 
@@ -135,7 +144,7 @@ When upgrading Sveltia, bump the version in both `package.json` and `public/admi
 src/
   content/                # all content (one JSON file per entry)
     profile.json, skills.json
-    experience/ volunteering/ education/ projects/ activities/ credentials/ writing/
+    experience/ volunteering/ education/ projects/ activities/ testimonials/ credentials/ writing/
   content.config.ts       # Astro collections for the folders above
   assets/images/          # photos and screenshots (optimized at build)
   lib/schemas.ts          # Zod schemas: the single definition of every field
