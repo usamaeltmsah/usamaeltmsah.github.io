@@ -165,12 +165,15 @@ export function createApp(role: TimelineRole, data: Timeline, tint: string): Pho
     appIcon(56, y, 160, tint, initials(role.org));
     ctx.fillStyle = IOS.label; ctx.font = `700 44px ${SF}`;
     const ny = wrap(ctx, role.org, 244, y + 44, W - 300, 50, 2);
-    ctx.fillStyle = IOS.secondary; ctx.font = `400 30px ${SF}`; wrap(ctx, role.title, 244, ny, W - 300, 38, 2);
+    ctx.fillStyle = IOS.secondary; ctx.font = `400 30px ${SF}`;
+    const ty = wrap(ctx, role.title, 244, ny, W - 300, 38, 2);
+    // The badge sits under the last title line, so a two-line org or title pushes it down instead of overlapping
+    const capY = Math.max(y + 112, ty - 20);
     ctx.font = `700 26px ${SF}`;
     const cap = role.current ? 'CURRENT' : role.kind.toUpperCase(), cw = ctx.measureText(cap).width + 48;
-    ctx.fillStyle = role.current ? tint : `${tint}33`; rr(ctx, 244, y + 112, cw, 50, 25); ctx.fill();
-    ctx.fillStyle = role.current ? '#fff' : tint; ctx.fillText(cap, 268, y + 146);
-    y += 220;
+    ctx.fillStyle = role.current ? tint : `${tint}33`; rr(ctx, 244, capY, cw, 50, 25); ctx.fill();
+    ctx.fillStyle = role.current ? '#fff' : tint; ctx.fillText(cap, 268, capY + 34);
+    y = Math.max(y + 220, capY + 50 + 58);
     // One line of facts leaves the room to the photo; the capsule already names the type unless it says CURRENT
     ctx.fillStyle = IOS.secondary; ctx.font = `400 30px ${SF}`;
     ctx.fillText([role.dates, role.duration, role.current && role.kind].filter(Boolean).join(' · '), 56, y + 30);
