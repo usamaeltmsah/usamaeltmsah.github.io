@@ -39,7 +39,7 @@ const phoneData = {
 
 <header class="nav">
   <div class="wrap nav-in">
-    <a class="logo" href="#top" aria-label="uf. Usama Fouad, home">uf<span>.</span></a>
+    <a class="logo" href="#top" aria-label="Usama Fouad, home">uf</a>
     <nav aria-label="Primary">
       <a href="#work">Work</a><a href="#experience">Experience</a><a href="#activities">Activities</a><a href="#skills">Skills</a><a href="#contact">Contact</a>
     </nav>
@@ -55,7 +55,7 @@ const phoneData = {
   <div>
     <div class="who">
       {avatar && <span class="avatar"><Image src={avatar} alt={b.name} width={128} height={128} loading="eager" /></span>}
-      <div><b>{b.name}</b><span class="status"><span class="dot" aria-hidden="true"></span>{b.availability} · {b.location.city}</span></div>
+      <div><b>{b.name}</b><span class="status">{b.availability} · {b.location.city}</span></div>
     </div>
     <h1 id="h1" set:html={b.headline.replace('polished', '<em class="grad" style="font-style:normal">polished</em>')} />
     <p class="lead">{b.label} working in Swift, SwiftUI and UIKit. By day I build at <strong>{current?.name}</strong>. On the side I'm a <strong>Top Rated</strong> Upwork freelancer, growing into a Senior iOS role.</p>
@@ -199,7 +199,7 @@ const phoneData = {
         </div>
         <ul class="legend">{gh.languages.map((l) => <li style={`--c:${langColors[l.name] ?? '#888'}`}>{l.name} {l.pct}%</li>)}</ul>
       </div>
-      <span class="live"><span class="dot" aria-hidden="true"></span>Last synced {new Date().toISOString().slice(0, 10)}</span>
+      <span class="live">Last synced {new Date().toISOString().slice(0, 10)}</span>
     </div>
     <div class="repos">
       {gh.recent.map((r) => (

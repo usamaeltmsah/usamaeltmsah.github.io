@@ -17,7 +17,7 @@ main{overflow-x:clip}
 /* nav */
 .nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 80%,transparent);backdrop-filter:saturate(1.6) blur(14px);border-bottom:1px solid var(--line)}
 .nav-in{display:flex;align-items:center;gap:20px;height:64px}
-.logo{font:800 22px var(--display);text-decoration:none;letter-spacing:-.04em}.logo span{color:var(--accent)}
+.logo{font:800 22px var(--display);text-decoration:none;letter-spacing:-.04em}
 .nav nav{margin-left:auto;display:flex;gap:20px}
 .nav nav a{text-decoration:none;color:var(--muted);font-size:15px;font-weight:500;padding:6px 0}.nav nav a:hover{color:var(--ink)}
 .icon-btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);width:40px;height:40px;border-radius:50%;display:grid;place-items:center;cursor:pointer;flex:none}
@@ -40,10 +40,6 @@ main{overflow-x:clip}
 .avatar img{width:100%;height:100%;border-radius:50%;object-fit:cover;border:3px solid var(--bg)}
 .who b{display:block;font-size:17px}
 .status{font:500 13px var(--mono);color:var(--muted);display:inline-flex;gap:8px;align-items:center}
-/* the halo is a scaled pseudo-element, so the pulse runs on the compositor (transform/opacity) instead of repainting box-shadow */
-.dot{position:relative;width:8px;height:8px;border-radius:50%;background:#22c55e;flex:none}
-.dot::after{content:"";position:absolute;inset:0;border-radius:50%;background:rgba(34,197,94,.22);transform:scale(2);animation:pulse 2s infinite}
-@keyframes pulse{50%{transform:scale(3);opacity:0}}
 h1{font:800 clamp(40px,6.2vw,72px)/1.02 var(--display);letter-spacing:-.045em}
 .lead{margin-top:24px;max-width:36em;font-size:19px;color:var(--muted)}.lead strong{color:var(--ink);font-weight:600}
 .cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
