@@ -1,0 +1,201 @@
+# Sveltia CMS (Decap-compatible). Edits src/data/resume.json in the GitHub repo;
+# every save is a commit, and the GitHub Action rebuilds and deploys the site.
+backend:
+  name: github
+  repo: usamaeltmsah/usamaeltmsah.github.io
+  branch: main
+  commit_messages:
+    update: "content: update {{slug}}"
+    uploadMedia: "content: upload {{path}}"
+    deleteMedia: "content: delete {{path}}"
+
+site_url: https://usamaeltmsah.github.io
+display_url: https://usamaeltmsah.github.io
+logo_url: /icon.svg
+media_folder: src/assets/images
+public_folder: ""
+
+collections:
+  - name: content
+    label: Portfolio
+    icon: badge
+    editor: { preview: false }
+    files:
+      - name: resume
+        label: Resume & portfolio data
+        file: src/data/resume.json
+        format: json
+        fields:
+          - { name: "$schema", widget: hidden }
+          - name: basics
+            label: Basics
+            widget: object
+            fields:
+              - { name: name, label: Name }
+              - { name: label, label: Title, hint: "e.g. iOS Developer" }
+              - { name: headline, label: Hero headline, hint: "The word 'polished' gets the gradient." }
+              - { name: image, label: Photo, widget: image }
+              - { name: email, label: Email }
+              - { name: url, label: Website }
+              - { name: summary, label: Summary, widget: text }
+              - { name: availability, label: Availability, hint: "e.g. Open to freelance work" }
+              - name: location
+                label: Location
+                widget: object
+                fields:
+                  - { name: city, label: City }
+                  - { name: countryCode, label: Country code }
+                  - { name: region, label: Region, required: false }
+              - name: profiles
+                label: Profiles
+                widget: list
+                summary: "{{fields.network}}"
+                fields:
+                  - { name: network, label: Network }
+                  - { name: username, label: Username }
+                  - { name: url, label: URL }
+          - name: stats
+            label: Hero stats
+            widget: list
+            summary: "{{fields.value}} {{fields.label}}"
+            fields:
+              - { name: value, label: Value }
+              - { name: label, label: Label }
+          - name: work
+            label: Experience
+            widget: list
+            summary: "{{fields.position}} · {{fields.name}}"
+            fields:
+              - { name: name, label: Company }
+              - { name: position, label: Position }
+              - { name: url, label: URL, required: false }
+              - { name: startDate, label: Start, required: false, hint: "YYYY-MM or YYYY" }
+              - { name: endDate, label: End, required: false, hint: "Leave empty if current" }
+              - { name: location, label: Location, required: false }
+              - { name: summary, label: Summary, widget: text }
+              - { name: highlights, label: Highlights, widget: list, required: false }
+          - name: volunteer
+            label: Volunteering
+            widget: list
+            required: false
+            summary: "{{fields.position}} · {{fields.organization}}"
+            fields:
+              - { name: organization, label: Organization }
+              - { name: position, label: Role }
+              - { name: url, label: URL, required: false }
+              - { name: startDate, label: Start, required: false }
+              - { name: endDate, label: End, required: false }
+              - { name: summary, label: Summary, widget: text }
+              - { name: highlights, label: Highlights, widget: list, required: false }
+          - name: education
+            label: Education
+            widget: list
+            summary: "{{fields.studyType}} · {{fields.institution}}"
+            fields:
+              - { name: institution, label: Institution }
+              - { name: url, label: URL, required: false }
+              - { name: area, label: Area }
+              - { name: studyType, label: Degree }
+              - { name: startDate, label: Start, required: false }
+              - { name: endDate, label: End, required: false }
+              - { name: score, label: Grade, required: false }
+              - { name: courses, label: Courses, widget: list, required: false }
+          - name: projects
+            label: Projects
+            widget: list
+            summary: "{{fields.name}}"
+            fields:
+              - { name: name, label: Name }
+              - { name: featured, label: Featured (with screenshot), widget: boolean, default: false }
+              - { name: description, label: Description, widget: text }
+              - { name: highlights, label: Highlights, widget: list, required: false }
+              - { name: keywords, label: Tech tags, widget: list }
+              - { name: url, label: Code URL }
+              - { name: demo, label: Demo URL, required: false }
+              - { name: image, label: Screenshot (portrait), widget: image, required: false }
+              - { name: color, label: Accent color, widget: color, required: false }
+          - name: activities
+            label: Activities
+            widget: list
+            summary: "{{fields.name}}"
+            fields:
+              - { name: name, label: Name }
+              - { name: role, label: Role }
+              - { name: date, label: Date, required: false }
+              - { name: description, label: Description, widget: text }
+              - { name: url, label: URL, required: false }
+              - { name: image, label: Image, widget: image, required: false }
+          - name: awards
+            label: Awards
+            widget: list
+            required: false
+            summary: "{{fields.title}}"
+            fields:
+              - { name: title, label: Title }
+              - { name: date, label: Date, required: false }
+              - { name: awarder, label: Awarder }
+              - { name: summary, label: Summary, widget: text, required: false }
+          - name: certificates
+            label: Certificates
+            widget: list
+            required: false
+            summary: "{{fields.name}}"
+            fields:
+              - { name: name, label: Name }
+              - { name: date, label: Date, required: false }
+              - { name: issuer, label: Issuer }
+              - { name: url, label: URL, required: false }
+          - name: publications
+            label: Publications
+            widget: list
+            required: false
+            summary: "{{fields.name}}"
+            fields:
+              - { name: name, label: Title }
+              - { name: publisher, label: Publisher }
+              - { name: releaseDate, label: Date, required: false }
+              - { name: url, label: URL }
+              - { name: summary, label: Summary, widget: text, required: false }
+          - name: skills
+            label: Technical skills
+            widget: list
+            summary: "{{fields.name}}"
+            fields:
+              - { name: name, label: Group }
+              - { name: level, label: Level, required: false }
+              - { name: keywords, label: Skills, widget: list }
+          - name: softSkills
+            label: Soft skills
+            widget: list
+            summary: "{{fields.name}}"
+            fields:
+              - { name: name, label: Skill }
+              - { name: description, label: Evidence, widget: text }
+          - name: languages
+            label: Languages
+            widget: list
+            summary: "{{fields.language}} ({{fields.fluency}})"
+            fields:
+              - { name: language, label: Language }
+              - { name: fluency, label: Fluency }
+          - name: interests
+            label: Interests
+            widget: list
+            summary: "{{fields.name}}"
+            fields:
+              - { name: name, label: Interest }
+              - { name: keywords, label: Keywords, widget: list, required: false }
+          - name: references
+            label: References
+            widget: list
+            required: false
+            fields:
+              - { name: name, label: Name }
+              - { name: reference, label: Reference, widget: text }
+          - name: meta
+            label: Meta
+            widget: object
+            fields:
+              - { name: canonical, label: Canonical, widget: hidden }
+              - { name: version, label: Schema version, widget: hidden }
+              - { name: lastModified, label: Last modified, widget: datetime, date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD" }

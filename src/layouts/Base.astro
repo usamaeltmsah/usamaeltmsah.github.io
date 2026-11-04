@@ -1,0 +1,67 @@
+---
+import '../styles/global.css';
+import { resume, SITE } from '../lib/data';
+
+interface Props { title: string; description: string; path?: string; noindex?: boolean; jsonld?: boolean }
+const { title, description, path = '/', noindex = false, jsonld = true } = Astro.props;
+const b = resume.basics;
+const url = SITE + path;
+
+const ld = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    { '@type': 'WebSite', '@id': `${SITE}/#site`, url: `${SITE}/`, name: b.name, inLanguage: 'en', publisher: { '@id': `${SITE}/#me` } },
+    { '@type': 'ProfilePage', '@id': `${SITE}/#page`, url, name: title, isPartOf: { '@id': `${SITE}/#site` }, mainEntity: { '@id': `${SITE}/#me` }, dateModified: resume.meta.lastModified },
+    {
+      '@type': 'Person', '@id': `${SITE}/#me`, name: b.name, jobTitle: b.label, description: b.summary, url: `${SITE}/`,
+      email: `mailto:${b.email}`, image: `${SITE}/og.png`,
+      address: { '@type': 'PostalAddress', addressLocality: b.location.city, addressCountry: b.location.countryCode },
+      worksFor: resume.work[0] && { '@type': 'Organization', name: resume.work[0].name },
+      alumniOf: resume.education.map((e) => ({ '@type': 'CollegeOrUniversity', name: e.institution })),
+      knowsLanguage: resume.languages.map((l) => l.language),
+      knowsAbout: resume.skills.flatMap((s) => s.keywords),
+      award: resume.awards.map((a) => `${a.title} (${a.awarder})`),
+      sameAs: b.profiles.map((p) => p.url),
+    },
+  ],
+};
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{title}</title>
+<meta name="description" content={description}>
+<meta name="author" content={b.name}>
+<meta name="robots" content={noindex ? 'noindex' : 'index, follow, max-image-preview:large'}>
+<meta name="theme-color" content="#0b0c10" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#fafaf9" media="(prefers-color-scheme: light)">
+<meta name="color-scheme" content="dark light">
+<link rel="canonical" href={url}>
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/icon.svg">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="sitemap" type="application/xml" href="/sitemap-index.xml">
+<link rel="alternate" type="text/markdown" href="/index.md" title="Markdown version for agents">
+<link rel="alternate" type="application/json" href="/resume.json" title="JSON Resume">
+<link rel="alternate" type="text/plain" href="/llms.txt" title="llms.txt">
+<meta property="og:type" content="profile">
+<meta property="og:site_name" content={b.name}>
+<meta property="og:title" content={title}>
+<meta property="og:description" content={description}>
+<meta property="og:url" content={url}>
+<meta property="og:image" content={`${SITE}/og.png`}>
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content={`${b.name}, ${b.label}`}>
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@usama_fouad">
+<script is:inline>document.documentElement.classList.add('js');try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+{jsonld && <script type="application/ld+json" set:html={JSON.stringify(ld)} />}
+<slot name="head" />
+</head>
+<body>
+<slot />
+</body>
+</html>
