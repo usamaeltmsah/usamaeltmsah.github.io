@@ -52,7 +52,7 @@ const phoneData = {
 <section class="hero wrap" id="top" aria-labelledby="h1">
   <div>
     <div class="who">
-      {avatar && <span class="avatar"><Image src={avatar} alt={b.name} width={128} height={128} loading="eager" fetchpriority="high" /></span>}
+      {avatar && <span class="avatar"><Image src={avatar} alt={b.name} width={128} height={128} loading="eager" /></span>}
       <div><b>{b.name}</b><span class="status"><span class="dot" aria-hidden="true"></span>{b.availability} · {b.location.city}</span></div>
     </div>
     <h1 id="h1" set:html={b.headline.replace('polished', '<em class="grad" style="font-style:normal">polished</em>')} />
@@ -65,7 +65,7 @@ const phoneData = {
   </div>
   <div class="stage" aria-hidden="true">
     <div class="phone"><div class="screen">
-      {heroShots.map((s, i) => <Image src={s} alt="" widths={[270, 540]} sizes="(max-width: 640px) 230px, 270px" loading={i === 0 ? 'eager' : 'lazy'} />)}
+      {heroShots.map((s, i) => <Image src={s} alt="" widths={[270, 540]} sizes="(max-width: 640px) 230px, 270px" loading={i === 0 ? 'eager' : 'lazy'} fetchpriority={i === 0 ? 'high' : undefined} />)}
     </div></div>
     <span class="badge a">SwiftUI</span><span class="badge b">AVFoundation</span><span class="badge c">WidgetKit</span>
   </div>
