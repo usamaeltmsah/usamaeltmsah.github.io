@@ -46,3 +46,20 @@ describe('relations', () => {
     expect(dangling, `entries in ${r.from} with a broken ${r.field} link`).toEqual([]);
   });
 });
+
+describe('privacy', () => {
+  /** Money amounts and earnings language stay out of the public site, CV and resume.json. */
+  const money = /[$€£]\s?\d|\d\s?(usd|eur|egp|sar)\b|\bearn(ed|ings)\b|\bsalary\b|\bincome\b|\b(hourly|day) rate\b/i;
+  const files = [
+    join(root, 'content', 'profile.json'),
+    join(root, 'content', 'skills.json'),
+    ...Object.keys(folders).flatMap((name) =>
+      readdirSync(join(root, 'content', name)).filter((f) => f.endsWith('.json')).map((f) => join(root, 'content', name, f))),
+  ];
+  const strings = (v: unknown): string[] =>
+    typeof v === 'string' ? [v] : Array.isArray(v) ? v.flatMap(strings) : v && typeof v === 'object' ? Object.values(v).flatMap(strings) : [];
+
+  it.each(files.map((f) => [f.slice(root.length + 1), f]))('%s mentions no earnings or money amounts', (_, file) => {
+    expect(strings(read(file)).filter((t) => money.test(t))).toEqual([]);
+  });
+});
