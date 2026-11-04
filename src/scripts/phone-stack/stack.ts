@@ -158,10 +158,12 @@ export async function mount(section: HTMLElement, data: Timeline) {
   const ray = new THREE.Raycaster();
   const ndc = new THREE.Vector2();
   const canvasEl = renderer.domElement;
-  let activeIndex = 0, settled = false;
-  /** Canvas-pixel point under the pointer on the active phone's display, or null. */
+  let activeIndex = 0;
+  /**
+   * Canvas-pixel point under the pointer on the front phone's display, or null. Taps work
+   * wherever the scroll stops: the ray hits the phone as it is drawn, even mid-deal.
+   */
   function screenPoint(e: MouseEvent) {
-    if (!settled) return null;
     const b = canvasEl.getBoundingClientRect();
     ndc.set(((e.clientX - b.left) / b.width) * 2 - 1, -((e.clientY - b.top) / b.height) * 2 + 1);
     ray.setFromCamera(ndc, camera);
@@ -192,11 +194,14 @@ export async function mount(section: HTMLElement, data: Timeline) {
     raf = 0;
     const r = section.getBoundingClientRect();
     const p = Math.min(1, Math.max(0, -r.top / (r.height - innerHeight)));
-    const target = p * (roles.length - 1);
+    // Each phone holds still facing you through the middle half of its scroll range and deals
+    // across the rest, so wherever a swipe stops, the front phone is usually square and easy to tap
+    const raw = p * (roles.length - 1), step = Math.floor(raw);
+    const ease = Math.min(1, Math.max(0, (raw - step - 0.25) / 0.5));
+    const target = step + ease * ease * (3 - 2 * ease);
     focus += (target - focus) * (reduced ? 1 : 0.09);
     activeIndex = Math.round(focus);
     show(activeIndex);
-    settled = Math.abs(focus - activeIndex) < 0.12;
     const t = clock.getElapsedTime();
     // Fit the phone to ~86% of the stage height (or width on narrow screens), centred
     const fitH = 2.3 / (0.86 * 2 * tanHalf);
