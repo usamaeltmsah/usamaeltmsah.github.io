@@ -25,6 +25,7 @@
     {
       "name": "Apple frameworks",
       "keywords": [
+        "Combine",
         "AVFoundation",
         "WebKit",
         "MapKit",
