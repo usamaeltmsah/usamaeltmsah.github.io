@@ -1,0 +1,19 @@
+{
+  "name": "VideoNinja",
+  "order": 2,
+  "featured": true,
+  "description": "iOS video-editing app built on AVFoundation, with grayscale and sepia filters and a live preview.",
+  "highlights": [
+    "Media composition and playback",
+    "Xcode 16, iOS 15.6+"
+  ],
+  "tech": [
+    "AVFoundation",
+    "Swift",
+    "UIKit"
+  ],
+  "url": "https://github.com/usamaeltmsah/VideoNinja",
+  "demo": "",
+  "image": "/src/assets/images/videoninja.png",
+  "color": "#2563eb"
+}

@@ -1,9 +1,10 @@
 ---
 import '../styles/global.css';
-import { resume, SITE } from '../lib/data';
+import { getResume, SITE } from '../lib/data';
 
 interface Props { title: string; description: string; path?: string; noindex?: boolean; jsonld?: boolean }
 const { title, description, path = '/', noindex = false, jsonld = true } = Astro.props;
+const resume = await getResume();
 const b = resume.basics;
 const url = SITE + path;
 

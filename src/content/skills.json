@@ -1,0 +1,152 @@
+{
+  "technical": [
+    {
+      "name": "Languages",
+      "keywords": [
+        "Swift",
+        "Python",
+        "Java",
+        "C/C++",
+        "Ruby",
+        "PHP",
+        "SQL"
+      ]
+    },
+    {
+      "name": "UI",
+      "keywords": [
+        "SwiftUI",
+        "UIKit",
+        "WidgetKit",
+        "SpriteKit",
+        "React Native (growing)"
+      ]
+    },
+    {
+      "name": "Apple frameworks",
+      "keywords": [
+        "AVFoundation",
+        "WebKit",
+        "MapKit",
+        "Core Data",
+        "Apple Pay",
+        "Push Notifications"
+      ]
+    },
+    {
+      "name": "Data & backend",
+      "keywords": [
+        "REST APIs",
+        "WebSockets",
+        "Firebase",
+        "Realm",
+        "SQLite",
+        "MySQL",
+        "PostgreSQL",
+        "Laravel"
+      ]
+    },
+    {
+      "name": "Engineering",
+      "keywords": [
+        "MVVM",
+        "Clean Architecture",
+        "Design patterns",
+        "Data structures & algorithms",
+        "Code review",
+        "Agile / Scrum",
+        "Git",
+        "CI/CD"
+      ]
+    },
+    {
+      "name": "Also",
+      "keywords": [
+        "NLP",
+        "Data analytics",
+        "Web scraping (Selenium)",
+        "Elasticsearch",
+        "Arduino"
+      ]
+    }
+  ],
+  "soft": [
+    {
+      "name": "Ownership & leadership",
+      "description": "Led Nugttah's iOS app end to end, from UX to performance to App Store results."
+    },
+    {
+      "name": "Client communication",
+      "description": "Clear, async-friendly updates for clients across time zones, reflected in 22 Upwork reviews."
+    },
+    {
+      "name": "Problem solving",
+      "description": "Sharpened through competitive programming on Codeforces, LeetCode and HackerRank."
+    },
+    {
+      "name": "Teaching & presenting",
+      "description": "Trained students to build Arduino robots and moderated workshops at Eng Break."
+    },
+    {
+      "name": "Negotiation & partnerships",
+      "description": "Closed sponsor, speaker and venue deals for 180 Daraga's student events."
+    },
+    {
+      "name": "Teamwork in Agile",
+      "description": "Comfortable in Scrum teams, code reviews and cross-functional product work."
+    },
+    {
+      "name": "Time management",
+      "description": "Balance a full-time role with freelance delivery without missing commitments."
+    },
+    {
+      "name": "Continuous learning",
+      "description": "10 certificates and counting, from CS50 to MVVM, and now agentic AI."
+    },
+    {
+      "name": "Knowledge sharing",
+      "description": "Write articles and record walkthroughs so others can learn from what I build."
+    }
+  ],
+  "languages": [
+    {
+      "language": "Arabic",
+      "fluency": "Native"
+    },
+    {
+      "language": "English",
+      "fluency": "Fluent"
+    },
+    {
+      "language": "German",
+      "fluency": "Basic"
+    },
+    {
+      "language": "French",
+      "fluency": "Basic"
+    }
+  ],
+  "interests": [
+    {
+      "name": "Chess",
+      "keywords": []
+    },
+    {
+      "name": "Arduino & making",
+      "keywords": []
+    },
+    {
+      "name": "AI & data",
+      "keywords": [
+        "Agentic AI",
+        "NLP"
+      ]
+    },
+    {
+      "name": "Reading",
+      "keywords": [
+        "Clean Architecture"
+      ]
+    }
+  ]
+}

@@ -1,7 +1,10 @@
 ---
 import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
-import { resume, img, range, fmtDate, github, posts, profile } from '../lib/data';
+import { getResume, img, range, fmtDate, github, posts, profileLink } from '../lib/data';
+
+const resume = await getResume();
+const profile = (network: string) => profileLink(resume, network);
 
 const b = resume.basics;
 const gh = await github();
@@ -157,14 +160,14 @@ const year = new Date().getFullYear();
   <span class="kicker">04 / Experience</span>
   <h2 class="sec-title" id="t-exp">Where I've worked.</h2>
   <ol class="timeline" style="margin-top:34px">
-    {resume.work.map((w, i) => (
+    {resume.work.map((w) => (
       <li class="reveal">
-        <div class="when">{range(w.startDate, w.endDate) || (i === 0 ? 'Current' : w.position.startsWith('Freelance') ? 'Ongoing' : 'Previous')}</div>
+        <div class="when">{range(w.startDate, w.endDate)}{w.type !== 'Full-time' && <><br>{w.type}</>}</div>
         <div><h3>{w.position} · <span class="org">{w.name}</span></h3><p>{w.summary}</p>{w.highlights.length > 0 && <ul>{w.highlights.map((h) => <li>{h}</li>)}</ul>}</div>
       </li>
     ))}
-    {resume.volunteer.map((v: any) => (
-      <li class="reveal"><div class="when">{range(v.startDate, v.endDate)}<br>Volunteer</div><div><h3>{v.position} · <span class="org">{v.organization}</span></h3><p>{v.summary}</p>{v.highlights?.length > 0 && <ul>{v.highlights.map((h: string) => <li>{h}</li>)}</ul>}</div></li>
+    {resume.volunteer.map((v) => (
+      <li class="reveal"><div class="when">{range(v.startDate, v.endDate)}<br>Volunteer</div><div><h3>{v.position} · <span class="org">{v.organization}</span></h3><p>{v.summary}</p>{v.highlights.length > 0 && <ul>{v.highlights.map((h) => <li>{h}</li>)}</ul>}</div></li>
     ))}
     {resume.education.map((e) => (
       <li class="reveal"><div class="when">{range(e.startDate, e.endDate)}</div><div><h3>{e.studyType} · <span class="org">{e.institution}</span></h3><p>{e.courses.join(', ')}.</p></div></li>

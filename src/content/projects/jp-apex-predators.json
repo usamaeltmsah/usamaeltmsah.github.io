@@ -1,0 +1,18 @@
+{
+  "name": "JP Apex Predators",
+  "order": 5,
+  "featured": true,
+  "description": "Jurassic Park-themed list app with sorting, filtering, search, animations and MapKit locations.",
+  "highlights": [
+    "Search, sort and filter",
+    "MapKit"
+  ],
+  "tech": [
+    "SwiftUI",
+    "MapKit"
+  ],
+  "url": "https://github.com/usamaeltmsah/JPApexPredators",
+  "demo": "",
+  "image": "/src/assets/images/jp-apex.png",
+  "color": "#166534"
+}

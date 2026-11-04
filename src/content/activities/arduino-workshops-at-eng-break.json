@@ -1,0 +1,9 @@
+{
+  "name": "Arduino workshops at Eng Break",
+  "order": 2,
+  "role": "Trainer & moderator",
+  "date": "2018-2019",
+  "description": "Prepared and led hands-on sessions teaching students to build robots with Arduino.",
+  "url": "",
+  "image": "/src/assets/images/arduino-workshop.jpg"
+}

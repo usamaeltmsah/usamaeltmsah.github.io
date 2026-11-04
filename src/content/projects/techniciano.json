@@ -1,0 +1,16 @@
+{
+  "name": "Techniciano",
+  "order": 7,
+  "featured": false,
+  "description": "Multi-vendor service app: users post a request, nearby providers get notified, and users track the provider live.",
+  "highlights": [],
+  "tech": [
+    "Swift",
+    "Push",
+    "Maps"
+  ],
+  "url": "",
+  "demo": "",
+  "image": "",
+  "color": "#f59e0b"
+}

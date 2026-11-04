@@ -1,0 +1,14 @@
+{
+  "name": "HP Trivia",
+  "order": 10,
+  "featured": false,
+  "description": "Harry Potter trivia game in SwiftUI.",
+  "highlights": [],
+  "tech": [
+    "SwiftUI"
+  ],
+  "url": "https://github.com/usamaeltmsah/HPTrivia",
+  "demo": "",
+  "image": "",
+  "color": "#7c3aed"
+}

@@ -1,0 +1,15 @@
+{
+  "name": "Minesweeper game bot",
+  "order": 12,
+  "featured": false,
+  "description": "Python bot that reads the board with computer vision and plays Minesweeper with automated clicks.",
+  "highlights": [],
+  "tech": [
+    "Python",
+    "Computer vision"
+  ],
+  "url": "https://github.com/usamaeltmsah/MineSweeper-game-bot",
+  "demo": "https://www.youtube.com/watch?v=WALsiz1YkO0",
+  "image": "",
+  "color": "#334155"
+}

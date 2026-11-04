@@ -1,0 +1,16 @@
+{
+  "name": "Topotify Alarm",
+  "order": 8,
+  "featured": false,
+  "description": "Custom Spotify alarm using the Spotify Web API with the Authorization Code flow.",
+  "highlights": [],
+  "tech": [
+    "Spotify API",
+    "OAuth",
+    "SwiftUI"
+  ],
+  "url": "https://github.com/usamaeltmsah/Topotify-with-alarm",
+  "demo": "https://www.youtube.com/watch?v=94iYjuddzJI",
+  "image": "",
+  "color": "#16a34a"
+}

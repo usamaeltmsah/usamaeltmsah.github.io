@@ -1,6 +1,8 @@
 ---
 import { Image } from 'astro:assets';
-import { resume, img, range, fmtDate, SITE } from '../lib/data';
+import { getResume, img, range, fmtDate, SITE } from '../lib/data';
+
+const resume = await getResume();
 
 const b = resume.basics;
 const avatar = img(b.image);
@@ -78,7 +80,7 @@ aside .item{margin-bottom:7px}
         <h2>Experience</h2>
         {resume.work.map((w) => (
           <div class="item">
-            <h3>{w.position}<span>{range(w.startDate, w.endDate)}</span></h3>
+            <h3>{w.position}{w.type !== 'Full-time' && ` · ${w.type}`}<span>{range(w.startDate, w.endDate)}</span></h3>
             <div class="org">{w.name}{w.location && ` · ${w.location}`}</div>
             <p>{w.summary}</p>
             {w.highlights.length > 0 && <ul>{w.highlights.map((h) => <li>{h}</li>)}</ul>}
@@ -91,9 +93,9 @@ aside .item{margin-bottom:7px}
           <div class="item"><h3>{p.name}<span>{p.keywords.join(' · ')}</span></h3><p>{p.description} <a href={p.url}>{p.url.replace('https://', '')}</a></p></div>
         ))}
       </section>
-      {(resume.volunteer as any[]).length > 0 && (
+      {resume.volunteer.length > 0 && (
         <section><h2>Volunteering</h2>
-          {(resume.volunteer as any[]).map((v) => <div class="item"><h3>{v.position}<span>{range(v.startDate, v.endDate)}</span></h3><div class="org">{v.organization}</div><p>{v.summary}</p>{v.highlights?.length > 0 && <ul>{v.highlights.map((h: string) => <li>{h}</li>)}</ul>}</div>)}
+          {resume.volunteer.map((v) => <div class="item"><h3>{v.position}<span>{range(v.startDate, v.endDate)}</span></h3><div class="org">{v.organization}</div><p>{v.summary}</p>{v.highlights.length > 0 && <ul>{v.highlights.map((h) => <li>{h}</li>)}</ul>}</div>)}
         </section>
       )}
       <section>
@@ -115,7 +117,7 @@ aside .item{margin-bottom:7px}
         <h2>Soft skills</h2>
         <div class="tags">{resume.softSkills.map((s) => <span class="tag">{s.name}</span>)}</div>
       </section>
-      {(resume.awards.length > 0 || (resume.certificates as any[]).length > 0) && (
+      {(resume.awards.length > 0 || resume.certificates.length > 0) && (
         <section><h2>Awards & certificates</h2>
           {resume.awards.map((a) => <div class="item"><p><b>{a.title}</b>, {a.awarder}{a.date && ` (${a.date})`}</p></div>)}
           {resume.certificates.map((c) => <div class="item"><p><b>{c.name}</b><br>{c.issuer}{c.date && `, ${fmtDate(c.date)}`}</p></div>)}

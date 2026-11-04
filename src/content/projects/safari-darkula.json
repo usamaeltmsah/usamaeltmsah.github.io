@@ -1,0 +1,20 @@
+{
+  "name": "Safari Darkula",
+  "order": 1,
+  "featured": true,
+  "description": "iOS app plus Safari Web Extension that re-themes any website in Dark, Gray or Sepia, with ON / OFF / Auto (time-based) modes.",
+  "highlights": [
+    "App-to-extension communication across targets",
+    "Injected HTML, CSS and JavaScript",
+    "Syncs with system appearance"
+  ],
+  "tech": [
+    "WebKit",
+    "Safari Extension",
+    "JS / CSS"
+  ],
+  "url": "https://github.com/usamaeltmsah/Safari-Darkula",
+  "demo": "https://dev.to/usamaeltmsah/building-sepia-theme-for-mobile-browser-using-css-3ei4",
+  "image": "/src/assets/images/safari-darkula.png",
+  "color": "#6d28d9"
+}

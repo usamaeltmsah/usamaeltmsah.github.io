@@ -1,0 +1,19 @@
+{
+  "name": "UF News",
+  "order": 4,
+  "featured": true,
+  "description": "MVVM news reader on NewsAPI with categories, article details and an in-app web view.",
+  "highlights": [
+    "MVVM",
+    "REST networking"
+  ],
+  "tech": [
+    "MVVM",
+    "REST",
+    "UIKit"
+  ],
+  "url": "https://github.com/usamaeltmsah/UF-News-iOS",
+  "demo": "",
+  "image": "/src/assets/images/uf-news.png",
+  "color": "#7c3aed"
+}

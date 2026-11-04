@@ -1,0 +1,14 @@
+{
+  "company": "2Grand",
+  "position": "iOS Developer",
+  "type": "Full-time",
+  "url": "",
+  "location": "Cairo, Egypt · Hybrid",
+  "startDate": "2022-07",
+  "endDate": "2022-12",
+  "summary": "Built Techniciano, a multi-vendor iOS app connecting users with nearby service providers.",
+  "highlights": [
+    "Order broadcast to the nearest providers via push notifications",
+    "Live tracking of the provider and order status"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "name": "Nugttah",
+  "order": 6,
+  "featured": false,
+  "description": "Digital loyalty app in Saudi Arabia that replaces physical cards. I led the iOS app: reviews 120 → 6,000, rating 4.3 → 4.8.",
+  "highlights": [],
+  "tech": [
+    "Swift",
+    "iOS",
+    "Product"
+  ],
+  "url": "",
+  "demo": "",
+  "image": "",
+  "color": "#0ea5e9"
+}

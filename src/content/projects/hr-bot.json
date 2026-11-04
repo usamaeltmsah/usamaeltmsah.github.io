@@ -1,0 +1,16 @@
+{
+  "name": "HR-Bot",
+  "order": 9,
+  "featured": false,
+  "description": "Graduation project: automated first-round interviews scored by an NLP model, built with Laravel and React.",
+  "highlights": [],
+  "tech": [
+    "Laravel",
+    "React",
+    "NLP"
+  ],
+  "url": "https://github.com/usamaeltmsah/HR-Bot-Backend",
+  "demo": "",
+  "image": "",
+  "color": "#db2777"
+}

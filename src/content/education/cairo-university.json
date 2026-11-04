@@ -1,0 +1,16 @@
+{
+  "institution": "Cairo University",
+  "degree": "B.Sc., Faculty of Computers & Artificial Intelligence",
+  "area": "Computer Science",
+  "url": "https://cu.edu.eg",
+  "startDate": "2016",
+  "endDate": "2020",
+  "score": "",
+  "courses": [
+    "Algorithms",
+    "Data Structures",
+    "Machine Learning",
+    "Parallel Computing",
+    "Software Engineering"
+  ]
+}

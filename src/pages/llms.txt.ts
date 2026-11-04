@@ -1,7 +1,8 @@
 import type { APIRoute } from 'astro';
-import { resume, SITE } from '../lib/data';
+import { getResume, SITE } from '../lib/data';
 
-export const GET: APIRoute = () => {
+export const GET: APIRoute = async () => {
+  const resume = await getResume();
   const b = resume.basics;
   const body = `# ${b.name}
 

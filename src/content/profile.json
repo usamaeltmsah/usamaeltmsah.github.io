@@ -1,0 +1,80 @@
+{
+  "name": "Usama Fouad",
+  "label": "iOS Developer",
+  "headline": "I build polished iOS apps that feel native, because they are.",
+  "image": "/src/assets/images/avatar.jpg",
+  "email": "usamaeltmsah@gmail.com",
+  "url": "https://usamaeltmsah.github.io/",
+  "availability": "Open to freelance work",
+  "summary": "Software engineer and iOS developer at VOIS, and a Top Rated freelancer on Upwork. I build native apps in Swift, SwiftUI and UIKit. At Nugttah I led the iOS app, grew App Store reviews from 120 to 6,000 and lifted the rating from 4.3 to 4.8. I'm a Computers & Artificial Intelligence graduate of Cairo University with a strong foundation in algorithms, design patterns and software architecture.",
+  "location": {
+    "city": "Cairo",
+    "countryCode": "EG",
+    "region": "Giza"
+  },
+  "stats": [
+    {
+      "value": "50×",
+      "label": "App Store reviews growth I led (120 → 6,000)"
+    },
+    {
+      "value": "4.8★",
+      "label": "app rating, up from 4.3"
+    },
+    {
+      "value": "Top Rated",
+      "label": "on Upwork, 29 jobs delivered"
+    },
+    {
+      "value": "22",
+      "label": "client reviews"
+    }
+  ],
+  "profiles": [
+    {
+      "network": "GitHub",
+      "username": "usamaeltmsah",
+      "url": "https://github.com/usamaeltmsah"
+    },
+    {
+      "network": "LinkedIn",
+      "username": "usama-fouad-270672110",
+      "url": "https://www.linkedin.com/in/usama-fouad-270672110/"
+    },
+    {
+      "network": "Upwork",
+      "username": "usama-fouad",
+      "url": "https://www.upwork.com/freelancers/~016419d1dc161e5297"
+    },
+    {
+      "network": "Twitter",
+      "username": "usama_fouad",
+      "url": "https://twitter.com/usama_fouad"
+    },
+    {
+      "network": "YouTube",
+      "username": "usamafouad",
+      "url": "https://www.youtube.com/channel/UCKV_YQHNBqjjriKHUfe-2jg"
+    },
+    {
+      "network": "dev.to",
+      "username": "usamaeltmsah",
+      "url": "https://dev.to/usamaeltmsah"
+    },
+    {
+      "network": "LeetCode",
+      "username": "usamaeltmsah",
+      "url": "https://leetcode.com/usamaeltmsah/"
+    },
+    {
+      "network": "Codeforces",
+      "username": "usamafouad",
+      "url": "https://codeforces.com/profile/usamafouad"
+    },
+    {
+      "network": "HackerRank",
+      "username": "usamaeltmsah1",
+      "url": "https://www.hackerrank.com/usamaeltmsah1"
+    }
+  ]
+}

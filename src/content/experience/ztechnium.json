@@ -1,0 +1,13 @@
+{
+  "company": "zTechnium",
+  "position": "Data Science Intern",
+  "type": "Internship",
+  "url": "",
+  "location": "Cairo, Egypt",
+  "startDate": "2020-01",
+  "endDate": "2020-04",
+  "summary": "Built a pipeline that scrapes job listings, cleans the data and classifies job titles from a user's description.",
+  "highlights": [
+    "Web scraping, data cleaning, feature extraction, NLP text classification, Elasticsearch"
+  ]
+}

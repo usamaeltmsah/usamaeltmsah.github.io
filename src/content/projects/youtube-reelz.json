@@ -1,0 +1,15 @@
+{
+  "name": "YouTube Reelz",
+  "order": 11,
+  "featured": false,
+  "description": "MVVM app listing YouTube videos in a collection view, playing on tap.",
+  "highlights": [],
+  "tech": [
+    "MVVM",
+    "UIKit"
+  ],
+  "url": "https://github.com/usamaeltmsah/Youtube-Reelz",
+  "demo": "",
+  "image": "",
+  "color": "#dc2626"
+}
