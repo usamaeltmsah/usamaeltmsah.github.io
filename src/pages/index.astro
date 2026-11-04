@@ -26,6 +26,8 @@ const phoneImage = async (name: string) => {
   return meta ? (await getImage({ src: meta, width: Math.min(meta.width, 720), format: 'webp' })).src : '';
 };
 const timeline = buildTimeline(resume, new Date());
+// Filled in with the built chunk's URL by the lazy-entry integration (astro.config.mjs)
+const phoneEntry = import.meta.env.DEV ? '/src/scripts/phone-stack/entry.ts' : '/__PHONE_STACK_ENTRY__';
 const phoneData = {
   roles: await Promise.all(timeline.roles.map(async (r) => ({ ...r, image: await phoneImage(r.image) }))),
   projects: await Promise.all(timeline.projects.map(async (p) => ({ ...p, image: await phoneImage(p.image) }))),
@@ -214,7 +216,7 @@ const phoneData = {
   <span class="kicker">05 / Experience</span>
   <h2 class="sec-title" id="t-exp">Where I've worked.</h2>
   <p class="sec-sub phones-only">Each role is an iPhone running a small app, newest first. Scroll to deal through them, then tap the screen to switch tabs or open a project.</p>
-  <div class="phones phones-only" style={`--n:${phoneData.roles.length}`}>
+  <div class="phones phones-only" style={`--n:${phoneData.roles.length}`} data-entry={phoneEntry}>
     <div class="stage"><nav class="rail" aria-label="Jump to a role"></nav></div>
   </div>
   <script type="application/json" id="phone-data" set:html={JSON.stringify(phoneData).replace(/</g, '\\u003c')} />
@@ -339,31 +341,22 @@ const phoneData = {
 </footer>
 <div id="toast" role="status" aria-live="polite"></div>
 
-<script>
-  import type { Timeline } from '../lib/timeline';
-
-  // Phone stack: decided at load so the section's height never jumps later; Three.js loads only near it
-  const section = document.querySelector<HTMLElement>('#experience');
-  const phones = section?.querySelector<HTMLElement>('.phones');
-  const json = document.getElementById('phone-data')?.textContent;
-  const webgl = (() => {
-    try { return Boolean(document.createElement('canvas').getContext('webgl2')); } catch { return false; }
-  })();
-  if (section && phones && json && webgl) {
-    section.classList.add('has-phones');
-    const io = new IntersectionObserver(async ([entry]) => {
-      if (!entry.isIntersecting) return;
-      io.disconnect();
-      try {
-        const { mount } = await import('../scripts/phone-stack/stack');
-        await mount(phones, JSON.parse(json) as Timeline);
-      } catch (err) {
-        section.classList.remove('has-phones');
-        console.error('[phone-stack] showing the plain timeline instead:', err);
-      }
-    }, { rootMargin: '800px 0px' });
-    io.observe(section);
-  }
+<script is:inline>
+/* Phone stack loader, inline so the page has no script request at load. WebGL support is
+   decided now, so the section's height never jumps later; the 3D code loads only near it. */
+(function(){
+  var section=document.getElementById('experience'),phones=section&&section.querySelector('.phones'),src=phones&&phones.dataset.entry;
+  var webgl=false;try{webgl=!!document.createElement('canvas').getContext('webgl2')}catch(e){}
+  if(!section||!src||!webgl||!('IntersectionObserver' in window))return;
+  section.classList.add('has-phones');
+  var io=new IntersectionObserver(function(es){
+    if(!es[0].isIntersecting)return;io.disconnect();
+    var s=document.createElement('script');s.type='module';s.src=src;
+    s.onerror=function(){section.classList.remove('has-phones');console.error('[phone-stack] could not load '+src+'; showing the plain timeline')};
+    document.head.appendChild(s);
+  },{rootMargin:'800px 0px'});
+  io.observe(section);
+})();
 </script>
 
 <script is:inline define:vars={{ mcp: { profile: { name: b.name, role: b.label, employer: current?.name, location: `${b.location.city}, Egypt`, availability: b.availability, summary: b.summary, stats: resume.stats }, projects: resume.projects.map((p) => ({ name: p.name, description: p.description, url: p.url, tech: p.keywords })), contact: { email: b.email, profiles: b.profiles }, skills: { technical: resume.skills, soft: resume.softSkills } } }}>
