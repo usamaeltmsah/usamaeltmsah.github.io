@@ -1,0 +1,6 @@
+/* TEAM */
+Developer: Usama Fouad
+Contact: usamaeltmsah@gmail.com
+Location: Cairo, Egypt
+/* SITE */
+Stack: hand-written HTML, CSS, JS. No frameworks, no trackers.
