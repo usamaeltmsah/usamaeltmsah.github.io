@@ -2,6 +2,10 @@
   "name": "Time Hero",
   "order": 3,
   "featured": true,
+  "private": false,
+  "onCv": false,
+  "period": "2021",
+  "experience": "",
   "description": "A 7-day planner whose task page switches automatically each day, with swipe gestures and a home-screen widget.",
   "highlights": [
     "WidgetKit widget",

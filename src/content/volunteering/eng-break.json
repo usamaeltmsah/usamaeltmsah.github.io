@@ -1,0 +1,15 @@
+{
+  "organization": "Eng Break",
+  "role": "Arduino Trainer & Moderator",
+  "startDate": "2018-09",
+  "endDate": "2019-04",
+  "location": "Cairo, Egypt",
+  "url": "",
+  "summary": "Taught engineering and computer science students to build robots from scratch with Arduino.",
+  "highlights": [
+    "Prepared and led hands-on workshop sessions",
+    "Interviewed and selected workshop participants",
+    "Studied Arduino in depth and rehearsed every session with the team"
+  ],
+  "image": "/src/assets/images/arduino-workshop.jpg"
+}

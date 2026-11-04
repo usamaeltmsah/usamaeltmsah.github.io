@@ -1,9 +1,11 @@
 {
   "name": "Competitive programming",
-  "order": 5,
+  "order": 3,
   "role": "Participant",
   "date": "",
   "description": "Regular problem solving on Codeforces, LeetCode and HackerRank.",
   "url": "https://codeforces.com/profile/usamafouad",
-  "image": ""
+  "image": "",
+  "experience": "",
+  "volunteering": ""
 }

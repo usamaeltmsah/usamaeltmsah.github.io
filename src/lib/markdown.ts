@@ -14,9 +14,10 @@ export function resumeMarkdown(resume: Resume) {
     out.push(`- **${w.position}, ${w.name}**${range(w.startDate, w.endDate) ? ` (${range(w.startDate, w.endDate)})` : ''}: ${w.summary}`);
     for (const h of w.highlights) out.push(`  - ${h}`);
   }
-  for (const v of resume.volunteer) out.push(`- **${v.position}, ${v.organization}** (volunteer): ${v.summary}`);
+  
+  out.push('', '## Volunteering', ...resume.volunteer.map((v) => `- **${v.position}, ${v.organization}** (${range(v.startDate, v.endDate)}): ${v.summary}`));
   out.push('', '## Education', ...resume.education.map((e) => `- ${e.studyType}, ${e.institution} (${range(e.startDate, e.endDate)})`), '');
-  out.push('## Projects', ...resume.projects.map((p) => `- **${link(p.name, p.url)}** (${p.keywords.join(', ')}): ${p.description}`), '');
+  out.push('## Projects', ...resume.projects.map((p) => `- **${link(p.name, p.url)}**${p.at ? ` ${p.at}` : ''}${p.private ? ' (private client work)' : ''} (${p.keywords.join(', ')}): ${p.description}`), '');
   out.push('## Activities', ...resume.activities.map((a) => `- **${link(a.name, a.url)}** (${a.role}${a.date ? `, ${a.date}` : ''}): ${a.description}`), '');
   if (resume.awards.length || resume.certificates.length) {
     out.push('## Awards & certificates', ...resume.awards.map((a) => `- ${a.title}, ${a.awarder}: ${a.summary}`), ...resume.certificates.map((c) => `- ${link(c.name, c.url)}, ${c.issuer}`), '');

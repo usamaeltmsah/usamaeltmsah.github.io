@@ -22,17 +22,18 @@ let resumeCache: Promise<Resume> | undefined;
 /** All CMS content assembled into one JSON Resume–shaped object. Cached per build. */
 export function getResume(): Promise<Resume> {
   return (resumeCache ??= (async () => {
-    const [experience, education, projects, activities, credentials, writing] = await Promise.all([
-      getCollection('experience'), getCollection('education'), getCollection('projects'),
+    const [experience, volunteering, education, projects, activities, credentials, writing] = await Promise.all([
+      getCollection('experience'), getCollection('volunteering'), getCollection('education'), getCollection('projects'),
       getCollection('activities'), getCollection('credentials'), getCollection('writing'),
     ]);
     const data = <T>(entries: { data: T }[]) => entries.map((e) => e.data);
+    const withId = <T>(entries: { id: string; data: T }[]) => entries.map((e) => ({ ...e.data, id: e.id }));
     return buildResume(
       {
         profile: profileData,
         skills: skillsSchema.parse(skillsJson),
-        experience: data(experience), education: data(education), projects: data(projects),
-        activities: data(activities), credentials: data(credentials), writing: data(writing),
+        experience: withId(experience), volunteering: withId(volunteering), education: data(education),
+        projects: withId(projects), activities: withId(activities), credentials: data(credentials), writing: data(writing),
       },
       new Date().toISOString().slice(0, 10),
     );

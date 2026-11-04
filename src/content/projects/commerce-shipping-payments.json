@@ -1,0 +1,23 @@
+{
+  "name": "Shipping & payments for a commerce app",
+  "order": 8,
+  "featured": false,
+  "private": true,
+  "onCv": true,
+  "period": "2025",
+  "experience": "upwork",
+  "description": "Extended a live commerce app on native iOS and Android, together with its PHP backend, to add shipping and payment integration end to end.",
+  "highlights": [
+    "Delivered across iOS, Android and backend in one engagement"
+  ],
+  "tech": [
+    "Swift",
+    "Android",
+    "PHP",
+    "Payments"
+  ],
+  "url": "",
+  "demo": "",
+  "image": "",
+  "color": "#d97706"
+}

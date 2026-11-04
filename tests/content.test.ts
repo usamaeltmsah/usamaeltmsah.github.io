@@ -1,7 +1,7 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { folders, singletons } from '../src/lib/schemas';
+import { folders, relations, singletons } from '../src/lib/schemas';
 
 const root = join(import.meta.dirname, '..', 'src');
 const read = (path: string) => JSON.parse(readFileSync(path, 'utf8'));
@@ -32,5 +32,17 @@ describe('profile', () => {
   it('references an existing photo', () => {
     const profile = singletons.profile.parse(read(join(root, 'content', 'profile.json')));
     expect(imageExists(profile.image)).toBe(true);
+  });
+});
+
+describe('relations', () => {
+  const ids = (name: string) => readdirSync(join(root, 'content', name)).filter((f) => f.endsWith('.json')).map((f) => f.slice(0, -5));
+
+  it.each(relations.map((r) => [`${r.from}.${r.field} → ${r.to}`, r] as const))('%s points to existing entries', (_, r) => {
+    const targets = new Set(ids(r.to));
+    const dangling = ids(r.from)
+      .map((id) => [id, read(join(root, 'content', r.from, `${id}.json`))[r.field] ?? ''] as const)
+      .filter(([, value]) => value !== '' && !targets.has(value));
+    expect(dangling, `entries in ${r.from} with a broken ${r.field} link`).toEqual([]);
   });
 });

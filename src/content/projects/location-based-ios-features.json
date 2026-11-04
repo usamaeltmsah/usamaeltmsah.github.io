@@ -1,0 +1,22 @@
+{
+  "name": "Location-based features for a live iOS app",
+  "order": 7,
+  "featured": false,
+  "private": true,
+  "onCv": true,
+  "period": "2024-2026",
+  "experience": "upwork",
+  "description": "Long-term freelance engagement adding location-based features to a production iOS app, from geolocation to map-driven flows.",
+  "highlights": [
+    "Nearly two years of continuous delivery for one client"
+  ],
+  "tech": [
+    "Swift",
+    "Core Location",
+    "MapKit"
+  ],
+  "url": "",
+  "demo": "",
+  "image": "",
+  "color": "#0891b2"
+}

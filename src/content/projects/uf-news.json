@@ -2,6 +2,10 @@
   "name": "UF News",
   "order": 4,
   "featured": true,
+  "private": false,
+  "onCv": false,
+  "period": "2022",
+  "experience": "",
   "description": "MVVM news reader on NewsAPI with categories, article details and an in-app web view.",
   "highlights": [
     "MVVM",

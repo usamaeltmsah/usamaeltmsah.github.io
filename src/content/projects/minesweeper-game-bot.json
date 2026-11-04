@@ -1,7 +1,11 @@
 {
   "name": "Minesweeper game bot",
-  "order": 12,
+  "order": 13,
   "featured": false,
+  "private": false,
+  "onCv": false,
+  "period": "2019",
+  "experience": "",
   "description": "Python bot that reads the board with computer vision and plays Minesweeper with automated clicks.",
   "highlights": [],
   "tech": [

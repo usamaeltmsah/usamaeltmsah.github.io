@@ -209,3 +209,28 @@ h1{font:800 clamp(40px,6.2vw,72px)/1.02 var(--display);letter-spacing:-.045em}
 .more{margin-top:24px;font-weight:600}
 @media (max-width:980px){.certs{grid-template-columns:1fr}}
 @media (max-width:640px){.certs ul{grid-template-columns:1fr}}
+
+/* client work */
+.sub-title{font:700 20px var(--display);letter-spacing:-.02em;margin:44px 0 0;display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 12px}
+.sub-title span{font:400 14px var(--sans);color:var(--muted);letter-spacing:0}
+.card-top{display:flex;justify-content:space-between;align-items:center}
+.period{font:500 12px var(--mono);color:var(--muted)}
+.hl{margin:0;padding-left:18px;color:var(--muted);font-size:14px}
+
+/* relations & volunteering */
+.at{font:500 13px var(--mono);color:var(--accent);margin-top:-4px}
+.related{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.related a{font:500 12px var(--mono);color:var(--accent);background:var(--chip);border:1px solid var(--line);border-radius:99px;padding:5px 11px;text-decoration:none}
+.related a:hover{border-color:var(--accent)}
+.vols{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.vol{display:grid;grid-template-columns:200px 1fr;overflow:hidden}
+.vol img{width:100%;height:100%;object-fit:cover;min-height:220px}
+.vol:not(:has(img)){grid-template-columns:1fr}
+.vol-body{padding:24px;display:flex;flex-direction:column;gap:8px}
+.vol h3{font:700 20px var(--display);letter-spacing:-.015em}
+.vol p{color:var(--muted);font-size:15px}
+.vol .role{font:500 12px var(--mono);color:var(--accent);text-transform:uppercase;letter-spacing:.06em}
+:target{scroll-margin-top:90px}
+.card:target,.act:target,.feat-card:target{border-color:var(--accent);box-shadow:0 0 0 3px var(--glow1)}
+@media (max-width:980px){.vols{grid-template-columns:1fr}}
+@media (max-width:640px){.vol{grid-template-columns:1fr}.vol img{min-height:0;aspect-ratio:16/9}}

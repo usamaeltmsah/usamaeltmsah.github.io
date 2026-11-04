@@ -1,7 +1,11 @@
 {
   "name": "Topotify Alarm",
-  "order": 8,
+  "order": 11,
   "featured": false,
+  "private": false,
+  "onCv": false,
+  "period": "2022-2023",
+  "experience": "",
   "description": "Custom Spotify alarm using the Spotify Web API with the Authorization Code flow.",
   "highlights": [],
   "tech": [

@@ -1,9 +1,11 @@
 {
   "name": "Agentic AI Conference",
-  "order": 3,
+  "order": 2,
   "role": "Attendee",
   "date": "2026-04",
   "description": "Data Science Dojo's conference on governing, securing and shipping agentic AI systems.",
   "url": "",
-  "image": ""
+  "image": "",
+  "experience": "",
+  "volunteering": ""
 }

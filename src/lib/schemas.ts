@@ -7,6 +7,8 @@ const looseDate = z.string().regex(/^$|^\d{4}(-(0[1-9]|1[0-2]))?$|^\d{4}-\d{4}$/
 const url = z.union([z.literal(''), z.url()]).default('');
 const text = z.string().trim().min(1);
 const list = z.array(text).default([]);
+/** A link to another entry by its file name (slug), e.g. "nugttah". Empty means no link. */
+const ref = z.string().regex(/^$|^[a-z0-9-]+$/, 'Pick an entry in the CMS').default('');
 
 export const profileSchema = z.object({
   name: text,
@@ -29,7 +31,7 @@ export const skillsSchema = z.object({
   interests: z.array(z.object({ name: text, keywords: list })),
 });
 
-export const experienceTypes = ['Full-time', 'Part-time', 'Freelance', 'Internship', 'Volunteer'] as const;
+export const experienceTypes = ['Full-time', 'Part-time', 'Freelance', 'Contract', 'Internship'] as const;
 
 export const experienceSchema = z.object({
   company: text,
@@ -41,6 +43,18 @@ export const experienceSchema = z.object({
   endDate: date,
   summary: text,
   highlights: list,
+});
+
+export const volunteeringSchema = z.object({
+  organization: text,
+  role: text,
+  url,
+  location: z.string().default(''),
+  startDate: date,
+  endDate: date,
+  summary: text,
+  highlights: list,
+  image: z.string().default(''),
 });
 
 export const educationSchema = z.object({
@@ -59,6 +73,13 @@ export const projectSchema = z.object({
   /** Managed by the CMS drag-and-drop; new entries sort last until reordered. */
   order: z.number().int().positive().default(999),
   featured: z.boolean().default(false),
+  /** Client or employer work: no links, shown with a "Private" label and described without client details. */
+  private: z.boolean().default(false),
+  /** Include in the 2-page CV (keep it to the 6 or so strongest). */
+  onCv: z.boolean().default(false),
+  period: looseDate,
+  /** The role this project was built in (experience slug). */
+  experience: ref,
   description: text,
   highlights: list,
   tech: list,
@@ -74,6 +95,9 @@ export const activitySchema = z.object({
   order: z.number().int().positive().default(999),
   role: text,
   date: looseDate,
+  /** Optional link to the job or volunteering role this activity happened in. */
+  experience: ref,
+  volunteering: ref,
   description: text,
   url,
   image: z.string().default(''),
@@ -101,6 +125,7 @@ export const writingSchema = z.object({
 export type Profile = z.infer<typeof profileSchema>;
 export type Skills = z.infer<typeof skillsSchema>;
 export type Experience = z.infer<typeof experienceSchema>;
+export type Volunteering = z.infer<typeof volunteeringSchema>;
 export type Education = z.infer<typeof educationSchema>;
 export type Project = z.infer<typeof projectSchema>;
 export type Activity = z.infer<typeof activitySchema>;
@@ -110,12 +135,20 @@ export type Writing = z.infer<typeof writingSchema>;
 /** Folder collections: directory under src/content → schema. Shared by Astro, the CMS test and the content test. */
 export const folders = {
   experience: experienceSchema,
+  volunteering: volunteeringSchema,
   education: educationSchema,
   projects: projectSchema,
   activities: activitySchema,
   credentials: credentialSchema,
   writing: writingSchema,
 } as const;
+
+/** Relation fields: [collection, field] → target collection. Checked by tests and at build time. */
+export const relations = [
+  { from: 'projects', field: 'experience', to: 'experience' },
+  { from: 'activities', field: 'experience', to: 'experience' },
+  { from: 'activities', field: 'volunteering', to: 'volunteering' },
+] as const;
 
 /** Single-file entries under src/content. */
 export const singletons = {

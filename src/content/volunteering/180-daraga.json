@@ -1,15 +1,15 @@
 {
-  "company": "180 Daraga",
-  "position": "PR & FR member, previously Graphic Designer",
-  "type": "Volunteer",
-  "url": "",
-  "location": "Cairo, Egypt",
+  "organization": "180 Daraga",
+  "role": "PR & FR member, previously Graphic Designer",
   "startDate": "2016-11",
   "endDate": "2020-08",
+  "location": "Cairo, Egypt",
+  "url": "",
   "summary": "Student-run non-profit at the Faculty of Computers and AI, Cairo University, offering technical and social services.",
   "highlights": [
     "Negotiated media, catering and funding sponsorships",
     "Recruited speakers and partnered with companies and co-working spaces",
     "Designed event material in Photoshop and Illustrator"
-  ]
+  ],
+  "image": ""
 }

@@ -1,13 +1,17 @@
 {
   "name": "Techniciano",
-  "order": 7,
+  "order": 10,
   "featured": false,
-  "description": "Multi-vendor service app: users post a request, nearby providers get notified, and users track the provider live.",
+  "private": true,
+  "onCv": false,
+  "period": "2022",
+  "experience": "2grand",
+  "description": "Multi-vendor service marketplace: users post a request, the nearest providers are notified, and users track the provider live.",
   "highlights": [],
   "tech": [
     "Swift",
-    "Push",
-    "Maps"
+    "Push notifications",
+    "MapKit"
   ],
   "url": "",
   "demo": "",

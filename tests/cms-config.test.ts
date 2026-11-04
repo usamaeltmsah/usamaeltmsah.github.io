@@ -5,7 +5,7 @@ import addFormats from 'ajv-formats';
 import { describe, expect, it } from 'vitest';
 import { parse } from 'yaml';
 import type { ZodObject } from 'astro/zod';
-import { folders, singletons } from '../src/lib/schemas';
+import { folders, relations, singletons } from '../src/lib/schemas';
 
 const root = join(import.meta.dirname, '..');
 const sveltia = join(root, 'node_modules/@sveltia/cms'); // read directly: the package's exports hide these files
@@ -36,7 +36,7 @@ describe('CMS config', () => {
   });
 
   it('only uses built-in widgets (the JSON Schema allows any custom name)', () => {
-    const builtIn = new Set(['string', 'text', 'boolean', 'select', 'list', 'object', 'image', 'color', 'hidden', 'number', 'datetime', 'file', 'markdown']);
+    const builtIn = new Set(['string', 'text', 'boolean', 'select', 'list', 'object', 'image', 'color', 'hidden', 'number', 'datetime', 'file', 'markdown', 'relation']);
     const widgets: string[] = [];
     const walk = (fields: (Field & { widget?: string; fields?: Field[] })[] = []) =>
       fields.forEach((f) => { widgets.push(f.widget ?? 'string'); walk(f.fields as never); });
@@ -59,6 +59,11 @@ describe('CMS config', () => {
   it.each(collections.map((c) => [c.name, c] as const))('collection %s matches its folder and schema', (name, c) => {
     expect(c.folder).toBe(`src/content/${name}`);
     checkFields(c, folders[name as keyof typeof folders]);
+  });
+
+  it.each(relations.map((r) => [`${r.from}.${r.field}`, r] as const))('%s is a relation picker to the right collection, stored by slug', (_, r) => {
+    const field = (collections.find((c) => c.name === r.from)!.fields as (Field & Record<string, unknown>)[]).find((f) => f.name === r.field);
+    expect(field).toMatchObject({ widget: 'relation', collection: r.to, value_field: '{{slug}}' });
   });
 
   it.each((config.singletons as Section[]).map((s) => [s.name, s] as const))('singleton %s matches its file and schema', (name, s) => {

@@ -1,7 +1,11 @@
 {
   "name": "YouTube Reelz",
-  "order": 11,
+  "order": 15,
   "featured": false,
+  "private": false,
+  "onCv": false,
+  "period": "2022",
+  "experience": "",
   "description": "MVVM app listing YouTube videos in a collection view, playing on tap.",
   "highlights": [],
   "tech": [

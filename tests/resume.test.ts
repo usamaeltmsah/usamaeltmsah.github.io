@@ -30,6 +30,13 @@ describe('byRecency', () => {
   });
 });
 
+const job = (id: string, company: string, type: 'Full-time' | 'Freelance', startDate: string, endDate: string) =>
+  ({ id, company, position: 'Dev', type, url: '', location: '', startDate, endDate, summary: 's', highlights: [] });
+const project = (id: string, order: number, over: Partial<Content['projects'][number]> = {}): Content['projects'][number] => ({
+  id, name: id.toUpperCase(), order, featured: false, private: false, onCv: false, period: '', experience: '',
+  description: 'd', highlights: [], tech: [], url: '', demo: '', image: '', color: '', ...over,
+});
+
 const content: Content = {
   profile: {
     name: 'Ada', label: 'iOS Developer', headline: 'Hi', image: '', email: 'a@b.co', url: 'https://example.com/',
@@ -37,17 +44,17 @@ const content: Content = {
     stats: [{ value: '1', label: 'stat' }], profiles: [],
   },
   skills: { technical: [{ name: 'UI', keywords: ['SwiftUI'] }], soft: [{ name: 'Ownership', description: 'x' }], languages: [], interests: [] },
-  experience: [
-    { company: 'Old', position: 'Dev', type: 'Full-time', url: '', location: '', startDate: '2019-01', endDate: '2020-01', summary: 's', highlights: [] },
-    { company: 'Club', position: 'Member', type: 'Volunteer', url: '', location: '', startDate: '2016-01', endDate: '2018-01', summary: 's', highlights: [] },
-    { company: 'Now', position: 'Dev', type: 'Freelance', url: '', location: '', startDate: '2022-01', endDate: '', summary: 's', highlights: [] },
-  ],
+  experience: [job('old', 'Old Co', 'Full-time', '2019-01', '2020-01'), job('market', 'Upwork', 'Freelance', '2022-01', '')],
+  volunteering: [{ id: 'club', organization: 'Club', role: 'Member', url: '', location: '', startDate: '2016-01', endDate: '2018-01', summary: 's', highlights: [], image: 'club.jpg' }],
   education: [],
   projects: [
-    { name: 'B', order: 2, featured: false, description: 'd', highlights: [], tech: ['Swift'], url: '', demo: '', image: '', color: '' },
-    { name: 'A', order: 1, featured: true, description: 'd', highlights: [], tech: [], url: '', demo: '', image: 'a.png', color: '#123456' },
+    project('b', 2, { private: true, onCv: true, period: '2022-2025', experience: 'market', url: 'https://leak.example', tech: ['Swift'] }),
+    project('a', 1, { featured: true, period: '2024', experience: 'old', url: 'https://a.example', image: 'a.png', color: '#123456' }),
   ],
-  activities: [{ name: 'Hack', order: 1, role: 'Participant', date: '2025-07', description: 'd', url: '', image: '' }],
+  activities: [
+    { id: 'hack', name: 'Hack', order: 1, role: 'Participant', date: '2025-07', description: 'd', url: '', image: '', experience: 'old', volunteering: '' },
+    { id: 'talk', name: 'Talk', order: 2, role: 'Speaker', date: '', description: 'd', url: '', image: '', experience: '', volunteering: 'club' },
+  ],
   credentials: [
     { kind: 'Certificate', name: 'Old cert', issuer: 'X', date: '2020-01', url: '', summary: '' },
     { kind: 'Award', name: 'Top', issuer: 'Upwork', date: '', url: '', summary: 'great' },
@@ -59,20 +66,47 @@ const content: Content = {
 describe('buildResume', () => {
   const r = buildResume(content, '2026-01-01');
 
-  it('splits volunteering out of work and sorts work by recency', () => {
-    expect(r.work.map((w) => w.name)).toEqual(['Now', 'Old']);
-    expect(r.volunteer.map((v) => v.organization)).toEqual(['Club']);
+  it('sorts work by recency and keeps volunteering separate', () => {
+    expect(r.work.map((w) => w.name)).toEqual(['Upwork', 'Old Co']);
+    expect(r.volunteer).toMatchObject([{ id: 'club', organization: 'Club', position: 'Member', image: 'club.jpg' }]);
   });
   it('splits credentials into awards and newest-first certificates', () => {
     expect(r.awards.map((a) => a.title)).toEqual(['Top']);
     expect(r.certificates.map((c) => c.name)).toEqual(['New cert', 'Old cert']);
   });
   it('orders projects by the CMS order and defaults the color', () => {
-    expect(r.projects.map((p) => p.name)).toEqual(['A', 'B']);
+    expect(r.projects.map((p) => p.id)).toEqual(['a', 'b']);
     expect(r.projects[1].color).toBe('#64748b');
+  });
+  it('never exposes links for private projects', () => {
+    expect(r.projects[1]).toMatchObject({ private: true, url: '', demo: '' });
+    expect(r.projects[0].url).toBe('https://a.example');
   });
   it('derives the canonical URL from the profile URL', () => {
     expect(r.meta).toEqual({ canonical: 'https://example.com/resume.json', version: 'v1.0.0', lastModified: '2026-01-01' });
+  });
+});
+
+describe('relations', () => {
+  const r = buildResume(content, '2026-01-01');
+
+  it('labels projects and activities with the linked role', () => {
+    expect(r.projects.map((p) => [p.entity, p.at])).toEqual([['Old Co', 'at Old Co'], ['Upwork', 'via Upwork']]);
+    expect(r.activities.map((a) => a.at)).toEqual(['at Old Co', 'with Club']);
+  });
+  it('lists linked projects and activities on each role', () => {
+    const old = r.work.find((w) => w.id === 'old')!;
+    expect(old.projects).toEqual([{ id: 'a', name: 'A' }]);
+    expect(old.activities).toEqual([{ id: 'hack', name: 'Hack' }]);
+    expect(r.volunteer[0].activities).toEqual([{ id: 'talk', name: 'Talk' }]);
+  });
+  it('follows a role when it is edited, because links are by id', () => {
+    const renamed = buildResume({ ...content, experience: [job('old', 'Renamed Co', 'Full-time', '2019-01', '2020-01'), content.experience[1]] }, 'x');
+    expect(renamed.projects[0].at).toBe('at Renamed Co');
+  });
+  it('fails loudly on a link to a missing entry', () => {
+    const broken = { ...content, projects: [project('x', 1, { experience: 'deleted-role' })] };
+    expect(() => buildResume(broken, 'x')).toThrow('Project "X" links to experience "deleted-role", which doesn\'t exist');
   });
 });
 
@@ -83,10 +117,17 @@ describe('toJsonResume', () => {
     expect(json).not.toHaveProperty('stats');
     expect(json.projects[0]).not.toHaveProperty('featured');
     expect(json.projects[0]).not.toHaveProperty('color');
+    expect(json.projects[0]).not.toHaveProperty('onCv');
+    expect(json.work[0]).not.toHaveProperty('id');
+    expect(json.volunteer[0]).not.toHaveProperty('image');
+  });
+  it('maps project periods to JSON Resume dates, entity and type', () => {
+    expect(json.projects[0]).toMatchObject({ startDate: '2024', endDate: '', type: 'personal', entity: 'Old Co' });
+    expect(json.projects[1]).toMatchObject({ startDate: '2022', endDate: '2025', type: 'client work', entity: 'Upwork' });
   });
   it('keeps the extra sections and uses an absolute image URL', () => {
     expect(json.softSkills).toHaveLength(1);
-    expect(json.activities).toHaveLength(1);
+    expect(json.activities).toHaveLength(2);
     expect(json.basics.image).toBe('https://example.com/og.png');
   });
 });

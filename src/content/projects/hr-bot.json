@@ -1,7 +1,11 @@
 {
   "name": "HR-Bot",
-  "order": 9,
+  "order": 12,
   "featured": false,
+  "private": false,
+  "onCv": false,
+  "period": "2019-2020",
+  "experience": "",
   "description": "Graduation project: automated first-round interviews scored by an NLP model, built with Laravel and React.",
   "highlights": [],
   "tech": [

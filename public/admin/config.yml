@@ -117,7 +117,7 @@ collections:
     label: Experience
     label_singular: Role
     icon: work
-    description: Jobs, freelance, internships and volunteering. Current roles show first on the site.
+    description: Jobs, freelance work and internships. Current roles show first. Volunteering has its own section.
     folder: src/content/experience
     format: json
     extension: json
@@ -137,13 +137,40 @@ collections:
     fields:
       - { name: company, label: Company / organization }
       - { name: position, label: Position }
-      - { name: type, label: Type, widget: select, default: Full-time, options: [Full-time, Part-time, Freelance, Internship, Volunteer] }
+      - { name: type, label: Type, widget: select, default: Full-time, options: [Full-time, Part-time, Freelance, Contract, Internship] }
       - { name: startDate, label: Start, hint: "YYYY-MM", pattern: ["^\\d{4}(-(0[1-9]|1[0-2]))?$", "Use YYYY or YYYY-MM"] }
       - { name: endDate, label: End, required: false, hint: "Leave empty if this is your current role", pattern: ["^$|^\\d{4}(-(0[1-9]|1[0-2]))?$", "Use YYYY or YYYY-MM"] }
       - { name: location, label: Location, required: false, hint: "e.g. Cairo, Egypt · Hybrid" }
       - { name: url, label: Company URL, required: false }
       - { name: summary, label: Summary, widget: text, hint: "One sentence on what you did there." }
       - { name: highlights, label: Highlights, widget: list, required: false, hint: "Results with numbers stand out most." }
+
+  - name: volunteering
+    label: Volunteering
+    label_singular: Volunteer role
+    icon: volunteer_activism
+    description: Unpaid roles in communities and non-profits. Shown in their own section on the site and the CV.
+    folder: src/content/volunteering
+    format: json
+    extension: json
+    identifier_field: organization
+    slug: "{{organization}}"
+    summary: "{{role}} · {{organization}}"
+    thumbnail: image
+    sortable_fields:
+      fields: [startDate, organization]
+      default: { field: startDate, direction: descending }
+    editor: { preview: false }
+    fields:
+      - { name: organization, label: Organization }
+      - { name: role, label: Role }
+      - { name: startDate, label: Start, hint: "YYYY-MM", pattern: ["^\\d{4}(-(0[1-9]|1[0-2]))?$", "Use YYYY or YYYY-MM"] }
+      - { name: endDate, label: End, required: false, hint: "Leave empty if ongoing", pattern: ["^$|^\\d{4}(-(0[1-9]|1[0-2]))?$", "Use YYYY or YYYY-MM"] }
+      - { name: location, label: Location, required: false }
+      - { name: url, label: Organization URL, required: false }
+      - { name: summary, label: Summary, widget: text }
+      - { name: highlights, label: Highlights, widget: list, required: false }
+      - { name: image, label: Photo, widget: image, required: false }
 
   - name: education
     label: Education
@@ -174,7 +201,7 @@ collections:
     label: Projects
     label_singular: Project
     icon: apps
-    description: Drag to reorder. Featured projects appear large, in a phone frame, using their screenshot.
+    description: Drag to reorder. Featured projects appear large in a phone frame; private ones appear under Client work; "Show on CV" picks the CV projects.
     folder: src/content/projects
     format: json
     extension: json
@@ -185,11 +212,17 @@ collections:
     reorder: true
     view_filters:
       - { name: featured, label: Featured, field: featured, eq: true }
-      - { name: other, label: Not featured, field: featured, eq: false }
+      - { name: on-cv, label: On CV, field: onCv, eq: true }
+      - { name: private, label: Client work (private), field: private, eq: true }
+      - { name: personal, label: Personal & open source, field: private, eq: false }
     editor: { preview: false }
     fields:
       - { name: name, label: Name }
       - { name: featured, label: Featured, widget: boolean, default: false, hint: "Needs a portrait screenshot." }
+      - { name: private, label: Private client work, widget: boolean, default: false, hint: "Hides links and shows a Private label. Describe the work only: no client names, app names, numbers you're not allowed to share, or screenshots." }
+      - { name: onCv, label: Show on CV, widget: boolean, default: false, hint: "Keep about 6 projects on the CV so it stays at 2 pages." }
+      - { name: experience, label: Built at (role), widget: relation, collection: experience, value_field: "{{slug}}", search_fields: [company, position], display_fields: ["{{position}} · {{company}}"], required: false, hint: "Links the project to a role. The site shows “at Nugttah” or “via Upwork”, and the role lists the project." }
+      - { name: period, label: Period, required: false, hint: "YYYY, YYYY-MM or a range like 2022-2025", pattern: ["^$|^\\d{4}(-(0[1-9]|1[0-2]))?$|^\\d{4}-\\d{4}$", "Use YYYY, YYYY-MM or YYYY-YYYY"] }
       - { name: image, label: Screenshot, widget: image, required: false, hint: "Portrait phone screenshot works best." }
       - { name: description, label: Description, widget: text }
       - { name: tech, label: Tech tags, widget: list, hint: "e.g. SwiftUI, MapKit" }
@@ -217,6 +250,8 @@ collections:
       - { name: role, label: Your role, hint: "e.g. Participant, Speaker, Trainer" }
       - { name: date, label: Date, required: false, hint: "YYYY-MM, YYYY or a range like 2018-2019", pattern: ["^$|^\\d{4}(-(0[1-9]|1[0-2]))?$|^\\d{4}-\\d{4}$", "Use YYYY, YYYY-MM or YYYY-YYYY"] }
       - { name: description, label: Description, widget: text }
+      - { name: experience, label: Related job, widget: relation, collection: experience, value_field: "{{slug}}", search_fields: [company, position], display_fields: ["{{position}} · {{company}}"], required: false, hint: "Optional. Use this or Related volunteering, not both." }
+      - { name: volunteering, label: Related volunteering, widget: relation, collection: volunteering, value_field: "{{slug}}", search_fields: [organization, role], display_fields: ["{{role}} · {{organization}}"], required: false }
       - { name: image, label: Photo, widget: image, required: false }
       - { name: url, label: Link, required: false }
 

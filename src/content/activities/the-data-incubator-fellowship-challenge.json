@@ -1,9 +1,11 @@
 {
   "name": "The Data Incubator Fellowship Challenge",
-  "order": 7,
+  "order": 5,
   "role": "Applicant",
   "date": "2019",
   "description": "Completed the data science fellowship challenge in R.",
   "url": "https://github.com/usamaeltmsah/thedataincubator-challenge",
-  "image": ""
+  "image": "",
+  "experience": "",
+  "volunteering": ""
 }

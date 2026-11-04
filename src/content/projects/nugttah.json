@@ -2,12 +2,21 @@
   "name": "Nugttah",
   "order": 6,
   "featured": false,
-  "description": "Digital loyalty app in Saudi Arabia that replaces physical cards. I led the iOS app: reviews 120 → 6,000, rating 4.3 → 4.8.",
-  "highlights": [],
+  "private": true,
+  "onCv": false,
+  "period": "2023-2024",
+  "experience": "nugttah",
+  "description": "Led the iOS app of a digital loyalty platform in Saudi Arabia that replaces physical loyalty cards.",
+  "highlights": [
+    "App Store reviews grew from 120 to 6,000+",
+    "Rating improved from 4.3 to 4.8",
+    "UI/UX overhaul and performance optimization"
+  ],
   "tech": [
     "Swift",
-    "iOS",
-    "Product"
+    "UIKit",
+    "REST APIs",
+    "Analytics"
   ],
   "url": "",
   "demo": "",

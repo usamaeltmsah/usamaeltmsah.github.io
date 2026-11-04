@@ -2,6 +2,10 @@
   "name": "Safari Darkula",
   "order": 1,
   "featured": true,
+  "private": false,
+  "onCv": true,
+  "period": "2022",
+  "experience": "",
   "description": "iOS app plus Safari Web Extension that re-themes any website in Dark, Gray or Sepia, with ON / OFF / Auto (time-based) modes.",
   "highlights": [
     "App-to-extension communication across targets",

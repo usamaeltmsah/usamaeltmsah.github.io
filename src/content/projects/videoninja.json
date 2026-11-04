@@ -2,6 +2,10 @@
   "name": "VideoNinja",
   "order": 2,
   "featured": true,
+  "private": false,
+  "onCv": true,
+  "period": "2024",
+  "experience": "",
   "description": "iOS video-editing app built on AVFoundation, with grayscale and sepia filters and a live preview.",
   "highlights": [
     "Media composition and playback",

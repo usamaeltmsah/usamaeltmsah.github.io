@@ -1,7 +1,11 @@
 {
   "name": "HP Trivia",
-  "order": 10,
+  "order": 14,
   "featured": false,
+  "private": false,
+  "onCv": false,
+  "period": "2025",
+  "experience": "",
   "description": "Harry Potter trivia game in SwiftUI.",
   "highlights": [],
   "tech": [

@@ -6,6 +6,7 @@ const json = (dir: keyof typeof folders) => glob({ pattern: '*.json', base: `./s
 
 export const collections = {
   experience: defineCollection({ loader: json('experience'), schema: folders.experience }),
+  volunteering: defineCollection({ loader: json('volunteering'), schema: folders.volunteering }),
   education: defineCollection({ loader: json('education'), schema: folders.education }),
   projects: defineCollection({ loader: json('projects'), schema: folders.projects }),
   activities: defineCollection({ loader: json('activities'), schema: folders.activities }),

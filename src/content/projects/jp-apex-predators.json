@@ -2,6 +2,10 @@
   "name": "JP Apex Predators",
   "order": 5,
   "featured": true,
+  "private": false,
+  "onCv": false,
+  "period": "2025",
+  "experience": "",
   "description": "Jurassic Park-themed list app with sorting, filtering, search, animations and MapKit locations.",
   "highlights": [
     "Search, sort and filter",

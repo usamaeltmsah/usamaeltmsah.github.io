@@ -1,15 +1,32 @@
-import type { Activity, Credential, Education, Experience, Profile, Project, Skills, Writing } from './schemas';
+import type { Activity, Credential, Education, Experience, Profile, Project, Skills, Volunteering, Writing } from './schemas';
+
+/** An entry plus its id: the file name without .json, which relations point to. */
+export type Entry<T> = T & { id: string };
 
 export type Content = {
   profile: Profile;
   skills: Skills;
-  experience: Experience[];
+  experience: Entry<Experience>[];
+  volunteering: Entry<Volunteering>[];
   education: Education[];
-  projects: Project[];
-  activities: Activity[];
+  projects: Entry<Project>[];
+  activities: Entry<Activity>[];
   credentials: Credential[];
   writing: Writing[];
 };
+
+/** Looks up related entries by id; a dangling link is an error, never a silent blank. */
+function linker<T extends { id: string }>(items: T[], collection: string) {
+  const byId = new Map(items.map((i) => [i.id, i]));
+  return (id: string, from: string): T | undefined => {
+    if (!id) return undefined;
+    const hit = byId.get(id);
+    if (!hit) {
+      throw new Error(`${from} links to ${collection} "${id}", which doesn't exist. Pick another entry in the CMS, or restore the deleted one.`);
+    }
+    return hit;
+  };
+}
 
 const MONTH = /^(0[1-9]|1[0-2])$/;
 
@@ -48,6 +65,15 @@ export function buildResume(c: Content, lastModified: string) {
   const p = c.profile;
   const jobs = [...c.experience].sort(byRecency);
   const credentials = [...c.credentials].sort(byDateDesc);
+  const job = linker(c.experience, 'experience');
+  const volunteering = linker(c.volunteering, 'volunteering');
+  const projects = [...c.projects].sort(byOrder);
+  const activities = [...c.activities].sort(byOrder);
+  const projectsAt = (id: string) => projects.filter((x) => x.experience === id).map((x) => ({ id: x.id, name: x.name }));
+  const activitiesAt = (field: 'experience' | 'volunteering', id: string) =>
+    activities.filter((a) => a[field] === id).map((a) => ({ id: a.id, name: a.name }));
+  /** "at Nugttah" for employers, "via Upwork" for freelance platforms. */
+  const atJob = (j?: Entry<Experience>) => (j ? `${j.type === 'Freelance' ? 'via' : 'at'} ${j.company}` : '');
 
   return {
     basics: {
@@ -63,13 +89,15 @@ export function buildResume(c: Content, lastModified: string) {
       profiles: p.profiles,
     },
     stats: p.stats,
-    work: jobs.filter((j) => j.type !== 'Volunteer').map((j) => ({
-      name: j.company, position: j.position, type: j.type, url: j.url, location: j.location,
+    work: jobs.map((j) => ({
+      id: j.id, name: j.company, position: j.position, type: j.type, url: j.url, location: j.location,
       startDate: j.startDate, endDate: j.endDate, summary: j.summary, highlights: j.highlights,
+      projects: projectsAt(j.id), activities: activitiesAt('experience', j.id),
     })),
-    volunteer: jobs.filter((j) => j.type === 'Volunteer').map((j) => ({
-      organization: j.company, position: j.position, url: j.url, location: j.location,
-      startDate: j.startDate, endDate: j.endDate, summary: j.summary, highlights: j.highlights,
+    volunteer: [...c.volunteering].sort(byRecency).map((v) => ({
+      id: v.id, organization: v.organization, position: v.role, url: v.url, location: v.location,
+      startDate: v.startDate, endDate: v.endDate, summary: v.summary, highlights: v.highlights,
+      image: v.image, activities: activitiesAt('volunteering', v.id),
     })),
     education: [...c.education].sort(byRecency).map((e) => ({
       institution: e.institution, url: e.url, area: e.area, studyType: e.degree,
@@ -89,11 +117,20 @@ export function buildResume(c: Content, lastModified: string) {
     languages: c.skills.languages,
     interests: c.skills.interests,
     references: [] as { name: string; reference: string }[],
-    projects: [...c.projects].sort(byOrder).map((x) => ({
-      name: x.name, featured: x.featured, description: x.description, highlights: x.highlights,
-      keywords: x.tech, url: x.url, demo: x.demo, image: x.image, color: x.color || '#64748b',
-    })),
-    activities: [...c.activities].sort(byOrder).map(({ order: _order, ...a }) => a),
+    projects: projects.map((x) => {
+      const j = job(x.experience, `Project "${x.name}"`);
+      return {
+      id: x.id, name: x.name, entity: j?.company ?? '', at: atJob(j),
+      featured: x.featured, private: x.private, onCv: x.onCv, period: x.period,
+      description: x.description, highlights: x.highlights, keywords: x.tech,
+      url: x.private ? '' : x.url, demo: x.private ? '' : x.demo, image: x.image, color: x.color || '#64748b',
+      };
+    }),
+    activities: activities.map(({ order: _order, experience, volunteering: vol, ...a }) => {
+      const j = job(experience, `Activity "${a.name}"`);
+      const v = volunteering(vol, `Activity "${a.name}"`);
+      return { ...a, at: j ? atJob(j) : v ? `with ${v.organization}` : '' };
+    }),
     meta: { canonical: new URL('resume.json', p.url).href, version: 'v1.0.0', lastModified },
   };
 }
@@ -110,6 +147,12 @@ export function toJsonResume(r: Resume) {
     $schema: 'https://raw.githubusercontent.com/jsonresume/resume-schema/v1.0.0/schema.json',
     ...rest,
     basics: { ...rest.basics, image: new URL('og.png', r.basics.url).href },
-    projects: r.projects.map(({ featured: _f, color: _c, ...x }) => x),
+    work: r.work.map(({ id: _id, projects: _p, activities: _a, ...w }) => w),
+    volunteer: r.volunteer.map(({ id: _id, image: _i, activities: _a, ...v }) => v),
+    activities: r.activities.map(({ id: _id, at: _at, ...a }) => a),
+    projects: r.projects.map(({ id: _id, at: _at, featured: _f, color: _c, onCv: _cv, private: isPrivate, period, ...x }) => {
+      const [startDate = '', endDate = ''] = period.match(/^\d{4}-\d{4}$/) ? period.split('-') : [period];
+      return { ...x, startDate, endDate, type: isPrivate ? 'client work' : 'personal' };
+    }),
   };
 }
