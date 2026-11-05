@@ -245,7 +245,9 @@ h1{font:800 clamp(40px,6.2vw,72px)/1.02 var(--display);letter-spacing:-.045em}
 @media (max-width:640px){.vol{grid-template-columns:1fr}.vol img{min-height:0;aspect-ratio:16/9}}
 
 /* client feedback */
-.quotes{display:grid;grid-auto-flow:column;grid-auto-columns:calc((100% - 16px) / 2.15);gap:16px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none;padding:4px 2px 8px;margin:-4px -2px 0}
+/* scroll-padding matches the side padding so the first card starts snapped: a snap scroll during
+   load would make Chrome stop recording LCP (PageSpeed then reports NO_LCP) */
+.quotes{display:grid;grid-auto-flow:column;grid-auto-columns:calc((100% - 16px) / 2.15);gap:16px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none;padding:4px 2px 8px;margin:-4px -2px 0;scroll-padding-inline:2px}
 .quotes::-webkit-scrollbar{display:none}
 .quotes:focus-visible{outline-offset:6px}
 .quote{margin:0;padding:28px;display:flex;flex-direction:column;gap:14px;position:relative;scroll-snap-align:start}

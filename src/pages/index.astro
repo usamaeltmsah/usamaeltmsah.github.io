@@ -176,7 +176,7 @@ const phoneData = {
     ))}
   </div>
   <div class="car-nav" hidden>
-    <button class="icon-btn car-prev" type="button" aria-label="Previous review"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
+    <button class="icon-btn car-prev" type="button" aria-label="Previous review" disabled><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
     <span class="car-count" aria-live="polite">1 / {resume.testimonials.length}</span>
     <button class="icon-btn car-next" type="button" aria-label="Next review"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg></button>
   </div>
@@ -369,7 +369,8 @@ const phoneData = {
   next.addEventListener('click',function(){go(1)});
   row.addEventListener('scroll',update,{passive:true});
   addEventListener('resize',update);
-  nav.hidden=false;update();
+  /* The markup already shows "1 / N" with Previous disabled, so nothing is measured at load */
+  nav.hidden=false;
 })();
 </script>
 
