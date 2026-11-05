@@ -382,12 +382,19 @@ const phoneData = {
   var webgl=false;try{webgl=!!document.createElement('canvas').getContext('webgl2')}catch(e){}
   if(!section||!src||!webgl||!('IntersectionObserver' in window))return;
   section.classList.add('has-phones');
+  /* Fetch the bundle once the page is loaded and idle, so it's ready before anyone scrolls there */
+  addEventListener('load',function(){
+    var c=navigator.connection;if(c&&c.saveData)return;
+    (window.requestIdleCallback||function(f){setTimeout(f,2000)})(function(){
+      var l=document.createElement('link');l.rel='modulepreload';l.href=src;document.head.appendChild(l);
+    },{timeout:5000});
+  });
   var io=new IntersectionObserver(function(es){
     if(!es[0].isIntersecting)return;io.disconnect();
     var s=document.createElement('script');s.type='module';s.src=src;
     s.onerror=function(){section.classList.remove('has-phones');console.error('[phone-stack] could not load '+src+'; showing the plain timeline')};
     document.head.appendChild(s);
-  },{rootMargin:'800px 0px'});
+  },{rootMargin:'1200px 0px'});
   io.observe(section);
 })();
 </script>

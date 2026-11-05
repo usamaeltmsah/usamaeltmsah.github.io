@@ -31,9 +31,10 @@ function roundedRect(w: number, h: number, r: number) {
  * Throws when WebGL can't start, so the caller keeps the plain timeline.
  */
 export async function mount(section: HTMLElement, data: Timeline) {
-  const stage = section.querySelector<HTMLElement>('.stage');
+  const stageEl = section.querySelector<HTMLElement>('.stage');
   const rail = section.querySelector<HTMLElement>('.rail');
-  if (!stage || !rail) throw new Error('phone stack markup is missing .stage or .rail');
+  if (!stageEl || !rail) throw new Error('phone stack markup is missing .stage or .rail');
+  const stage: HTMLElement = stageEl; // a narrowed const, so the frame loop below can use it
   const { roles } = data;
 
   const token = (n: string) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
@@ -81,8 +82,6 @@ export async function mount(section: HTMLElement, data: Timeline) {
   const ringMat = new THREE.MeshBasicMaterial({ color: 0x0d0d14 });
   const metal = new THREE.MeshPhysicalMaterial({ color: FRAME, metalness: 0.95, roughness: 0.38, clearcoat: 0.6, clearcoatRoughness: 0.2 });
 
-  await preload([...data.projects.map((p) => p.image), ...roles.map((r) => r.image)]);
-
   const phones = roles.map((r, i) => {
     const group = new THREE.Group();
     const ui = createApp(r, data, KIND[r.kind]);
@@ -115,6 +114,12 @@ export async function mount(section: HTMLElement, data: Timeline) {
     scene.add(group);
     return { group, glass, i, ui, tex, faded };
   });
+
+  // Photos and screenshots fill in as they arrive, so the phones never wait for the network:
+  // role photos first (they're on each Work screen), then project screenshots
+  const redraw = () => phones.forEach((ph) => { ph.ui.render(); ph.tex.needsUpdate = true; });
+  preload(roles.map((r) => r.image)).then(redraw)
+    .then(() => preload(data.projects.map((p) => p.image))).then(redraw);
 
   // ---- Year rail: one button per role, newest first ----
   rail.innerHTML = '';
@@ -232,6 +237,7 @@ export async function mount(section: HTMLElement, data: Timeline) {
       for (const m of ph.faded) m.opacity = fade;
     }
     renderer.render(scene, camera);
+    stage.classList.add('ready'); // hides the placeholder frame
     if (visible) raf = requestAnimationFrame(frame);
   }
   raf = requestAnimationFrame(frame);
