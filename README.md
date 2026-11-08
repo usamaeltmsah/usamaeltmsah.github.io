@@ -84,13 +84,13 @@ Tick **Private client work** on a project to show it under **Client work** on th
 
 ### The CV
 
-`/cv/` and `/cv.pdf` fit **two A4 pages**, split into a main column and a sidebar. The main column comes first in the HTML, so screeners read it as one block before the sidebar; the ATS check below fails the build if that ever breaks. No photo, icons or tables.
+`/cv/` and `/cv.pdf` fit **two A4 pages at 100% scale** in a single column, the layout resume-screening tools parse most reliably: no photo, icons, tables or sidebars. For people, the body is 9.8pt with aligned dates and skill labels, so the page scans quickly. In order:
 
-- Header: name, title and contact details written out in full.
-- Main column: Summary; Experience (full-time and freelance roles in full, internships and part-time roles as one line each under "Earlier experience"); Projects (those with **Show on CV** ticked, about 5).
-- Sidebar: Skills, Education, Certifications, Awards, the first 2 activities with volunteering, and Languages.
+- Header (name, title, contact details written out), Summary, Skills.
+- Experience: full-time and freelance roles in full; internships and part-time roles in one compact paragraph under "Earlier experience".
+- Projects (those with **Show on CV** ticked, about 5), Education, Certifications (grouped by issuer, one line each), the first 2 activities with volunteering, and Languages.
 
-Client quotes stay on the website only; screeners skip them. Write the profile summary without "I" or "my" (the build checks this), and start highlights with a verb ("Built", "Led", "Shipped").
+Client quotes and the Top Rated award stay on the website only; screeners skip quotes, and Top Rated already appears in the summary and the Upwork role. Write the profile summary without "I" or "my" (the build checks this), and start highlights with a verb ("Built", "Led", "Shipped").
 
 **ATS-friendly by construction.** After rendering, the build reads the PDF back the way an applicant tracking system does (with PDF.js) and fails the deploy if any of these break:
 
