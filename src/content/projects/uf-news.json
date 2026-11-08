@@ -6,18 +6,23 @@
   "onCv": false,
   "period": "2022",
   "experience": "",
-  "description": "MVVM news reader on NewsAPI with categories, article details and an in-app web view.",
+  "description": "News reader on NewsAPI with categories, search, article details and an in-app web view.",
   "highlights": [
-    "MVVM",
-    "REST networking"
+    "Typed Moya service layer",
+    "Image caching with SDWebImage",
+    "In-app reading with WebKit"
   ],
   "tech": [
-    "MVVM",
-    "REST",
-    "UIKit"
+    "UIKit",
+    "Moya",
+    "REST"
   ],
   "url": "https://github.com/usamaeltmsah/UF-News-iOS",
   "demo": "",
   "image": "/src/assets/images/uf-news.png",
-  "color": "#7c3aed"
+  "color": "#7c3aed",
+  "problem": "A news reader tests everyday iOS work: talking to a REST API, showing images in long lists, and keeping scrolling smooth. I built UF News on NewsAPI to do that work cleanly.",
+  "approach": "The app uses MVC with a separate service layer. All networking goes through Moya. A single ArticleService enum describes the two NewsAPI endpoints, top headlines and search across all articles, with their paths, query parameters and API key header in one place. View controllers ask the service for data and never build URLs themselves.\n\nHeadlines are grouped by category in a horizontal selector, and each article opens a detail screen. The full story opens in an in-app WebKit view, so readers never leave the app.",
+  "challenge": "Keeping long, image-heavy lists smooth.\n\nSDWebImage loads article images in the background and caches them, so a reused cell doesn't download the same picture again as you scroll back. A loading indicator covers the network wait instead of an empty screen. Because the API is defined as a typed Moya target, adding the second endpoint took only a few lines.",
+  "outcome": "Five screens covering headlines by category, search, article details and in-app reading.\n\nThe typed service layer keeps every request in one place, so endpoints are easy to add, change or stub out."
 }

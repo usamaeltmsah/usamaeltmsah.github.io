@@ -20,5 +20,14 @@
   "url": "https://github.com/usamaeltmsah/Safari-Darkula",
   "demo": "https://dev.to/usamaeltmsah/building-sepia-theme-for-mobile-browser-using-css-3ei4",
   "image": "/src/assets/images/safari-darkula.png",
-  "color": "#6d28d9"
+  "color": "#6d28d9",
+  "problem": "Most websites still ship without a dark theme, and Safari on iPhone has no setting to force one. Reading at night meant bright white pages.\n\nI wanted one switch that themes any website, with softer options than pure black: Gray and Sepia.",
+  "approach": "The project has two targets. The iOS app is where you pick a theme and a mode. A Safari Web Extension then restyles the pages by injecting a stylesheet for the chosen theme into each tab. Sites where a generic dark theme breaks the layout, like GitHub, Google, Stack Overflow and YouTube, get their own hand-tuned stylesheets.\n\nThere are three modes: On, Off and Auto. Auto turns the dark theme on between 8 pm and 7 am, so it follows the evening without you touching anything. You can also limit the themes to a list of websites, and the app's own screens follow the system appearance.",
+  "challenge": "The app and the extension run as separate, sandboxed processes, so they can't share memory or call each other directly.\n\nI connected them through an App Group. The app saves the theme, mode and website list to shared UserDefaults. Whenever a tab loads, the extension's background script asks the native SafariWebExtensionHandler for those settings with sendNativeMessage. Changes made from the extension's popup travel back the same way, so the app and the extension always agree.",
+  "outcome": "The themes work on any website in Safari on iPhone, and setup takes about a minute.\n\nThe project taught me how iOS extensions are sandboxed and how to pass data safely between an app and its extensions. Widgets and share extensions rely on the same pattern. I also wrote up the sepia technique in an article on DEV.",
+  "gallery": [
+    "/src/assets/images/safari-darkula-extension.png",
+    "/src/assets/images/safari-darkula-websites.png",
+    "/src/assets/images/safari-darkula-dark.png"
+  ]
 }

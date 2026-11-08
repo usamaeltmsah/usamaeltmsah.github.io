@@ -18,5 +18,9 @@
   "url": "https://github.com/usamaeltmsah/JPApexPredators",
   "demo": "",
   "image": "/src/assets/images/jp-apex.png",
-  "color": "#166534"
+  "color": "#166534",
+  "problem": "A learning project to practise modern SwiftUI end to end: lists, search, sorting and filtering, animations and MapKit, with a clean split between data and views.",
+  "approach": "The predators load from a bundled JSON file, decoded with Codable. A small Predators class owns the data and handles search, sorting and filtering, so the views only describe the interface.\n\nThe list uses NavigationStack, built-in search, swipe to delete, and a toolbar menu that filters by type and by movie. An alphabetical toggle animates its SF Symbol. Each detail page opens a MapKit camera on the predator's filming location. A full map shows every predator as a tappable annotation, with a satellite toggle and realistic elevation. The app also ships an iMessage sticker pack.",
+  "challenge": "Combining four controls on one list without them fighting each other.\n\nType, movie, sort order and search all act on the same list. The type filter always starts from the full data set, then the movie filter, sorting and search narrow it in a fixed order. Results stay correct whichever control you touch first, and SwiftUI animates the list as it changes.",
+  "outcome": "A compact SwiftUI app built on iOS 17 APIs: NavigationStack, built-in search, the new MapKit for SwiftUI, and symbol effects."
 }

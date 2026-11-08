@@ -9,7 +9,7 @@
   "description": "iOS video-editing app built on AVFoundation, with grayscale and sepia filters and a live preview.",
   "highlights": [
     "Media composition and playback",
-    "Xcode 16, iOS 15.6+"
+    "Trim, split, reorder and merge clips"
   ],
   "tech": [
     "AVFoundation",
@@ -19,5 +19,9 @@
   "url": "https://github.com/usamaeltmsah/VideoNinja",
   "demo": "",
   "image": "/src/assets/images/videoninja.png",
-  "color": "#2563eb"
+  "color": "#2563eb",
+  "problem": "I wanted to go deeper into AVFoundation than playing a video: pick a clip from the photo library, trim it, apply a filter and see the result before saving.",
+  "approach": "The app is built in UIKit with MVVM, and each screen has its own view model.\n\nThe first loads your videos from the Photos library, supports limited access, explains what to do if access is denied, and refreshes when the library changes. The editor maps the trim handles to a time range on the clip and applies grayscale and sepia filters with Core Image. A timeline view model splits a clip into segments, lets you reorder them, and merges them back into a single composition.",
+  "challenge": "Showing the filter live in the preview, not only in the exported file.\n\nThe filter runs on every frame through an AVMutableVideoComposition, so the same player shows the filtered video as it plays. Core Image treats images as infinite, so a filter can pull empty pixels in at the edges of the frame. To prevent that, each frame is clamped to its edges before filtering and cropped back to its original size afterwards. The trim handles' positions convert to exact CMTime values, so every cut lands on the intended frame.",
+  "outcome": "A working editor that trims, filters, splits, reorders and merges clips, with a live preview.\n\nIt covers the core of video editing on iOS: compositions, video compositions with Core Image, and Photos library access. It needs iOS 15.6 or later."
 }

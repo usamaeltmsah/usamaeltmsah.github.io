@@ -18,5 +18,9 @@
   "url": "https://github.com/usamaeltmsah/Time-Hero",
   "demo": "https://www.youtube.com/watch?v=Lk2TXxJ44co",
   "image": "/src/assets/images/time-hero.png",
-  "color": "#ef4444"
+  "color": "#ef4444",
+  "problem": "Weekly planners usually make you find today's page yourself. I wanted one with a page for each day of the week that opens on today automatically, plus a widget that shows what's next without opening the app.",
+  "approach": "The app is built in UIKit. A week bar switches between the seven day pages and selects today on launch. Tasks are colored cards with a title, category and duration. Swipe right to mark a task done or undo it; swipe left to edit it. Plans are saved as JSON, so they survive restarts.\n\nA WidgetKit extension shows today's remaining tasks in small and large sizes.",
+  "challenge": "Keeping the widget in sync with the app.\n\nThe widget runs in its own process. The app saves the week's plans to a shared App Group container and asks WidgetCenter to reload the widget after every change. The widget's timeline provider works out the weekday itself and reads the same data, so it shows the right day's tasks even if the app hasn't been opened that day.",
+  "outcome": "Seven day pages with swipe actions, saved plans, and a home-screen widget in two sizes. A demo video shows it in use."
 }
