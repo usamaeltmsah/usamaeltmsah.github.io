@@ -74,6 +74,8 @@ Paste the client's words exactly as written into **Client feedback**, pick the *
 
 Fill in **Case study: the problem** on a public project and it gets its own page at `/projects/<name>/`. The homepage card then shows a **Case study →** link, and the page is added to the sitemap and `llms.txt`. The page has four sections, each skipped while its field is empty: the problem, your approach (followed by the project's highlights), the tricky part, and the result. Leave a blank line between paragraphs. **More screenshots** adds a gallery; like every screenshot, each one must be at least 700px wide.
 
+Each case study also gets its own link-preview image for LinkedIn, X and Slack: a 1200×630 card with the project's name, description, tags and phone screenshot (or an app-style icon when there's no sharp screenshot). The build renders `src/pages/share/[id].astro` with headless Chrome into `/share/<name>.png` (`scripts/share-images.ts`), then removes the card pages, so only the images are published. To change the design, edit that page.
+
 Write what the code really does, and only use numbers you can share. Hiring managers read the tricky part most. Private client work never gets a page.
 
 ### Private client projects
@@ -187,6 +189,8 @@ public/
   robots.txt, og.png, icon.svg, humans.txt
 tests/                    # Vitest
 scripts/cv-pdf.ts         # renders /cv/ to dist/cv.pdf, fitted to 2 pages
+scripts/share-images.ts   # renders a link-preview image per case study
+scripts/headless.ts       # finds Chrome and serves dist/ for the two scripts above
 scripts/pdf-fit.ts        # page counting + auto-fit (tested)
 scripts/ats.ts            # ATS check: reads the PDF back and verifies the text layer (tested)
 scripts/lazy-entry.ts     # build integration: emits the phone stack as a lazy chunk for the inline loader

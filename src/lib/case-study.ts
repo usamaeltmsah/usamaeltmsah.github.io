@@ -4,6 +4,8 @@ type Project = Resume['projects'][number];
 export type CaseStudyProject = Project & { caseStudy: NonNullable<Project['caseStudy']> };
 
 export const caseStudyPath = (id: string) => `/projects/${id}/`;
+/** The link-preview image, rendered after the build by scripts/share-images.ts. */
+export const shareImagePath = (id: string) => `/share/${id}.png`;
 
 /** Projects that have a case study page, in the CMS order. */
 export const caseStudies = (r: Resume): CaseStudyProject[] =>

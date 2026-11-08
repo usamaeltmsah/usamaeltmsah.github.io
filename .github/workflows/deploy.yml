@@ -28,8 +28,8 @@ jobs:
       - run: npm ci
       - name: Run tests
         run: npm test
-      - name: Build site and CV PDF
-        run: npm run build:site && node scripts/cv-pdf.ts
+      - name: Build site, CV PDF and share images
+        run: npm run build:site && node scripts/cv-pdf.ts && node scripts/share-images.ts
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CHROME_PATH: /usr/bin/google-chrome

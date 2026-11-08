@@ -1,0 +1,57 @@
+---
+// A 1200×630 card per case study. scripts/share-images.ts screenshots it to /share/<id>.png
+// for link previews, then deletes this page from dist, so it is never published.
+import '@fontsource/inter/latin-500.css';
+import '@fontsource/inter/latin-800.css';
+import type { GetStaticPaths } from 'astro';
+import { Image } from 'astro:assets';
+import { getResume, screenshot } from '../../lib/data';
+import { caseStudies, type CaseStudyProject } from '../../lib/case-study';
+
+export const getStaticPaths = (async () =>
+  caseStudies(await getResume()).map((project) => ({ params: { id: project.id }, props: { project } }))) satisfies GetStaticPaths;
+
+interface Props { project: CaseStudyProject }
+const { project: p } = Astro.props;
+const b = (await getResume()).basics;
+const shot = screenshot(p.image);
+const initials = p.name.split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase();
+const site = b.url.replace(/^https?:\/\//, '').replace(/\/$/, '');
+---
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="robots" content="noindex"><title>{p.name} share image</title></head>
+<body style={`--c:${p.color}`}>
+  <div class="card">
+    <div class="text">
+      <p class="kicker"><span class="logo">uf</span>Case study</p>
+      <h1>{p.name}</h1>
+      <p class="desc">{p.description}</p>
+      <p class="chips">{p.keywords.slice(0, 4).map((k) => <span>{k}</span>)}</p>
+      <p class="by"><strong>{b.name}</strong> · {b.label} · {site}</p>
+    </div>
+    {shot
+      ? <div class="phone"><Image src={shot} alt="" widths={[500]} sizes="250px" loading="eager" /></div>
+      : <div class="icon" aria-hidden="true">{initials}</div>}
+  </div>
+</body>
+</html>
+
+<style is:global>
+*{margin:0;box-sizing:border-box}
+body{width:1200px;height:630px;overflow:hidden;background:#0a0b0f;color:#eef0f6;font-family:Inter,sans-serif}
+.card{position:relative;display:flex;align-items:center;gap:56px;width:100%;height:100%;padding:64px 72px}
+.card::before{content:"";position:absolute;right:-140px;top:-160px;width:760px;height:760px;border-radius:50%;background:radial-gradient(closest-side,color-mix(in srgb,var(--c) 45%,transparent),transparent)}
+.card::after{content:"";position:absolute;left:-200px;bottom:-320px;width:700px;height:700px;border-radius:50%;background:radial-gradient(closest-side,rgba(124,58,237,.18),transparent)}
+.text{position:relative;z-index:1;flex:1;min-width:0}
+.kicker{display:flex;align-items:center;gap:14px;font:500 22px Inter;color:#a3a9b9;text-transform:uppercase;letter-spacing:.12em}
+.logo{display:grid;place-items:center;width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#5aa2ff,#b17cff);color:#06101f;font:800 21px Inter;letter-spacing:-.04em;text-transform:none}
+h1{margin-top:26px;font:800 78px/1 Inter;letter-spacing:-.045em}
+.desc{margin-top:22px;font:500 27px/1.4 Inter;color:#a3a9b9;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+.chips span{font:500 19px Inter;color:#5aa2ff;background:#161d2c;border:1px solid #232632;padding:6px 14px;border-radius:99px}
+.by{margin-top:36px;font:500 20px Inter;color:#a3a9b9}.by strong{color:#eef0f6;font-weight:800}
+.phone{position:relative;z-index:1;flex:none;width:250px;aspect-ratio:9/19.5;padding:9px;border-radius:42px;background:linear-gradient(145deg,#3a3e4b,#14151a);box-shadow:0 40px 80px -30px rgba(0,0,0,.7),inset 0 0 0 2px #50556a;transform:rotate(4deg)}
+.phone img{display:block;width:100%;height:100%;object-fit:cover;object-position:top;border-radius:34px;background:#000}
+.icon{position:relative;z-index:1;flex:none;display:grid;place-items:center;width:230px;height:230px;border-radius:52px;background:linear-gradient(145deg,var(--c),color-mix(in srgb,var(--c) 55%,#000));box-shadow:0 40px 80px -30px rgba(0,0,0,.7);font:800 96px Inter;letter-spacing:-.04em;transform:rotate(4deg)}
+</style>

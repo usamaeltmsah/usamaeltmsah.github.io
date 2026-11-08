@@ -7,7 +7,7 @@ export default defineConfig({
   trailingSlash: 'ignore',
   build: { inlineStylesheets: 'always', format: 'directory' },
   integrations: [
-    sitemap({ filter: (page) => !page.includes('/admin') }),
+    sitemap({ filter: (page) => !page.includes('/admin') && !page.includes('/share/') }),
     // The Experience phone stack (with Three.js) loads only near its section, via an inline loader
     lazyEntry({ entry: 'src/scripts/phone-stack/entry.ts', placeholder: '/__PHONE_STACK_ENTRY__' }),
   ],

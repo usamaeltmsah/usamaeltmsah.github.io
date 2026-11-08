@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { caseStudies, caseStudyPath, neighbours, paragraphs } from '../src/lib/case-study';
+import { caseStudies, caseStudyPath, neighbours, paragraphs, shareImagePath } from '../src/lib/case-study';
 import { buildResume, type Content } from '../src/lib/resume';
 
 const project = (id: string, order: number, over: Partial<Content['projects'][number]> = {}): Content['projects'][number] => ({
@@ -55,4 +55,8 @@ describe('neighbours', () => {
 
 it('builds the page path', () => {
   expect(caseStudyPath('time-hero')).toBe('/projects/time-hero/');
+});
+
+it('builds the share image path', () => {
+  expect(shareImagePath('time-hero')).toBe('/share/time-hero.png');
 });

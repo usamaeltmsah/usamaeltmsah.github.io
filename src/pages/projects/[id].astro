@@ -3,7 +3,7 @@ import type { GetStaticPaths } from 'astro';
 import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import { getResume, screenshot, SITE } from '../../lib/data';
-import { caseStudies, caseStudyPath, neighbours, paragraphs, type CaseStudyProject } from '../../lib/case-study';
+import { caseStudies, caseStudyPath, neighbours, paragraphs, shareImagePath, type CaseStudyProject } from '../../lib/case-study';
 
 export const getStaticPaths = (async () => {
   const list = caseStudies(await getResume());
@@ -31,10 +31,10 @@ const entity = {
   '@type': 'SoftwareSourceCode', '@id': `${SITE}${path}#project`, name: p.name, description: p.description,
   codeRepository: p.url || undefined, programmingLanguage: 'Swift', runtimePlatform: 'iOS',
   keywords: p.keywords.join(', '), dateCreated: p.period.slice(0, 4) || undefined,
-  author: { '@id': `${SITE}/#me` },
+  image: SITE + shareImagePath(p.id), author: { '@id': `${SITE}/#me` },
 };
 ---
-<Base title={`${p.name}: iOS case study | ${b.name}`} description={`How ${b.name} built ${p.name}: ${p.description}`} path={path} pageType="WebPage" ogType="article" entity={entity}>
+<Base title={`${p.name}: iOS case study | ${b.name}`} description={`How ${b.name} built ${p.name}: ${p.description}`} path={path} pageType="WebPage" ogType="article" ogImage={shareImagePath(p.id)} ogImageAlt={`${p.name} case study by ${b.name}`} entity={entity}>
 <a class="skip" href="#main">Skip to content</a>
 
 <header class="nav">
