@@ -98,6 +98,7 @@ h1{font:800 clamp(40px,6.2vw,72px)/1.02 var(--display);letter-spacing:-.045em}
 .feat-grid .feat-card{grid-template-columns:1fr 160px;padding:26px}
 .feat-grid .mini-phone{width:150px;border-radius:28px;padding:6px}.feat-grid .mini-phone img{border-radius:22px}
 .feat-grid .feat-card h3{font-size:24px}
+.feat-card.no-shot{grid-template-columns:1fr}
 
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:18px}
 .card{position:relative;overflow:hidden;padding:24px;display:flex;flex-direction:column;gap:10px;transition:transform .2s,border-color .2s}

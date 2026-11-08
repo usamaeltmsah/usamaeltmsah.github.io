@@ -4,6 +4,7 @@ import profileJson from '../content/profile.json';
 import skillsJson from '../content/skills.json';
 import { buildResume, type Resume } from './resume';
 import { profileSchema, skillsSchema } from './schemas';
+import { sharp } from './screenshot';
 import { mergePosts, parseYouTubeFeed, summarizeGitHub, type GitHub, type Post, type Repo } from './feeds';
 
 export { fmtDate, range } from './resume';
@@ -53,6 +54,9 @@ export function img(name?: string): ImageMetadata | undefined {
   if (!found) console.warn(`[data] image not found in src/assets/images: ${name}`);
   return found;
 }
+
+/** A project screenshot, or undefined when it is too low-resolution to show crisply. */
+export const screenshot = (name?: string) => sharp(img(name));
 
 export const profileLink = (resume: Resume, network: string) =>
   resume.basics.profiles.find((p) => p.network.toLowerCase() === network.toLowerCase());

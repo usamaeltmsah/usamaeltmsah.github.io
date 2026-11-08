@@ -103,7 +103,7 @@ The PDF step also checks the page count. If edits push it past two pages, it shr
 
 To edit without a token, run the site locally (see [Local development](#local-development)), open http://localhost:4321/admin/ in Chrome or Edge, choose **Work with Local Repository**, and select this folder. Then commit and push yourself.
 
-Uploaded images go to `src/assets/images/` and are automatically resized and converted to WebP.
+Uploaded images go to `src/assets/images/` and are automatically resized and converted to WebP. Project screenshots must be at least 700px wide (a full-resolution simulator capture is about 1179px). Narrower ones would look blurry on retina phones, so the site leaves them out and the project shows without a phone mockup.
 
 ### Editing the files directly
 
@@ -142,6 +142,7 @@ Set `GITHUB_TOKEN` when building locally to avoid GitHub API rate limits.
 
 The Vitest suite in [`tests/`](tests) guards both the content and the CMS:
 
+- **`screenshot.test.ts`:** low-resolution project screenshots are dropped rather than shown blurry.
 - **`content.test.ts`:** every content file matches its Zod schema, every referenced image exists, and every link points to an existing entry.
 - **`cms-config.test.ts`:** `public/admin/config.yml` is valid against Sveltia CMS's official JSON Schema and uses only built-in widgets. Every CMS field exists in the Zod schema, every required schema field is editable in the CMS, and `index.html` loads the same Sveltia version the tests validate against.
 - **`resume.test.ts`, `feeds.test.ts`:** date formatting, sorting, resume assembly, links between entries, and the GitHub and YouTube parsers.
