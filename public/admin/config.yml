@@ -231,6 +231,11 @@ collections:
       - { name: url, label: Code URL, required: false, hint: "Leave empty for private client work." }
       - { name: demo, label: Demo URL, required: false, hint: "Video, article or App Store link." }
       - { name: color, label: Accent color, widget: color, required: false }
+      - { name: problem, label: "Case study: the problem", widget: text, required: false, hint: "Why the app exists, in a few sentences. Filling this in gives a public project its own page at /projects/<name>/. Leave a blank line between paragraphs." }
+      - { name: approach, label: "Case study: my approach", widget: text, required: false, hint: "How you built it: architecture, key screens, frameworks." }
+      - { name: challenge, label: "Case study: the tricky part", widget: text, required: false, hint: "One hard problem and how you solved it. Hiring managers read this section most." }
+      - { name: outcome, label: "Case study: the result", widget: text, required: false, hint: "What works now and what you learned. Only numbers you can share." }
+      - { name: gallery, label: "Case study: more screenshots", widget: image, multiple: true, required: false, hint: "Portrait simulator screenshots, at least 700px wide (Cmd+S in the Simulator)." }
 
   - name: activities
     label: Activities

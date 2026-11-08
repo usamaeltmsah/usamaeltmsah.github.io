@@ -2,8 +2,14 @@
 import '../styles/global.css';
 import { getResume, SITE } from '../lib/data';
 
-interface Props { title: string; description: string; path?: string; noindex?: boolean; jsonld?: boolean }
-const { title, description, path = '/', noindex = false, jsonld = true } = Astro.props;
+interface Props {
+  title: string; description: string; path?: string; noindex?: boolean; jsonld?: boolean;
+  /** Case study pages are articles about a project, not the profile page. */
+  pageType?: 'ProfilePage' | 'WebPage'; ogType?: 'profile' | 'article';
+  /** Extra schema.org nodes for this page; the page's mainEntity when given. */
+  entity?: Record<string, unknown>;
+}
+const { title, description, path = '/', noindex = false, jsonld = true, pageType = 'ProfilePage', ogType = 'profile', entity } = Astro.props;
 const resume = await getResume();
 const b = resume.basics;
 const url = SITE + path;
@@ -12,7 +18,8 @@ const ld = {
   '@context': 'https://schema.org',
   '@graph': [
     { '@type': 'WebSite', '@id': `${SITE}/#site`, url: `${SITE}/`, name: b.name, inLanguage: 'en', publisher: { '@id': `${SITE}/#me` } },
-    { '@type': 'ProfilePage', '@id': `${SITE}/#page`, url, name: title, isPartOf: { '@id': `${SITE}/#site` }, mainEntity: { '@id': `${SITE}/#me` }, dateModified: resume.meta.lastModified },
+    { '@type': pageType, '@id': `${url}#page`, url, name: title, isPartOf: { '@id': `${SITE}/#site` }, mainEntity: entity ? { '@id': entity['@id'] } : { '@id': `${SITE}/#me` }, dateModified: resume.meta.lastModified },
+    ...(entity ? [entity] : []),
     {
       '@type': 'Person', '@id': `${SITE}/#me`, name: b.name, jobTitle: b.label, description: b.summary, url: `${SITE}/`,
       email: `mailto:${b.email}`, image: `${SITE}/og.png`,
@@ -47,7 +54,7 @@ const ld = {
 <link rel="alternate" type="text/markdown" href="/index.md" title="Markdown version for agents">
 <link rel="alternate" type="application/json" href="/resume.json" title="JSON Resume">
 <link rel="alternate" type="text/plain" href="/llms.txt" title="llms.txt">
-<meta property="og:type" content="profile">
+<meta property="og:type" content={ogType}>
 <meta property="og:site_name" content={b.name}>
 <meta property="og:title" content={title}>
 <meta property="og:description" content={description}>

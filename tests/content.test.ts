@@ -23,8 +23,8 @@ describe.each(Object.entries(folders))('collection %s', (name, schema) => {
   it.each(files)('%s matches its schema and its images exist', (file) => {
     const result = schema.safeParse(read(join(dir, file)));
     expect(result.error?.issues ?? []).toEqual([]);
-    const image = (result.data as { image?: string }).image ?? '';
-    expect(imageExists(image), `missing image ${image}`).toBe(true);
+    const { image = '', gallery = [] } = result.data as { image?: string; gallery?: string[] };
+    for (const name of [image, ...gallery]) expect(imageExists(name), `missing image ${name}`).toBe(true);
   });
 });
 

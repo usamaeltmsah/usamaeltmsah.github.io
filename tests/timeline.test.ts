@@ -16,7 +16,8 @@ const job = (id: string, company: string, type: 'Full-time' | 'Freelance', start
   ({ id, company, position: 'iOS Developer', type, url: '', location: '', startDate, endDate, summary, highlights: [] });
 const project = (id: string, experience: string, over: Partial<Content['projects'][number]> = {}): Content['projects'][number] => ({
   id, name: id.toUpperCase(), order: 1, featured: false, private: false, onCv: false, period: '2024', experience,
-  description: 'An app.', highlights: [], tech: [], url: '', demo: '', image: '', color: '', ...over,
+  description: 'An app.', highlights: [], tech: [], url: '', demo: '', image: '', color: '',
+  problem: '', approach: '', challenge: '', outcome: '', gallery: [], ...over,
 });
 
 const content: Content = {

@@ -89,6 +89,13 @@ export const projectSchema = z.object({
   demo: url,
   image: z.string().default(''),
   color: z.string().regex(/^$|^#[0-9a-fA-F]{6}$/, 'Use a hex color like #2563eb').default(''),
+  /** Case study write-up. A public project with a problem filled in gets its own page at /projects/<slug>/. */
+  problem: z.string().trim().default(''),
+  approach: z.string().trim().default(''),
+  challenge: z.string().trim().default(''),
+  outcome: z.string().trim().default(''),
+  /** Extra screenshots for the case study page. */
+  gallery: z.array(z.string()).default([]),
 });
 
 export const activitySchema = z.object({

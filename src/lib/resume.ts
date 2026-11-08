@@ -132,6 +132,7 @@ export function buildResume(c: Content, lastModified: string) {
       featured: x.featured, private: x.private, onCv: x.onCv, period: x.period,
       description: x.description, highlights: x.highlights, keywords: x.tech,
       url: x.private ? '' : x.url, demo: x.private ? '' : x.demo, image: x.image, color: x.color || '#64748b',
+      caseStudy: caseStudyOf(x),
       };
     }),
     activities: activities.map(({ order: _order, experience, volunteering: vol, ...a }) => {
@@ -150,6 +151,12 @@ export function buildResume(c: Content, lastModified: string) {
 
 export type Resume = ReturnType<typeof buildResume>;
 
+/** The case study for a project, or null when it has no write-up. Private client work never gets one. */
+function caseStudyOf(x: Content['projects'][number]) {
+  if (x.private || !x.problem) return null;
+  return { problem: x.problem, approach: x.approach, challenge: x.challenge, outcome: x.outcome, gallery: x.gallery };
+}
+
 /**
  * The public JSON Resume document. Keeps the extra sections (softSkills, activities,
  * work[].type), which the schema allows, and drops presentation-only fields.
@@ -163,7 +170,7 @@ export function toJsonResume(r: Resume) {
     work: r.work.map(({ id: _id, projects: _p, activities: _a, ...w }) => w),
     volunteer: r.volunteer.map(({ id: _id, image: _i, activities: _a, ...v }) => v),
     activities: r.activities.map(({ id: _id, at: _at, ...a }) => a),
-    projects: r.projects.map(({ id: _id, at: _at, reviews: _reviews, featured: _f, color: _c, onCv: _cv, private: isPrivate, period, ...x }) => {
+    projects: r.projects.map(({ id: _id, at: _at, reviews: _reviews, featured: _f, color: _c, onCv: _cv, caseStudy: _cs, private: isPrivate, period, ...x }) => {
       const [startDate = '', endDate = ''] = period.match(/^\d{4}-\d{4}$/) ? period.split('-') : [period];
       return { ...x, startDate, endDate, type: isPrivate ? 'client work' : 'personal' };
     }),

@@ -34,7 +34,8 @@ const job = (id: string, company: string, type: 'Full-time' | 'Freelance', start
   ({ id, company, position: 'Dev', type, url: '', location: '', startDate, endDate, summary: 's', highlights: [] });
 const project = (id: string, order: number, over: Partial<Content['projects'][number]> = {}): Content['projects'][number] => ({
   id, name: id.toUpperCase(), order, featured: false, private: false, onCv: false, period: '', experience: '',
-  description: 'd', highlights: [], tech: [], url: '', demo: '', image: '', color: '', ...over,
+  description: 'd', highlights: [], tech: [], url: '', demo: '', image: '', color: '',
+  problem: '', approach: '', challenge: '', outcome: '', gallery: [], ...over,
 });
 
 const content: Content = {
@@ -131,6 +132,7 @@ describe('toJsonResume', () => {
     expect(json.projects[0]).not.toHaveProperty('featured');
     expect(json.projects[0]).not.toHaveProperty('color');
     expect(json.projects[0]).not.toHaveProperty('onCv');
+    expect(json.projects[0]).not.toHaveProperty('caseStudy');
     expect(json.work[0]).not.toHaveProperty('id');
     expect(json.volunteer[0]).not.toHaveProperty('image');
   });

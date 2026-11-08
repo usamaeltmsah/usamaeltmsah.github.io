@@ -70,6 +70,12 @@ Paste the client's words exactly as written into **Client feedback**, pick the *
 - Keep clients anonymous ("Upwork client" plus what the work was) unless they agreed to be named. LinkedIn recommendations are already public, so you can use the person's name and title there.
 - Include every client review longer than five words, whatever the engagement length. Skip one-liners like "Thank you!". Keep the client's words as written; mark any correction in brackets, e.g. "[Usama]" for a misspelt name.
 
+### Case studies
+
+Fill in **Case study: the problem** on a public project and it gets its own page at `/projects/<name>/`. The homepage card then shows a **Case study →** link, and the page is added to the sitemap and `llms.txt`. The page has four sections, each skipped while its field is empty: the problem, your approach (followed by the project's highlights), the tricky part, and the result. Leave a blank line between paragraphs. **More screenshots** adds a gallery; like every screenshot, each one must be at least 700px wide.
+
+Write what the code really does, and only use numbers you can share. Hiring managers read the tricky part most. Private client work never gets a page.
+
 ### Private client projects
 
 Tick **Private client work** on a project to show it under **Client work** on the site and with a "Client work" label on the CV, with no links. Describe what you built, not who you built it for: no client or app names, no confidential numbers, no screenshots. Only list engagements that lasted more than a month, and never mention earnings or rates (a test blocks money amounts in all content).
@@ -142,6 +148,7 @@ Set `GITHUB_TOKEN` when building locally to avoid GitHub API rate limits.
 
 The Vitest suite in [`tests/`](tests) guards both the content and the CMS:
 
+- **`case-study.test.ts`:** only public projects with a write-up get a page, paragraphs split on blank lines, and previous/next links wrap around.
 - **`screenshot.test.ts`:** low-resolution project screenshots are dropped rather than shown blurry.
 - **`content.test.ts`:** every content file matches its Zod schema, every referenced image exists, and every link points to an existing entry.
 - **`cms-config.test.ts`:** `public/admin/config.yml` is valid against Sveltia CMS's official JSON Schema and uses only built-in widgets. Every CMS field exists in the Zod schema, every required schema field is editable in the CMS, and `index.html` loads the same Sveltia version the tests validate against.
@@ -172,6 +179,7 @@ src/
   layouts/Base.astro      # <head>, SEO meta, JSON-LD
   pages/index.astro       # portfolio
   pages/cv.astro          # printable A4 CV
+  pages/projects/[id].astro # case study pages
   pages/*.ts              # resume.json, llms.txt, llms-full.txt, index.md, manifest
   styles/global.css       # design tokens, light/dark themes, layout
 public/

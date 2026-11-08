@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { getResume, SITE } from '../lib/data';
+import { caseStudies, caseStudyPath } from '../lib/case-study';
 
 export const GET: APIRoute = async () => {
   const resume = await getResume();
@@ -17,6 +18,9 @@ Key facts: ${resume.stats.map((s) => `${s.value} ${s.label}`).join('; ')}.
 - [Printable CV](${SITE}/cv/): HTML curriculum vitae
 - [CV PDF](${SITE}/cv.pdf): downloadable PDF
 - [resume.json](${SITE}/resume.json): machine-readable resume in the JSON Resume schema
+
+## Case studies
+${caseStudies(resume).map((p) => `- [${p.name}](${SITE}${caseStudyPath(p.id)}): ${p.description}`).join('\n')}
 
 ## Profiles
 ${b.profiles.map((p) => `- [${p.network}](${p.url})`).join('\n')}
