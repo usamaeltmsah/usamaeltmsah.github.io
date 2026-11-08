@@ -39,93 +39,83 @@ const plain = plainText;
 <link rel="alternate" type="application/json" href="/resume.json" title="JSON Resume">
 <meta name="color-scheme" content="light">
 <style is:global>
+/* An editorial, ink-on-paper layout: hierarchy comes from type and hairline rules, not from
+   boxes, pills or colour. The accent is kept for links. */
 @page{size:A4;margin:11mm 12mm 13mm}
-:root{--ink:#14161b;--muted:#5a6070;--line:#e2e5eb;--accent:#0b5bd3;--accent2:#6d3fd6;--tint:#f2f6fd}
+:root{--ink:#1b1c1f;--body:#2d2f34;--muted:#62666f;--rule:#d8d8d4;--accent:#1f4f8f}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font:9.6pt/1.45 Inter,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;color:var(--ink);background:#e9ebef;-webkit-print-color-adjust:exact;print-color-adjust:exact;font-feature-settings:'liga' 0,'clig' 0;font-variant-ligatures:none}
+body{font:9.5pt/1.45 Inter,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;color:var(--body);background:#ecebe7;-webkit-print-color-adjust:exact;print-color-adjust:exact;font-feature-settings:'liga' 0,'clig' 0;font-variant-ligatures:none}
 a{color:inherit;text-decoration:none}
 ul{list-style:none}
-.job ul,.proj ul{list-style:disc;padding-left:4.2mm}
-.job li::marker,.proj li::marker{color:var(--accent)}
 
 .bar{max-width:210mm;margin:20px auto 0;display:flex;gap:8px;justify-content:flex-end;padding:0 4px}
-.bar a{font:600 13px Inter,sans-serif;padding:9px 14px;border-radius:10px;border:1px solid #d3d7de;background:#fff}
-.bar .p{background:var(--accent);color:#fff;border-color:var(--accent)}
-.sheet{max-width:210mm;margin:12px auto 40px;background:#fff;padding:12mm 12mm 14mm;box-shadow:0 10px 40px -20px rgba(0,0,0,.35)}
+.bar a{font:600 13px Inter,sans-serif;padding:9px 14px;border-radius:8px;border:1px solid #cfcdc6;background:#fff;color:var(--ink)}
+.bar .p{background:var(--ink);color:#fff;border-color:var(--ink)}
+.sheet{max-width:210mm;margin:12px auto 40px;background:#fff;padding:13mm 13mm 14mm;box-shadow:0 1px 2px rgba(0,0,0,.08),0 12px 32px -18px rgba(0,0,0,.25)}
 
 /* header */
-header{display:grid;grid-template-columns:auto 1fr auto;gap:5mm;align-items:center}
-header img{width:23mm;height:23mm;border-radius:50%;object-fit:cover;box-shadow:0 0 0 1.2mm #fff,0 0 0 1.6mm var(--accent)}
-h1{font-size:24pt;font-weight:800;line-height:1}
-.role{font-size:11.5pt;font-weight:600;color:var(--accent);margin-top:1.2mm}
-.contact{display:flex;flex-wrap:wrap;gap:.6mm 4mm;margin-top:2mm;font-size:8.6pt;color:var(--muted)}
+header{display:grid;grid-template-columns:auto 1fr;gap:5.5mm;align-items:end;padding-bottom:4.5mm;border-bottom:.5pt solid var(--ink)}
+header img{width:21mm;height:21mm;border-radius:1.5mm;object-fit:cover}
+h1{font-size:25pt;font-weight:700;line-height:1;letter-spacing:-.025em;color:var(--ink)}
+.role{font-size:11pt;font-weight:500;color:var(--ink);margin:1.6mm 0 1.6mm}
+.contact{display:flex;flex-wrap:wrap;gap:.4mm 0;margin-top:.6mm;font-size:8.5pt;color:var(--muted)}
+.contact span:not(:last-child)::after{content:'\00b7';margin:0 2mm;color:#a3a6ad}
 .contact a{color:var(--ink)}
-.contact span::before{content:'';display:inline-block;width:1.2mm;height:1.2mm;border-radius:50%;background:var(--accent);margin-right:1.4mm;vertical-align:.35mm}
-.avail{align-self:start;font-size:8pt;font-weight:600;color:#137a3a;background:#e8f7ee;border-radius:99px;padding:1mm 3mm;white-space:nowrap}
 
-.impact{display:grid;grid-template-columns:repeat(4,1fr);gap:2.5mm;margin:5mm 0 1mm}
-.impact div{background:var(--tint);border-radius:2.5mm;padding:2.6mm 3mm;border-left:.8mm solid var(--accent)}
-.impact b{display:block;font-size:13pt;font-weight:800;line-height:1.1}
-.impact span{font-size:7.6pt;color:var(--muted);line-height:1.25;display:block;margin-top:.6mm}
+.impact{display:grid;grid-template-columns:repeat(4,1fr);margin:3.6mm 0 0;padding-bottom:3.4mm;border-bottom:.5pt solid var(--rule)}
+.impact div{padding:0 3.5mm;border-left:.5pt solid var(--rule)}
+.impact div:first-child{padding-left:0;border-left:0}
+.impact b{display:block;font-size:12pt;font-weight:700;line-height:1.15;color:var(--ink);letter-spacing:-.01em}
+.impact span{font-size:7.8pt;color:var(--muted);line-height:1.3;display:block;margin-top:.5mm}
 
-.cols{display:grid;grid-template-columns:1fr 56mm;gap:7mm;margin-top:3mm}
-aside{border-left:1px solid var(--line);padding-left:6mm}
+.cols{display:grid;grid-template-columns:1fr 52mm;gap:8mm;margin-top:1mm}
 
-h2{font-size:8.4pt;font-weight:700;text-transform:uppercase;color:var(--accent);margin:4.6mm 0 2.2mm;display:flex;align-items:center;gap:2mm}
-h2::after{content:'';flex:1;height:1px;background:var(--line)}
-section:first-child>h2{margin-top:1.5mm}
-.summary{color:#2a2e37}
+h2{font-size:9.6pt;font-weight:700;color:var(--ink);letter-spacing:.01em;margin:4.4mm 0 1.8mm}
+.summary{color:var(--body)}
 
-.job{margin-bottom:3.4mm;break-inside:avoid}
+.job{margin-bottom:3.2mm;break-inside:avoid}
 .earlier-block{break-inside:auto}
 .earlier li{break-inside:avoid}
-.job-h{display:flex;justify-content:space-between;gap:3mm;align-items:baseline}
-.job h3{font-size:10.4pt;font-weight:700;}
-.job h3 em{font-style:normal;color:var(--accent)}
+.job-h,.proj-h{display:flex;justify-content:space-between;gap:3mm;align-items:baseline}
+.job h3,.proj h3{font-size:10pt;font-weight:600;color:var(--ink)}
+.job h3 .org{font-weight:400}
 .when{font-size:8.3pt;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
-.meta{font-size:8.3pt;color:var(--muted);margin:.2mm 0 .8mm}
-.job p{color:#2a2e37}
-.job ul{margin-top:.8mm}
-.job li,.proj li{color:#2a2e37}
+.meta{font-size:8.3pt;color:var(--muted);margin:.1mm 0 .8mm}
+.job ul,.proj ul{margin-top:.8mm}
+.job li,.proj li{list-style:'\2013\00a0\00a0' outside;margin-left:3.2mm}
+.job li::marker,.proj li::marker{color:var(--muted)}
+.job li+li{margin-top:.3mm}
 
-.earlier{list-style:none!important;padding-left:0!important}
-.earlier li{padding:.5mm 0;border-bottom:1px dashed var(--line)}
-.earlier li::marker{content:''}
-.earlier li:last-child{border:0}
-.earlier b{font-weight:600}
+.earlier-title{font-size:9.4pt;font-weight:600;color:var(--ink);margin-bottom:.8mm}
+.earlier li{padding:.25mm 0}
+.earlier b{font-weight:500;color:var(--ink)}
 .earlier span{color:var(--muted)}
-.earlier span:first-child{color:var(--ink)}
 
-.proj{margin-bottom:3mm;break-inside:avoid}
-.proj h3{font-size:10pt;font-weight:700;display:flex;justify-content:space-between;gap:3mm;align-items:baseline}
-.badge{display:inline-block;font-size:7pt;font-weight:600;text-transform:uppercase;padding:.3mm 1.6mm;border-radius:99px;vertical-align:.4mm;margin-left:1.4mm}
-.badge.priv{background:#f1edfb;color:var(--accent2)}
-.badge.oss{background:#e8f7ee;color:#137a3a}
-.proj p{color:#2a2e37}
+.proj{margin-bottom:2.8mm;break-inside:avoid}
+.kind{font-size:8.3pt;color:var(--muted);white-space:nowrap}
 .tech{font-size:8.2pt;color:var(--muted);margin-top:.4mm}
-.tech a{color:var(--accent);text-decoration:underline;text-underline-offset:.4mm}
+.tech a{color:var(--accent);text-decoration:underline;text-decoration-thickness:.5pt;text-underline-offset:.5mm}
 
-.fb{margin:0 0 2.6mm;padding:2mm 3mm;border-left:.8mm solid var(--accent2);background:#f7f5fd;border-radius:0 2mm 2mm 0;break-inside:avoid}
-.fb blockquote{font-style:italic;color:#2a2e37;line-height:1.4}
-.fb figcaption{font-size:8.2pt;color:var(--muted);margin-top:.8mm}
-.fb .st{color:#e0a100;}
-.act{margin-bottom:2mm;break-inside:avoid}
-.act b{font-weight:600}
+.fb{margin:0 0 2.6mm;padding-left:3.2mm;border-left:.5pt solid var(--ink);break-inside:avoid}
+.fb blockquote{color:var(--body);line-height:1.42}
+.fb figcaption{font-size:8.2pt;color:var(--muted);margin-top:.6mm}
+.act{margin-bottom:1.8mm;break-inside:avoid}
+.act b{font-weight:600;color:var(--ink)}
 .act p{color:var(--muted);font-size:8.6pt}
 
 aside section{break-inside:avoid}
-aside h2{margin-top:4.2mm}
-.sk{margin-bottom:2mm}
-.sk b{display:block;font-size:8.6pt;font-weight:600}
-.sk p{font-size:8.6pt;color:#3a3f4b;line-height:1.4}
-.pills{display:flex;flex-wrap:wrap;gap:1.2mm}
-.pills span{font-size:8pt;padding:.4mm 2mm;border-radius:99px;background:var(--tint);color:#163d7a}
-.edu b{display:block;font-weight:600}
+aside h2{margin-top:4.4mm}
+.sk{margin-bottom:1.8mm}
+.sk b{display:block;font-size:8.6pt;font-weight:600;color:var(--ink)}
+.sk p{font-size:8.6pt;color:var(--body);line-height:1.4}
+.edu b{display:block;font-weight:600;color:var(--ink)}
 .edu p,.small{font-size:8.6pt;color:var(--muted)}
-.cert{margin-bottom:1.5mm;font-size:8.6pt;line-height:1.3}
-.cert b{font-weight:600;display:block}
+.plain{font-size:8.6pt;line-height:1.5;color:var(--body)}
+.cert{margin-bottom:1.4mm;font-size:8.6pt;line-height:1.32}
+.cert b{font-weight:600;display:block;color:var(--ink)}
 .cert span{color:var(--muted)}
-.lang{display:flex;justify-content:space-between;font-size:8.6pt;padding:.4mm 0}
+.lang{display:flex;justify-content:space-between;font-size:8.6pt;padding:.2mm 0}
+.lang b{font-weight:500;color:var(--ink)}
 .lang span{color:var(--muted)}
 
 @media print{
@@ -134,15 +124,14 @@ aside h2{margin-top:4.2mm}
   .sheet{margin:0;padding:0;box-shadow:none;max-width:none}
 }
 @media screen{
-  .contact{row-gap:2mm}
   .contact a,.tech a{display:inline-block;min-height:24px;line-height:24px}
 }
 @media (max-width:760px){
   .sheet{padding:20px}
-  header{grid-template-columns:auto 1fr}.avail{grid-column:1/-1;justify-self:start}
-  .impact{grid-template-columns:1fr 1fr}
+  header{grid-template-columns:1fr}
+  .impact{grid-template-columns:1fr 1fr;row-gap:3mm}
+  .impact div:nth-child(3){padding-left:0;border-left:0}
   .cols{grid-template-columns:1fr}
-  aside{border:0;padding:0}
 }
 </style>
 </head>
@@ -157,16 +146,18 @@ aside h2{margin-top:4.2mm}
     {avatar && <Image src={avatar} alt={b.name} width={180} height={180} loading="eager" />}
     <div>
       <h1>{b.name}</h1>
-      <div class="role">{b.label} · Swift, SwiftUI & UIKit</div>
+      <div class="role">{b.label}, working in Swift, SwiftUI and UIKit</div>
       <div class="contact">
         <span>{b.location.city}, Egypt</span>
         {b.phone && <span><a href={`tel:${b.phone.replace(/\s/g, '')}`}>{b.phone}</a></span>}
         <span><a href={`mailto:${b.email}`}>{b.email}</a></span>
+        {b.availability && <span>{b.availability}</span>}
+      </div>
+      <div class="contact">
         <span><a href={b.url}>{host(b.url)}</a></span>
         {contacts.map((p) => <span><a href={p.url}>{host(p.url)}</a></span>)}
       </div>
     </div>
-    {b.availability && <div class="avail">{b.availability}</div>}
   </header>
 
   <div class="impact">
@@ -184,7 +175,7 @@ aside h2{margin-top:4.2mm}
         <h2>Experience</h2>
         {mainRoles.map((w) => (
           <div class="job">
-            <div class="job-h"><h3>{w.position} · <em>{w.name}</em></h3><span class="when">{range(w.startDate, w.endDate)}</span></div>
+            <div class="job-h"><h3>{w.position} · <span class="org">{w.name}</span></h3><span class="when">{range(w.startDate, w.endDate)}</span></div>
             <div class="meta">{[w.type, w.location].filter(Boolean).join(' · ')}</div>
             <p>{w.summary}</p>
             {w.highlights.length > 0 && <ul>{w.highlights.slice(0, 3).map((h) => <li>{plain(h)}</li>)}</ul>}
@@ -192,7 +183,7 @@ aside h2{margin-top:4.2mm}
         ))}
         {earlierRoles.length > 0 && (
           <div class="job earlier-block">
-            <h3 style="font-size:9.4pt;margin-bottom:1mm">Earlier experience</h3>
+            <h3 class="earlier-title">Earlier experience</h3>
             <ul class="earlier">
               {earlierRoles.map((w) => <li><b>{w.position}</b>, {w.name} <span>({w.type}, {yearOf(w.startDate)})</span></li>)}
             </ul>
@@ -204,7 +195,7 @@ aside h2{margin-top:4.2mm}
         <h2>Projects</h2>
         {projects.map((p) => (
           <div class="proj">
-            <h3><span>{p.name}{p.private ? <span class="badge priv">Client work</span> : <span class="badge oss">Open source</span>}</span><span class="when">{fmtDate(p.period)}</span></h3>
+            <div class="proj-h"><h3>{p.name}</h3><span class="kind">{p.private ? 'Client work' : 'Open source'}{p.period && `, ${fmtDate(p.period)}`}</span></div>
             <p>{plain(p.description)}</p>
             {p.private && p.highlights.length > 0 && <ul>{p.highlights.slice(0, 1).map((h) => <li>{plain(h)}</li>)}</ul>}
             <div class="tech">{plain([p.at, ...p.keywords].filter(Boolean).join(' · '))}{p.url && <> · <a href={p.url}>{host(p.url)}</a></>}</div>
@@ -218,7 +209,7 @@ aside h2{margin-top:4.2mm}
           {feedback.map((t) => (
             <figure class="fb">
               <blockquote>“{t.quote}”</blockquote>
-              <figcaption>{[t.author, t.context, t.date.slice(0, 4), t.rating > 0 ? `Rated ${t.rating}/5` : ''].filter(Boolean).join(' · ')}</figcaption>
+              <figcaption>— {[t.author, t.context, t.date.slice(0, 4), t.rating > 0 ? `rated ${t.rating}/5` : ''].filter(Boolean).join(', ')}</figcaption>
             </figure>
           ))}
         </section>
@@ -237,7 +228,7 @@ aside h2{margin-top:4.2mm}
       </section>
       <section>
         <h2>Strengths</h2>
-        <div class="pills">{resume.softSkills.map((s) => <span>{s.name}</span>)}</div>
+        <p class="plain">{resume.softSkills.map((s) => s.name).join(', ')}</p>
       </section>
       <section>
         <h2>Education</h2>
