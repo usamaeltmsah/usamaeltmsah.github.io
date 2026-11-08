@@ -8,7 +8,7 @@
   "endDate": "2022-12",
   "summary": "Built Techniciano, a multi-vendor iOS app connecting users with nearby service providers.",
   "highlights": [
-    "Order broadcast to the nearest providers via push notifications",
-    "Live tracking of the provider and order status"
+    "Built order broadcasting to the nearest providers with push notifications",
+    "Implemented live tracking of the provider and the order status"
   ]
 }
