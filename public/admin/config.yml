@@ -289,7 +289,7 @@ collections:
       - { name: url, label: Verify link, required: false, hint: "Where the review is public, e.g. your Upwork profile or LinkedIn recommendations page." }
       - { name: project, label: Related project, widget: relation, collection: projects, value_field: "{{slug}}", search_fields: [name], display_fields: ["{{name}}"], required: false }
       - { name: experience, label: Related role, widget: relation, collection: experience, value_field: "{{slug}}", search_fields: [company, position], display_fields: ["{{position}} · {{company}}"], required: false }
-      - { name: onCv, label: Show on CV, widget: boolean, default: false, hint: "Keep it to 2 short quotes so the CV stays at 2 pages." }
+      - { name: onCv, label: Show on CV, widget: boolean, default: false, hint: "The CV no longer shows quotes (resume screeners skip them); this only marks a favourite." }
 
   - name: credentials
     label: Certificates & awards

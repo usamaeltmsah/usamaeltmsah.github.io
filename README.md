@@ -84,10 +84,13 @@ Tick **Private client work** on a project to show it under **Client work** on th
 
 ### The CV
 
-`/cv/` and `/cv.pdf` are designed for exactly **two A4 pages**:
+`/cv/` and `/cv.pdf` fit **two A4 pages** in a single column, the layout resume-screening tools parse most reliably: no photo, icons, tables or sidebars. In order:
 
-- Page 1: header, impact stats, profile, and experience. Full-time and freelance roles are shown in full; internships and part-time roles appear as one line each under "Earlier experience".
-- Page 2: selected projects (those with **Show on CV** ticked, about 6), activities (the first 4 by your drag-and-drop order), certificates, volunteering, languages and interests.
+- Header (name, title, contact details written out), Summary, Skills.
+- Experience: full-time and freelance roles in full; internships and part-time roles as one line each under "Earlier experience".
+- Projects (those with **Show on CV** ticked, about 5), Education, Certifications, Awards, the first 2 activities with volunteering, and Languages.
+
+Client quotes stay on the website only; screeners skip them. Write the profile summary without "I" or "my" (the build checks this), and start highlights with a verb ("Built", "Led", "Shipped").
 
 **ATS-friendly by construction.** After rendering, the build reads the PDF back the way an applicant tracking system does (with PDF.js) and fails the deploy if any of these break:
 
@@ -95,7 +98,10 @@ Tick **Private client work** on a project to show it under **Client work** on th
 - standard section headings (Summary, Experience, Education, Skills, Projects, Certifications), each on its own line;
 - contact details as plain text: name, email, website and the full LinkedIn URL;
 - fonts embedded as real text fonts (no Type3), no ligature or broken glyphs, all skills readable;
+- no embedded images and no first-person pronouns in the summary;
 - at most 2 pages and under 2 MB.
+
+The build also prints a warning, without failing, when something only you can fix would cost points with screening tools, such as a missing phone number.
 
 To keep it that way, the CV avoids letter-spacing, positioned bullets, non-Latin scripts and symbols such as ★ and → (they are written out as "4.8/5" and "to"). The rules live in [`scripts/ats.ts`](scripts/ats.ts), with tests in `tests/ats.test.ts`. If a CMS edit breaks one, the Actions log lists exactly what to fix.
 
