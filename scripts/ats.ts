@@ -8,7 +8,7 @@
 import { plainText } from '../src/lib/plain-text.ts';
 
 export type JsonResume = {
-  basics: { name: string; email: string; url: string; summary: string; profiles: { network: string; url: string }[] };
+  basics: { name: string; email: string; phone?: string; url: string; summary: string; profiles: { network: string; url: string }[] };
   work: { name: string; position: string; startDate: string; endDate: string; summary: string; highlights: string[] }[];
   education: { institution: string }[];
   skills: { keywords: string[] }[];
@@ -53,6 +53,7 @@ export function checkAts({ pages, pdf, resume, highlightsPerRole = 3, projects =
   if (pdf.byteLength > maxBytes) problems.push(`PDF is ${Math.round(pdf.byteLength / 1024)} KB; many ATS reject files over ${Math.round(maxBytes / 1024)} KB.`);
   const binary = Buffer.from(pdf).toString('latin1');
   if (/\/Subtype\s*\/Type3/.test(binary)) problems.push('PDF embeds Type3 fonts, which many ATS cannot read. Use static (non-variable) fonts.');
+  if (/\/Subtype\s*\/Image/.test(binary)) problems.push('PDF embeds an image (photo, logo or icon). Resume screeners skip images and some score them down.');
   if (raw.replace(/\s/g, '').length < 1500) problems.push('Too little extractable text; the CV may be an image or use unreadable fonts.');
 
   // Character-level
@@ -71,6 +72,10 @@ export function checkAts({ pages, pdf, resume, highlightsPerRole = 3, projects =
   for (const heading of ['Summary', 'Experience', 'Education', 'Skills']) {
     if (!new RegExp(`(^|\\n)\\s*${heading}\\s*(\\n|$)`, 'i').test(raw)) problems.push(`Missing the standard "${heading}" heading on its own line.`);
   }
+
+  // Resume screeners flag first-person summaries; resume style leaves the pronoun out.
+  const pronouns = b.summary.match(/\b(I'm|I've|I|me|my|mine)\b/g);
+  if (pronouns) problems.push(`The summary uses first-person pronouns (${[...new Set(pronouns)].join(', ')}); write it without them.`);
 
   // Summary must come out as one unbroken passage (no column interleaving)
   if (!has(plainText(b.summary))) problems.push('The summary is broken up in the text layer (columns may be interleaving).');
@@ -101,6 +106,16 @@ export function checkAts({ pages, pdf, resume, highlightsPerRole = 3, projects =
   if (missingSkills.length) problems.push(`Skills not readable as text: ${missingSkills.join(', ')}.`);
 
   return problems;
+}
+
+/**
+ * Gaps that don't break parsing but cost points with resume-screening tools. Printed as warnings,
+ * since only the CV's owner can fill them in.
+ */
+export function screeningWarnings(resume: JsonResume): string[] {
+  const warnings: string[] = [];
+  if (!resume.basics.phone) warnings.push('No phone number: most screening tools score a CV without one lower. Add it in the CMS under Profile.');
+  return warnings;
 }
 
 /** Extracts each page's text in reading order with PDF.js. */

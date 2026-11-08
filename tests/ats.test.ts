@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { checkAts, normalize, type JsonResume } from '../scripts/ats.ts';
+import { checkAts, normalize, screeningWarnings, type JsonResume } from '../scripts/ats.ts';
 
 const resume: JsonResume = {
   basics: {
@@ -75,5 +75,23 @@ describe('checkAts', () => {
     expect(run([good.replace('Swift, SwiftUI', 'Swift')]).join()).toMatch(/Skills not readable as text: SwiftUI/);
   });
 
+  it('catches embedded images such as a photo', () => {
+    const photo = new TextEncoder().encode('<< /Type /XObject /Subtype /Image /Width 180 >>');
+    expect(run([good], { pdf: photo }).join()).toMatch(/embeds an image/);
+  });
+
+  it('catches a first-person summary', () => {
+    const firstPerson = { ...resume, basics: { ...resume.basics, summary: "I'm a seasoned iOS developer. I build apps." } };
+    expect(run([good.replace('Seasoned iOS developer.', "I'm a seasoned iOS developer. I build apps.")], { resume: firstPerson }).join())
+      .toMatch(/first-person pronouns \(I'm, I\)/);
+  });
+
   it('normalizes wrapped lines', () => expect(normalize(' A\n  b\tC ')).toBe('a b c'));
+});
+
+describe('screeningWarnings', () => {
+  it('warns when there is no phone number', () => {
+    expect(screeningWarnings(resume).join()).toMatch(/No phone number/);
+    expect(screeningWarnings({ ...resume, basics: { ...resume.basics, phone: '+20 100 000 0000' } })).toEqual([]);
+  });
 });

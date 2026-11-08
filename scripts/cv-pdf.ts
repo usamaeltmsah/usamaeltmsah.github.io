@@ -2,7 +2,7 @@
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import puppeteer from 'puppeteer-core';
-import { checkAts, extractPages } from './ats.ts';
+import { checkAts, extractPages, screeningWarnings } from './ats.ts';
 import { chromePath, serveDist } from './headless.ts';
 import { fitToPages } from './pdf-fit.ts';
 
@@ -47,7 +47,8 @@ try {
   if (problems.length) {
     throw new Error(`CV is not ATS-friendly:\n${problems.map((p) => `  - ${p}`).join('\n')}`);
   }
-  console.log('[cv-pdf] ATS check passed: text layer complete, in order, standard headings, no Type3 fonts');
+  console.log('[cv-pdf] ATS check passed: text layer complete, in order, standard headings, no Type3 fonts or images');
+  for (const w of screeningWarnings(JSON.parse(readFileSync('dist/resume.json', 'utf8')))) console.warn(`[cv-pdf] warning: ${w}`);
 } finally {
   await browser.close();
   server.close();
