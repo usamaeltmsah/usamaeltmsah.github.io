@@ -1,0 +1,116 @@
+---
+import Base from '../layouts/Base.astro';
+import { PROFILE_REPO } from '../lib/community-chess';
+
+const readme = `https://github.com/${PROFILE_REPO.split('/')[0]}`;
+---
+<Base
+  title="Community chess | Usama Fouad"
+  description="One shared chess game for every visitor. Drag a piece to play your move, then confirm it on GitHub."
+  path="/chess/"
+  pageType="WebPage"
+  jsonld={false}
+>
+  <header class="nav"><div class="wrap nav-in">
+    <a class="logo" href="/">UF<span class="grad">.</span></a>
+    <nav aria-label="Main"><a href="/">Portfolio</a><a href={readme}>GitHub profile</a></nav>
+  </div></header>
+
+  <main class="wrap cc">
+    <div class="cc-head">
+      <span class="kicker">// community chess</span>
+      <h1 class="sec-title">One game, <span class="grad">every visitor.</span></h1>
+      <p class="sec-sub">Everyone plays the same game. Drag a piece (or tap it, then tap where it goes). GitHub then opens with your move ready: press <b>Create</b> and it's played under your name within about a minute.</p>
+    </div>
+
+    <div class="cc-grid">
+      <section class="cc-board-wrap" aria-label="Chess board">
+        <div class="cc-board" id="board" role="grid" aria-busy="true"></div>
+        <div class="cc-promo" id="promo" hidden role="dialog" aria-label="Choose a piece to promote to"></div>
+        <div class="cc-tools">
+          <button class="btn sm ghost" id="flip" type="button">⇅ Flip board</button>
+          <button class="btn sm ghost" id="refresh" type="button">↻ Refresh</button>
+        </div>
+      </section>
+
+      <aside class="cc-side">
+        <div class="surface cc-card" aria-live="polite">
+          <p class="cc-status" id="status">Loading the game…</p>
+          <div id="pending" class="cc-pending" hidden>
+            <p><b>Almost there!</b> Press <b>Create</b> on the GitHub tab to play <span id="pending-san"></span>. The board updates here automatically.</p>
+            <div class="cc-row">
+              <a class="btn sm primary" id="pending-link" target="_blank" rel="noopener">Open GitHub again</a>
+              <button class="btn sm ghost" id="pending-cancel" type="button">Undo</button>
+            </div>
+          </div>
+          <div id="over" hidden><a class="btn sm primary" id="new-game" target="_blank" rel="noopener">♻️ Start a new game</a></div>
+        </div>
+
+        <div class="surface cc-card">
+          <h2 class="cc-h">Last moves</h2>
+          <ol class="cc-list" id="moves"><li class="cc-muted">No moves yet. Be the first!</li></ol>
+        </div>
+
+        <div class="surface cc-card">
+          <h2 class="cc-h">🏆 Top players</h2>
+          <ol class="cc-list" id="players"><li class="cc-muted">Nobody yet.</li></ol>
+        </div>
+
+        <p class="cc-muted cc-note">Why GitHub? Moves are saved in my <a href={readme}>profile README</a>, and opening an issue is how GitHub knows who played. You can't play twice in a row, so bring a friend.</p>
+      </aside>
+    </div>
+  </main>
+</Base>
+
+<style is:global>
+.cc{padding-block:48px 80px}
+.cc-head{margin-bottom:28px}
+.cc-grid{display:grid;grid-template-columns:minmax(0,560px) minmax(0,1fr);gap:32px;align-items:start}
+.cc-board-wrap{position:relative}
+.cc-board{--light:#ece8df;--dark:#7f97b4;display:grid;grid-template-columns:repeat(8,minmax(0,1fr));grid-template-rows:repeat(8,minmax(0,1fr));aspect-ratio:1;border-radius:14px;overflow:hidden;box-shadow:0 30px 60px -30px rgba(0,0,0,.45);border:1px solid var(--line);touch-action:none;user-select:none;-webkit-user-select:none}
+.cc-sq{position:relative;border:0;padding:0;margin:0;display:grid;place-items:center;background:var(--light);font:clamp(26px,8.6vw,54px)/1 "Segoe UI Symbol","Apple Symbols","Noto Sans Symbols 2","DejaVu Sans",serif;cursor:default;color:inherit}
+.cc-sq.dark{background:var(--dark)}
+.cc-sq.last{box-shadow:inset 0 0 0 999px rgba(255,214,10,.32)}
+.cc-sq.check{box-shadow:inset 0 0 18px 6px rgba(225,29,72,.85)}
+.cc-sq.sel{box-shadow:inset 0 0 0 4px var(--accent)}
+.cc-sq.own{cursor:grab}
+.cc-sq.target::after{content:"";position:absolute;width:30%;height:30%;border-radius:50%;background:rgba(20,21,26,.28)}
+.cc-sq.target.capture::after{width:86%;height:86%;background:none;border:5px solid rgba(20,21,26,.3)}
+.cc-sq.target{cursor:pointer}
+.cc-sq:focus-visible{outline:3px solid var(--accent);outline-offset:-3px;border-radius:0}
+.cc-sq .coord{position:absolute;font:600 11px var(--mono);opacity:.7;pointer-events:none}
+.cc-sq .coord.f{right:4px;bottom:2px}.cc-sq .coord.r{left:4px;top:3px}
+.cc-sq.dark .coord{color:var(--light)}.cc-sq:not(.dark) .coord{color:var(--dark)}
+.pc{pointer-events:none;line-height:1}
+.pc.w{color:#fff;-webkit-text-stroke:1.4px #1d1f27;paint-order:stroke fill;text-shadow:0 2px 3px rgba(0,0,0,.25)}
+.pc.b{color:#16171c;text-shadow:0 1px 1px rgba(255,255,255,.25)}
+.cc-sq.lifted .pc{opacity:.25}
+.cc-ghost{position:fixed;left:0;top:0;z-index:50;pointer-events:none;font:clamp(30px,9.6vw,60px)/1 "Segoe UI Symbol","Apple Symbols","Noto Sans Symbols 2","DejaVu Sans",serif;transform:translate(-50%,-50%) scale(1.15);filter:drop-shadow(0 10px 12px rgba(0,0,0,.35))}
+.cc-board.waiting .cc-sq{cursor:default}
+.cc-promo{position:absolute;inset:0;display:grid;place-items:center;background:color-mix(in srgb,var(--bg) 55%,transparent);backdrop-filter:blur(3px);border-radius:14px}
+.cc-promo[hidden]{display:none}
+.cc-promo div{display:flex;gap:10px;padding:14px;border-radius:16px;background:var(--surface);border:1px solid var(--line)}
+.cc-promo button{width:64px;height:64px;border-radius:12px;border:1px solid var(--line);background:var(--bg2);font-size:40px;cursor:pointer}
+.cc-promo button:hover{border-color:var(--accent)}
+.cc-tools{display:flex;gap:8px;margin-top:12px}
+.cc-side{display:grid;gap:14px}
+.cc-card{padding:20px}
+.cc-status{font:700 20px var(--display);letter-spacing:-.02em}
+.cc-pending{margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
+.cc-pending[hidden],#over[hidden]{display:none}
+#over{margin-top:12px}
+.cc-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.cc-h{font:700 15px var(--sans);margin-bottom:8px}
+.cc-list{padding-left:1.4em;display:grid;gap:4px;font-size:15px}
+.cc-list a{color:var(--accent);text-decoration:none}.cc-list a:hover{text-decoration:underline}
+.cc-list .san{font:600 14px var(--mono);margin-right:6px}
+.cc-muted{color:var(--muted);list-style:none;margin-left:-1.4em}
+.cc-note{font-size:14px;margin-left:0}.cc-note a{color:var(--accent)}
+@media (max-width:860px){.cc-grid{grid-template-columns:1fr}.cc-board-wrap{max-width:560px;width:100%;margin-inline:auto}}
+@media (prefers-reduced-motion:reduce){.cc-ghost{transform:translate(-50%,-50%)}}
+</style>
+
+<script>
+  import { mountCommunityChess } from '../scripts/community-chess';
+  mountCommunityChess();
+</script>
